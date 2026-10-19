@@ -1,0 +1,208 @@
+# Beheerpaneel voor Pages CMS (https://app.pagescms.org). Elke opslag is een commit; Cloudflare Pages bouwt de site daarna opnieuw (± 2 min).
+# Prijs, van-prijs, voorraad en variaties komen uit WooCommerce en worden bij elke build opgehaald: die velden staan hier op alleen-lezen.
+media:
+  input: public/img
+  output: /img
+  extensions: [jpg, jpeg, png, webp]
+
+content:
+  - name: products
+    label: Producten
+    type: file
+    path: content/products.json
+    format: json
+    list: true
+    fields:
+      - { name: name, label: Naam, type: string, required: true, description: "Zoals op de site, zonder 'Thobe' ervoor (bijv. White Desert)." }
+      - { name: slug, label: Adres van de pagina, type: string, required: true, description: "Kleine letters en streepjes, bijv. white-desert → thoby3.com/product/white-desert. Niet meer wijzigen na livegang." }
+      - { name: id, label: WooCommerce product-ID, type: string, required: true, description: "Het nummer van dit product in WooCommerce (Producten → beweeg over het product → ID). Hiermee vinden prijs, voorraad en afrekenen het juiste product." }
+      - { name: kind, label: Soort, type: select, required: true, options: { values: [thobe, accessory] }, description: "thobe = met maten en pasvormen; accessory = zonder maten (Musk, Siwak)." }
+      - { name: tagline, label: Korte omschrijving, type: text, description: "Eén zin onder de naam en in Google." }
+      - { name: description, label: Beschrijving (alinea's), type: text, list: true }
+      - { name: badge, label: Label bij het cadeau (mag leeg), type: string, description: "Bijv. Vanaf €50 gratis Musk & Siwak" }
+      - name: color
+        label: Kleur
+        type: object
+        fields:
+          - { name: name, label: Naam van de kleur, type: string, description: "Bijv. Gebroken wit" }
+          - { name: hex, label: Kleurcode, type: string, description: "Bijv. #EFEAE0 (voor het kleurbolletje)" }
+      - name: images
+        label: Hoofdfoto's
+        type: object
+        fields:
+          - { name: primary, label: Productfoto, type: image, required: true, description: "Staande foto (3:4) op lichte achtergrond." }
+          - { name: lifestyle, label: Sfeerfoto (bij muis erop), type: image }
+          - { name: detail, label: Detailfoto, type: image }
+      - { name: gallery, label: "Foto's op de productpagina (eerste = grote foto)", type: image, options: { multiple: true } }
+      - { name: price, label: Prijs (€) — uit WooCommerce, type: number, readonly: true }
+      - { name: compareAt, label: Van-prijs (€) — uit WooCommerce, type: number, readonly: true }
+      - { name: soldOut, label: Uitverkocht — uit WooCommerce, type: boolean, readonly: true }
+      - name: variations
+        label: Varianten — uit WooCommerce (niet aanpassen)
+        type: object
+        list: true
+        readonly: true
+        fields:
+          - { name: size, label: Maat, type: string }
+          - { name: fit, label: Pasvorm, type: string }
+          - { name: giftBox, label: Met cadeaudoos, type: boolean }
+          - { name: wooId, label: WooCommerce variatie-ID, type: number }
+
+  - name: shop
+    label: Winkel, maten & verzending
+    type: file
+    path: content/shop.json
+    format: json
+    fields:
+      - { name: rewardFrom, label: Gratis verzending + cadeau vanaf (€), type: number, required: true, description: "Moet gelijk zijn aan de instelling in WooCommerce. Pas ook de aankondigingen bovenaan aan." }
+      - { name: giftValue, label: Waarde van het gratis cadeau (€), type: number, required: true }
+      - { name: giftBoxPrice, label: Meerprijs cadeaudoos (€), type: number, required: true, description: "Moet gelijk zijn aan het prijsverschil in WooCommerce (nu €5)." }
+      - { name: shippingText, label: Verzendtekst, type: string }
+      - { name: checkoutLink, label: Afrekenlink (niet wijzigen), type: string, readonly: true }
+      - name: sizes
+        label: Maten
+        type: object
+        list: true
+        description: "De letters moeten overeenkomen met de maten in WooCommerce (S, M, L, XL)."
+        fields:
+          - { name: label, label: Maat, type: string, required: true }
+          - { name: bodyHeight, label: Lichaamslengte, type: string, description: "Bijv. 1.70 – 1.78 m" }
+      - name: fits
+        label: Pasvormen
+        type: object
+        list: true
+        fields:
+          - { name: id, label: Code (niet wijzigen), type: string, readonly: true }
+          - { name: label, label: Naam, type: string }
+          - { name: note, label: Uitleg, type: text }
+      - name: fabric
+        label: Stof (venster "Alle stofeigenschappen")
+        type: object
+        fields:
+          - { name: material, label: Naam van de stof, type: string }
+          - { name: description, label: Omschrijving, type: text }
+
+  - name: home
+    label: Homepagina
+    type: file
+    path: content/home.json
+    format: json
+    fields:
+      - name: hero
+        label: Grote foto bovenaan
+        type: object
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: titleItalic, label: Titel tweede regel (schuin), type: string }
+          - { name: text, label: Introtekst, type: text }
+          - { name: buttonPrimary, label: Tekst hoofdknop, type: string }
+          - { name: buttonSecondary, label: Tekst tweede knop, type: string }
+          - { name: image, label: Foto, type: image, description: "Liggende foto, minstens 2000 pixels breed." }
+          - { name: imageAlt, label: Beschrijving van de foto, type: string, description: "Voor blinde bezoekers en Google." }
+          - { name: featuredProduct, label: Uitgelicht product (adres), type: string, description: "Het adres van het product in het kaartje rechtsonder, bijv. white-desert." }
+      - name: usp
+        label: Blok "Vóór 17:00 besteld"
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: image, label: Foto, type: image }
+          - { name: imageAlt, label: Beschrijving van de foto, type: string }
+          - name: items
+            label: Beloftes
+            type: object
+            list: true
+            fields:
+              - { name: icon, label: Icoon, type: select, options: { values: [shield, leaf, headset, truck] } }
+              - { name: title, label: Vetgedrukte tekst, type: string }
+              - { name: text, label: Tekst erachter, type: string }
+              - { name: whatsapp, label: Tekst is een WhatsApp-link, type: boolean }
+      - name: collection
+        label: Kop boven de collectie
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: titleItalic, label: Kop (schuin deel), type: string }
+          - { name: text, label: Tekst, type: text }
+      - name: fit
+        label: Blok "Twee pasvormen"
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: titleItalic, label: Kop tweede regel (schuin), type: string }
+          - { name: text, label: Tekst, type: text }
+          - { name: note, label: Kleine tekst onder de maattabel, type: string }
+      - name: fabric
+        label: Blok "Satijn geweven katoen"
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: titleItalic, label: Kop (schuin deel), type: string }
+          - { name: text, label: Tekst, type: text }
+          - { name: button, label: Tekst knop, type: string }
+          - name: properties
+            label: Stofeigenschappen (in het venster)
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Eigenschap, type: string }
+              - { name: text, label: Uitleg, type: text }
+          - name: details
+            label: Detailfoto's (knoppen onder de foto)
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Naam knop, type: string, description: "Bijv. Kraag" }
+              - { name: image, label: Foto, type: image, description: "Staande foto (3:4)." }
+              - { name: alt, label: Beschrijving van de foto, type: string }
+      - name: craft
+        label: Blok "Kwaliteit tot in elk detail" + cadeaubalk
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: titleItalic, label: Kop (schuin deel), type: string }
+          - { name: text, label: Tekst, type: text }
+          - { name: button, label: Tekst knop, type: string }
+          - { name: giftText, label: Tekst cadeaubalk (de waarde komt er automatisch achter), type: string }
+          - { name: giftButton, label: Tekst knop cadeaubalk, type: string }
+          - { name: giftProduct, label: Knop gaat naar product (adres), type: string }
+
+  - name: site
+    label: Aankondigingen, contact & Google
+    type: file
+    path: content/site.json
+    format: json
+    fields:
+      - name: announcements
+        label: Lopende balk bovenaan
+        type: object
+        list: true
+        fields:
+          - { name: icon, label: Icoon, type: select, options: { values: [gift, truck, clock] } }
+          - { name: text, label: Tekst, type: string }
+      - name: contact
+        label: Contactgegevens
+        type: object
+        fields:
+          - { name: email, label: E-mailadres, type: string }
+          - { name: phone, label: "Telefoonnummer zoals getoond (bijv. +31 6 41344799)", type: string }
+          - { name: whatsapp, label: "WhatsApp-nummer, alleen cijfers met landcode (bijv. 31641344799)", type: string }
+          - { name: instagram, label: Link naar Instagram, type: string }
+      - name: legal
+        label: Juridische links in de footer
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Tekst, type: string }
+          - { name: url, label: Link, type: string }
+      - name: newsletter
+        label: Nieuwsbrief (footer)
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: text, label: Tekst, type: string }
+      - name: seo
+        label: Google & delen (SEO)
+        type: object
+        fields:
+          - { name: title, label: Titel in Google, type: string }
+          - { name: description, label: Omschrijving in Google, type: text }

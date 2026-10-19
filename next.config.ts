@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
+import imageSizes from "./lib/image-sizes.json";
 
 const nextConfig: NextConfig = {
-  // AVIF eerst (kleiner), WebP als terugval.
-  images: { qualities: [75, 90], formats: ["image/avif", "image/webp"] },
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Statische site voor Cloudflare Pages: `npm run build` schrijft alles naar out/.
+  output: "export",
+  // Foto's worden bij de build voorgegenereerd (scripts/images.mjs); de loader wijst ernaar.
+  images: { loader: "custom", loaderFile: "./lib/image-loader.ts", ...imageSizes },
   turbopack: {
     rules: {
       "*.css": {

@@ -27,7 +27,6 @@ export interface Product {
   soldOut?: boolean;
   colors: { name: string; hex: string }[];
   sizes: ThobeSize[];
-  fabric?: { material: string; description: string; textureImage: string };
   images: { primary: string; lifestyle: string; detail: string };
   gallery: string[];
   badge?: string;
@@ -51,13 +50,12 @@ export const GIFT_VALUE = shop.giftValue;
 export const eur = (n: number) => new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(n).replace(/\s/g, "");
 export const SHIPPING_COPY = shop.shippingText;
 
-export const products: Product[] = productData.products.map((p) => ({
+export const products: Product[] = productData.map((p) => ({
   ...p,
   kind: p.kind as Product["kind"],
   currency: "EUR",
   colors: "color" in p && p.color ? [p.color] : [],
   sizes: p.kind === "thobe" ? SIZES : [],
-  fabric: p.kind === "thobe" ? shop.fabric : undefined,
   variations: "variations" in p ? (p.variations as WooVariation[]) : undefined,
 }));
 

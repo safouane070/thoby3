@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 
+/** Alleen true op de echte site (Cloudflare-variabele SITE_LIVE=true); de pages.dev-preview blijft uit Google. */
+export const SITE_LIVE = process.env.SITE_LIVE === "true";
+
 // Next vervangt openGraph per pagina in zijn geheel (geen diepe merge): elke pagina spreidt deze basis.
 export const baseOpenGraph = {
   type: "website",

@@ -4,8 +4,8 @@ import { ProductDetail } from "@/components/ProductDetail";
 import { getProduct, products } from "@/lib/products";
 import { baseOpenGraph } from "@/lib/seo";
 
-// Alle slugs zijn voorgebouwd; blokkerend laden is hier bewust (geen Suspense-shell nodig).
-export const instant = false;
+// Statische export: alleen de producten uit content/products.json bestaan; andere slugs geven de 404-pagina.
+export const dynamicParams = false;
 export const generateStaticParams = () => products.map((p) => ({ slug: p.slug }));
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
