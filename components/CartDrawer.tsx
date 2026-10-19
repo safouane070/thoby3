@@ -56,12 +56,9 @@ function Qty({ qty, name, onChange }: { qty: number; name: string; onChange: (n:
 }
 
 export function CartDrawer() {
-  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, remainingForReward, money, count } = useStore();
-  const [note, setNote] = useState(false);
+  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, remainingForReward, money, count, checkoutHref } = useStore();
   // Mobiel: bottom sheet die je omlaag wegveegt; vanaf tablet: zijlade rechts.
   const desktop = useMediaQuery("(min-width: 768px)");
-  // De demo-melding hoort bij één bezoek aan de lade; sluiten wist hem (lade sluit altijd via onOpenChange).
-  const onOpenChange = (open: boolean) => { setDrawerOpen(open); if (!open) setNote(false); };
 
   // CartDrawer blijft altijd gemount, dus de overgang "nog niet -> ontgrendeld" wordt hier gezien (ook als add() de lade net opent).
   // De burst start na de slide-in (350ms) zodat hij niet onder de animatie verdwijnt.
@@ -77,7 +74,7 @@ export function CartDrawer() {
   }, [giftUnlocked]);
 
   return (
-    <Drawer.Root open={drawerOpen} onOpenChange={onOpenChange} direction={desktop ? "right" : "bottom"}>
+    <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen} direction={desktop ? "right" : "bottom"}>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-50" />
         <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex max-h-[92dvh] flex-col rounded-t-[28px] border-t border-line bg-ivory outline-none md:inset-y-0 md:left-auto md:right-0 md:max-h-none md:w-full md:max-w-[440px] md:rounded-none md:border-l md:border-t-0">
@@ -138,8 +135,13 @@ export function CartDrawer() {
             <div className="border-t border-line px-6 py-5">
               <div className="flex items-baseline justify-between"><span className="text-sm text-taupe">Subtotaal incl. btw</span><span className="font-serif text-3xl tabular-nums">{money(subtotal)}</span></div>
               <p className="mt-1 text-xs text-taupe">{giftUnlocked ? "Gratis verzending" : "Verzending wordt bij het afrekenen berekend."}</p>
-              <button onClick={() => setNote(true)} className="press btn-primary mt-4 w-full py-4 text-sm font-medium">Afrekenen</button>
-              {note && <p role="status" className="mt-3 text-center text-xs text-taupe">Demo: de checkout is nog niet gekoppeld aan een betaalprovider.</p>}
+              {/* Betalen, voorraad en bestellingen lopen via de bestaande WooCommerce-shop; de link zet de hele winkelwagen daar klaar. */}
+              {checkoutHref ? (
+                <a href={checkoutHref} className="press btn-primary mt-4 flex min-h-12 w-full items-center justify-center py-4 text-sm font-medium">Afrekenen</a>
+              ) : (
+                <p role="alert" className="mt-4 text-center text-sm text-taupe-strong">Een artikel in je winkelwagen is niet meer leverbaar. Verwijder het of neem contact met ons op.</p>
+              )}
+              <p className="mt-2 text-center text-xs text-taupe">Je rekent af in de beveiligde checkout op thoby3.com.</p>
               <div className="mt-4 flex flex-col items-center gap-2.5">
                 <p className="flex items-center gap-1.5 text-xs text-taupe-strong"><Lock size={12} aria-hidden /> Veilig betalen, SSL-versleuteld</p>
                 <ul className="flex flex-wrap justify-center gap-1.5 text-ink/70" aria-label="Betaalmethodes">
