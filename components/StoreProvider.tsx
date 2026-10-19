@@ -1,15 +1,16 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { CURRENCIES, FITS, REWARD_FROM, GIFT_BOX_PRICE, SIZES, getProduct, type Currency, type Fit } from "@/lib/products";
+import { FITS, REWARD_FROM, GIFT_BOX_PRICE, SIZES, checkoutUrl, eur, getProduct, wooId, type Fit } from "@/lib/products";
 
 export const MAX_QTY = 10;
 const STORAGE_KEY = "thoby3.store.v1";
 
-// localStorage is door de gebruiker aan te passen: alleen bestaande producten, maten en geldige aantallen komen terug.
+// localStorage is door de gebruiker aan te passen: alleen bestaande, leverbare producten, maten en geldige aantallen komen terug.
 const isLine = (v: unknown): v is Line => {
   const l = v as Line;
-  return typeof l === "object" && l !== null && typeof l.id === "string" && !!getProduct(l.slug)
+  const p = typeof l === "object" && l !== null ? getProduct(l.slug) : undefined;
+  return !!p && !p.soldOut && typeof l.id === "string"
     && Number.isInteger(l.qty) && l.qty >= 1 && l.qty <= MAX_QTY
     && (l.size === undefined || SIZES.some((s) => s.label === l.size))
     && (l.fit === undefined || l.fit === "slim" || l.fit === "broad");
@@ -31,11 +32,9 @@ type Store = {
   setDrawerOpen: (v: boolean) => void;
   wishlist: string[];
   toggleWish: (slug: string) => void;
-  currency: Currency;
-  setCurrency: (c: Currency) => void;
-  lang: string;
-  setLang: (l: string) => void;
-  money: (eur: number) => string;
+  money: (amount: number) => string;
+  /** Link naar de WooCommerce-checkout met deze winkelwagen; null als een regel geen WooCommerce-ID heeft. */
+  checkoutHref: string | null;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -49,8 +48,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<Line[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [wishlist, setWishlist] = useState<string[]>([]);
-  const [currency, setCurrency] = useState<Currency>("EUR");
-  const [lang, setLang] = useState("NL");
   const [announcement, setAnnouncement] = useState("");
   const hydrated = useRef(false);
 
@@ -84,7 +81,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const detail = n.size ? `, maat ${n.size}, ${FITS.find((f) => f.id === n.fit)?.label}` : "";
     const msg = `${p?.kind === "thobe" ? "Thobe " : ""}${p?.name}${detail} toegevoegd aan je winkelwagen.`;
     // Een no-break space laat screenreaders een identiek bericht opnieuw voorlezen.
-    setAnnouncement((prev) => (prev === msg ? `${msg} ` : msg));
+    setAnnouncement((prev) => (prev === msg ? `${msg} ` : msg));
     setDrawerOpen(true);
   }, []);
 
@@ -97,17 +94,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<Store>(() => {
     const subtotal = lines.reduce((sum, l) => sum + lineUnit(l) * l.qty, 0);
-    const money = (eur: number) =>
-      new Intl.NumberFormat(CURRENCIES[currency].locale, { style: "currency", currency }).format(eur * CURRENCIES[currency].rate);
+    const items = lines.map((l) => ({ id: wooId(getProduct(l.slug)!, l.size, l.fit, l.giftBox), qty: l.qty }));
+    // Liever geen link dan een bestelling waarin stilletjes een regel ontbreekt.
+    const complete = items.length > 0 && items.every((i) => i.id !== undefined);
     return {
       lines,
       count: lines.reduce((n, l) => n + l.qty, 0),
       subtotal,
       giftUnlocked: subtotal >= REWARD_FROM,
       remainingForReward: Math.max(0, REWARD_FROM - subtotal),
-      add, setQty, lineUnit, drawerOpen, setDrawerOpen, wishlist, toggleWish, currency, setCurrency, lang, setLang, money,
+      add, setQty, lineUnit, drawerOpen, setDrawerOpen, wishlist, toggleWish,
+      money: eur,
+      checkoutHref: complete ? checkoutUrl(items as { id: number; qty: number }[]) : null,
     };
-  }, [lines, drawerOpen, wishlist, currency, lang, add, setQty, lineUnit, toggleWish]);
+  }, [lines, drawerOpen, wishlist, add, setQty, lineUnit, toggleWish]);
 
   return (
     <Ctx.Provider value={value}>

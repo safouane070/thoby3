@@ -5,11 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { Globe, Heart, Menu, ShoppingBag, X } from "lucide-react";
+import { Heart, Menu, ShoppingBag, X } from "lucide-react";
 import { AnnouncementBar } from "./AnnouncementBar";
 import { Logo } from "./Brand";
 import { useStore } from "./StoreProvider";
-import { CURRENCIES, LANGS, getProduct, type Currency } from "@/lib/products";
+import { getProduct } from "@/lib/products";
 
 const nav = [
   { id: "collectie", href: "/#collectie", label: "Collectie" },
@@ -22,7 +22,6 @@ const artikelen = (n: number) => `${n} ${n === 1 ? "artikel" : "artikelen"}`;
 const SPRING = { type: "spring", stiffness: 400, damping: 35 } as const;
 // 48px tapdoel op touch, 40px vanaf desktop.
 const ICON_BTN = "press relative flex h-12 w-12 items-center justify-center lg:h-10 lg:w-10";
-const chip = (on: boolean) => `press border py-2 text-xs ${on ? "border-ink bg-ink text-ivory" : "border-line hover:border-line-strong"}`;
 // Breedte nooit groter dan het scherm min de header-inspringing, zodat het paneel op 320px niet buiten beeld valt.
 const fit = (rem: number) => `w-[min(${rem}rem,calc(100vw-1.5rem))]`;
 
@@ -77,32 +76,6 @@ function HeaderPanel({ label, triggerClass, trigger, width, children }: {
         </div>
       )}
     </>
-  );
-}
-
-function Locale() {
-  const { lang, setLang, currency, setCurrency } = useStore();
-  return (
-    <HeaderPanel label="Taal en valuta" width={fit(18)} triggerClass="press flex h-12 items-center gap-2 px-3 text-xs font-medium lg:h-10"
-      trigger={<><Globe size={16} aria-hidden /> {lang} · {currency}</>}>
-      {() => (
-        <>
-          <p className="mb-2 text-xs text-taupe">Taal</p>
-          <div className="mb-4 grid grid-cols-3 gap-1.5">
-            {LANGS.map((l) => (
-              <button key={l.code} onClick={() => setLang(l.code)} aria-pressed={lang === l.code} title={l.label} className={`${chip(lang === l.code)} rounded-lg`}>{l.code}</button>
-            ))}
-          </div>
-          <p className="mb-2 text-xs text-taupe">Valuta</p>
-          <div className="grid grid-cols-5 gap-1.5">
-            {(Object.keys(CURRENCIES) as Currency[]).map((c) => (
-              <button key={c} onClick={() => setCurrency(c)} aria-pressed={currency === c} className={`${chip(currency === c)} rounded-lg`}>{c}</button>
-            ))}
-          </div>
-          <p className="mt-3 text-[0.6875rem] leading-relaxed text-taupe">Demo: taal wijzigt alleen het label, valuta rekent live om.</p>
-        </>
-      )}
-    </HeaderPanel>
   );
 }
 
@@ -205,7 +178,6 @@ export function Header() {
             </nav>
 
             <div className="flex items-center">
-              <div className="hidden sm:block"><Locale /></div>
               <Wishlist />
               <button className={ICON_BTN} onClick={() => setDrawerOpen(true)} aria-label={`Winkelwagen, ${artikelen(count)}`}>
                 <ShoppingBag size={18} />
@@ -228,7 +200,6 @@ export function Header() {
                 {nav.map((n) => (
                   <Link key={n.id} href={n.href} onClick={() => setMenu(false)} className="block border-b border-line py-3.5 font-serif text-2xl last:border-0">{n.label}</Link>
                 ))}
-                <div className="relative pt-2 sm:hidden"><Locale /></div>
               </m.nav>
             )}
           </AnimatePresence>

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync:woo": "node scripts/sync-woo.mjs"
   },
   "dependencies": {
     "framer-motion": "^14.3.0",

@@ -1,0 +1,42 @@
+{
+  "rewardFrom": 50,
+  "giftValue": 13.48,
+  "giftBoxPrice": 5,
+  "sizes": [
+    {
+      "label": "S",
+      "bodyHeight": "1.60 – 1.70 m"
+    },
+    {
+      "label": "M",
+      "bodyHeight": "1.70 – 1.78 m"
+    },
+    {
+      "label": "L",
+      "bodyHeight": "1.78 – 1.87 m"
+    },
+    {
+      "label": "XL",
+      "bodyHeight": "1.87 – 1.95 m"
+    }
+  ],
+  "fits": [
+    {
+      "id": "slim",
+      "label": "Slank",
+      "note": "Gestroomlijnd om schouders en taille. Voor een atletische of slanke bouw."
+    },
+    {
+      "id": "broad",
+      "label": "Breed",
+      "note": "Ruimer om borst en buik, zelfde lengte. Voor een volle of brede bouw."
+    }
+  ],
+  "fabric": {
+    "material": "Satijn geweven katoen",
+    "description": "De perfecte balans tussen luxe uitstraling en ademend comfort: zachte textuur op de huid en een subtiele glans die de hele dag meegaat.",
+    "textureImage": "/img/wd-4.jpg"
+  },
+  "shippingText": "Gratis verzending vanaf €50 in Nederland en de rest van Europa.",
+  "checkoutLink": "https://thoby3.com/checkout-link/"
+}

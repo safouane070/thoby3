@@ -1,0 +1,302 @@
+{
+  "products": [
+    {
+      "id": "15701",
+      "slug": "white-desert",
+      "name": "White Desert",
+      "kind": "thobe",
+      "tagline": "Gebroken wit satijnkatoen, geïnspireerd door de kalksteen van de woestijn.",
+      "description": [
+        "De White Desert weerspiegelt de serene schoonheid van het gelijknamige landschap: puurheid, rust en tijdloze elegantie.",
+        "Gemaakt van hoogwaardig satijnkatoen met een luxueuze glans, zachte hand en ademend comfort, op warme dagen én bij formele gelegenheden.",
+        "De gebroken witte tint is een warm alternatief voor helder wit en past bij elke gelegenheid."
+      ],
+      "price": 44.99,
+      "compareAt": 74.99,
+      "soldOut": false,
+      "color": {
+        "name": "Gebroken wit",
+        "hex": "#EFEAE0"
+      },
+      "images": {
+        "primary": "/img/wd-1.jpg",
+        "lifestyle": "/img/wd-3.jpg",
+        "detail": "/img/wd-4.jpg"
+      },
+      "gallery": [
+        "/img/wd-1.jpg",
+        "/img/wd-2.jpg",
+        "/img/wd-3.jpg",
+        "/img/wd-4.jpg",
+        "/img/wd-5.jpg"
+      ],
+      "badge": "Vanaf €50 gratis Musk & Siwak",
+      "variations": [
+        {
+          "size": "S",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18667
+        },
+        {
+          "size": "S",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18668
+        },
+        {
+          "size": "S",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18669
+        },
+        {
+          "size": "S",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18670
+        },
+        {
+          "size": "M",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18671
+        },
+        {
+          "size": "M",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18672
+        },
+        {
+          "size": "M",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18673
+        },
+        {
+          "size": "M",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18674
+        },
+        {
+          "size": "L",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18675
+        },
+        {
+          "size": "L",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18676
+        },
+        {
+          "size": "L",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18677
+        },
+        {
+          "size": "L",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18678
+        },
+        {
+          "size": "XL",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18679
+        },
+        {
+          "size": "XL",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18680
+        },
+        {
+          "size": "XL",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18681
+        },
+        {
+          "size": "XL",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18682
+        }
+      ]
+    },
+    {
+      "id": "18592",
+      "slug": "caramel-sands",
+      "name": "Caramel Sands",
+      "kind": "thobe",
+      "tagline": "Warme karameltint van zonovergoten duinen.",
+      "description": [
+        "De Caramel Sands brengt de warmte van duinen bij zonsondergang naar jouw garderobe.",
+        "Dezelfde satijnkatoenen stof, dezelfde twee pasvormen per maat, in een diepe zandtint."
+      ],
+      "price": 44.99,
+      "compareAt": 79.99,
+      "soldOut": true,
+      "color": {
+        "name": "Karamel",
+        "hex": "#C9A56C"
+      },
+      "images": {
+        "primary": "/img/cs-1.jpg",
+        "lifestyle": "/img/cs-2.jpg",
+        "detail": "/img/cs-3.jpg"
+      },
+      "gallery": [
+        "/img/cs-1.jpg",
+        "/img/cs-2.jpg",
+        "/img/cs-3.jpg"
+      ],
+      "variations": [
+        {
+          "size": "S",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18662
+        },
+        {
+          "size": "S",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18653
+        },
+        {
+          "size": "S",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18663
+        },
+        {
+          "size": "S",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18654
+        },
+        {
+          "size": "M",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18660
+        },
+        {
+          "size": "M",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18651
+        },
+        {
+          "size": "M",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18661
+        },
+        {
+          "size": "M",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18652
+        },
+        {
+          "size": "L",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18658
+        },
+        {
+          "size": "L",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18649
+        },
+        {
+          "size": "L",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18659
+        },
+        {
+          "size": "L",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18650
+        },
+        {
+          "size": "XL",
+          "fit": "broad",
+          "giftBox": true,
+          "wooId": 18664
+        },
+        {
+          "size": "XL",
+          "fit": "broad",
+          "giftBox": false,
+          "wooId": 18655
+        },
+        {
+          "size": "XL",
+          "fit": "slim",
+          "giftBox": true,
+          "wooId": 18665
+        },
+        {
+          "size": "XL",
+          "fit": "slim",
+          "giftBox": false,
+          "wooId": 18656
+        }
+      ]
+    },
+    {
+      "id": "15782",
+      "slug": "musk",
+      "name": "Musk",
+      "kind": "accessory",
+      "tagline": "THOBY3 Musk, 5 ml.",
+      "description": [
+        "THOBY3 Musk. Gratis bij je bestelling vanaf €50."
+      ],
+      "price": 5.99,
+      "soldOut": false,
+      "images": {
+        "primary": "/img/musk-1.jpg",
+        "lifestyle": "/img/musk-2.jpg",
+        "detail": "/img/musk-2.jpg"
+      },
+      "gallery": [
+        "/img/musk-1.jpg",
+        "/img/musk-2.jpg"
+      ]
+    },
+    {
+      "id": "15785",
+      "slug": "siwak",
+      "name": "Siwak met houder",
+      "kind": "accessory",
+      "tagline": "Siwak in een handige houder.",
+      "description": [
+        "THOBY3 Siwak met houder. Gratis bij je bestelling vanaf €50."
+      ],
+      "price": 3.99,
+      "soldOut": false,
+      "images": {
+        "primary": "/img/siwak-2.jpg",
+        "lifestyle": "/img/siwak-1.png",
+        "detail": "/img/siwak-1.png"
+      },
+      "gallery": [
+        "/img/siwak-2.jpg",
+        "/img/siwak-1.png"
+      ]
+    }
+  ]
+}
