@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import home from "@/content/home.json";
 import { products } from "@/lib/products";
 import { ProductCard } from "./ProductCard";
 
@@ -18,8 +19,8 @@ export function ProductGrid() {
     <section id="collectie" className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-32">
       <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
         <div>
-          <h2 className="font-serif text-5xl leading-none md:text-7xl">Betaalbare <em>luxe</em></h2>
-          <p className="mt-5 max-w-md text-taupe">Luxe uitstraling en kwaliteit, voor iedereen toegankelijk.</p>
+          <h2 className="font-serif text-5xl leading-none md:text-7xl">{home.collection.title} <em>{home.collection.titleItalic}</em></h2>
+          <p className="mt-5 max-w-md text-taupe">{home.collection.text}</p>
         </div>
         <div role="group" aria-label="Filter collectie" className="flex border border-line p-0.5">
           {filters.map((f) => (

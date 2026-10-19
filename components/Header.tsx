@@ -149,7 +149,9 @@ export function Header() {
     setMenu(false);
   }
 
-  const active = hover ?? (pathname.startsWith("/product") ? "collectie" : pathname === "/" ? spy : null);
+  // Alleen bij een bestaand product: de 404-pagina (ook op /product/onbekend) is zonder markering gebouwd, anders hydration-mismatch.
+  const onProduct = pathname.startsWith("/product/") && !!getProduct(pathname.split("/")[2] ?? "");
+  const active = hover ?? (onProduct ? "collectie" : pathname === "/" ? spy : null);
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">

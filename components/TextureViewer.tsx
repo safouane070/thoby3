@@ -3,14 +3,10 @@
 import { useState } from "react";
 import { m } from "framer-motion";
 import { ToggleGroup } from "radix-ui";
-import { products } from "@/lib/products";
+import home from "@/content/home.json";
 import { Magnifier } from "./Magnifier";
 
-const TEXTURES = [
-  { id: "kraag", label: "Kraag", src: products[0].fabric!.textureImage, alt: "Kraag en parelmoerachtige knopen in satijnkatoen" },
-  { id: "knoop", label: "Knoop", src: "/img/wd-5.jpg", alt: "Knoopsluiting en stof van de thobe" },
-  { id: "manchet", label: "Manchet", src: "/img/wd-2.jpg", alt: "Manchet met THOBY3-merkteken" },
-];
+const TEXTURES = home.fabric.details.map((d) => ({ id: d.label.toLowerCase(), label: d.label, src: d.image, alt: d.alt }));
 
 // Macrofoto's met loep en een toggle tussen drie details. Foto's zijn 3:4 zodat de loep exact uitlijnt.
 export function TextureViewer({ id, sizes }: { id: string; sizes: string }) {

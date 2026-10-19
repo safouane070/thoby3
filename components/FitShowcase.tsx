@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import home from "@/content/home.json";
 import { FITS, SIZES, type Fit } from "@/lib/products";
 import { FitSilhouette } from "./FitSilhouette";
 import { FitToggle } from "./FitToggle";
@@ -15,10 +16,10 @@ export function FitShowcase() {
       <div className="mx-auto grid max-w-[1440px] items-center gap-16 px-5 lg:grid-cols-2 lg:px-10">
         <div>
           <h2 className="font-serif text-5xl leading-[0.95] md:text-7xl">
-            Twee pasvormen.<br /><em>Eén lengte.</em>
+            {home.fit.title}<br /><em>{home.fit.titleItalic}</em>
           </h2>
           <p className="mt-6 max-w-lg leading-relaxed text-ivory/70">
-            Elke maat is ontworpen voor twee posturen met dezelfde lengte. Zo zit je thobe niet alleen op de juiste lengte, maar ook precies zoals jij gebouwd bent.
+            {home.fit.text}
           </p>
 
           <FitToggle value={fit} onChange={setFit} id="fit-showcase" tone="dark" className="mt-10 w-full max-w-72" />
@@ -33,7 +34,7 @@ export function FitShowcase() {
               ))}
             </tbody>
           </table>
-          <p className="mt-4 max-w-md text-xs leading-relaxed text-ivory/50">Kort en vol postuur? Kies een lange maat en laat deze inkorten.</p>
+          <p className="mt-4 max-w-md text-xs leading-relaxed text-ivory/50">{home.fit.note}</p>
         </div>
 
         <Reveal className="relative mx-auto aspect-[1/1.5] w-full max-w-sm">

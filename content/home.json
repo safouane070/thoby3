@@ -1,0 +1,59 @@
+{
+  "hero": {
+    "title": "De White-Desert",
+    "titleItalic": "Thobe",
+    "text": "Ervaar de serene en pure uitstraling van de woestijn. Elke maat in twee pasvormen, ontworpen voor jouw postuur.",
+    "buttonPrimary": "Shop de collectie",
+    "buttonSecondary": "Ontdek ons vakmanschap",
+    "image": "/img/hero.jpg",
+    "imageAlt": "Karavaan kamelen op een duin bij zonsondergang",
+    "featuredProduct": "white-desert"
+  },
+  "usp": {
+    "title": "Vóór 17:00 besteld, vandaag onderweg.",
+    "image": "/img/wd-2.jpg",
+    "imageAlt": "Manchet van de White Desert thobe met het THOBY3-merkteken",
+    "items": [
+      { "icon": "shield", "title": "Vertrouwd en veilig betalen", "text": "" },
+      { "icon": "leaf", "title": "Ethisch geproduceerd.", "text": "Elke thobe is tot in detail afgewerkt." },
+      { "icon": "headset", "title": "Twijfel je over je maat?", "text": "Stuur ons een bericht via WhatsApp.", "whatsapp": true }
+    ]
+  },
+  "collection": {
+    "title": "Betaalbare",
+    "titleItalic": "luxe",
+    "text": "Luxe uitstraling en kwaliteit, voor iedereen toegankelijk."
+  },
+  "fit": {
+    "title": "Twee pasvormen.",
+    "titleItalic": "Eén lengte.",
+    "text": "Elke maat is ontworpen voor twee posturen met dezelfde lengte. Zo zit je thobe niet alleen op de juiste lengte, maar ook precies zoals jij gebouwd bent.",
+    "note": "Kort en vol postuur? Kies een lange maat en laat deze inkorten."
+  },
+  "fabric": {
+    "title": "Satijn geweven",
+    "titleItalic": "katoen",
+    "text": "Onze thobes zijn gemaakt van hoogwaardig satijn geweven katoen. De perfecte balans tussen luxe uitstraling en ademend comfort. De zachte textuur voelt heerlijk op de huid, terwijl de subtiele glans een verfijnde look geeft die de hele dag meegaat.",
+    "button": "Alle stofeigenschappen",
+    "properties": [
+      { "label": "Uitstraling", "text": "Luxe, met een subtiele glans die de hele dag elegant blijft." },
+      { "label": "Comfort", "text": "Ademend katoen, aangenaam op warme dagen én bij formele gelegenheden." },
+      { "label": "Gevoel", "text": "Een zachte textuur die heerlijk op de huid ligt." },
+      { "label": "Productie", "text": "Onze stoffen zijn ethisch geproduceerd en elke thobe is tot in detail afgewerkt." }
+    ],
+    "details": [
+      { "label": "Kraag", "image": "/img/wd-4.jpg", "alt": "Kraag en parelmoerachtige knopen in satijnkatoen" },
+      { "label": "Knoop", "image": "/img/wd-5.jpg", "alt": "Knoopsluiting en stof van de thobe" },
+      { "label": "Manchet", "image": "/img/wd-2.jpg", "alt": "Manchet met THOBY3-merkteken" }
+    ]
+  },
+  "craft": {
+    "title": "Kwaliteit tot in",
+    "titleItalic": "elk detail",
+    "text": "Bij THOBY3® geloven we in kwaliteit. Voor elke maat bieden we twee variaties, ontworpen voor twee posturen met dezelfde lengte. Dankzij onze snelle, betrouwbare levering hoef je niet lang te wachten op jouw bestelling.",
+    "button": "Naar de collectie",
+    "giftText": "Vanaf €50 gratis Musk & Siwak, t.w.v.",
+    "giftButton": "Bekijk de White Desert",
+    "giftProduct": "white-desert"
+  }
+}

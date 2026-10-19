@@ -2,16 +2,12 @@
 
 import { X } from "lucide-react";
 import { Dialog } from "radix-ui";
-import { products } from "@/lib/products";
+import home from "@/content/home.json";
+import shop from "@/content/shop.json";
 import { TextureViewer } from "./TextureViewer";
 
-const fabric = products[0].fabric!;
-const props = [
-  ["Uitstraling", "Luxe, met een subtiele glans die de hele dag elegant blijft."],
-  ["Comfort", "Ademend katoen, aangenaam op warme dagen én bij formele gelegenheden."],
-  ["Gevoel", "Een zachte textuur die heerlijk op de huid ligt."],
-  ["Productie", "Onze stoffen zijn ethisch geproduceerd en elke thobe is tot in detail afgewerkt."],
-];
+const fabric = shop.fabric;
+const props = home.fabric.properties.map((p) => [p.label, p.text]);
 
 // Modal blijft midden in beeld (geen trigger-origin); alleen fade + lichte scale.
 export function FabricDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {

@@ -1,12 +1,8 @@
 import { Clock, Gift, Truck } from "lucide-react";
-import { GIFT_VALUE, REWARD_FROM, eur } from "@/lib/products";
+import site from "@/content/site.json";
 
-const from = eur(REWARD_FROM).replace(",00", "");
-const items = [
-  { icon: Gift, text: `Vanaf ${from} GRATIS Musk & Siwak t.w.v. ${eur(GIFT_VALUE)}` },
-  { icon: Truck, text: `Gratis verzending vanaf ${from} in NL en EU` },
-  { icon: Clock, text: "Vóór 17:00 besteld, vandaag verzonden" },
-];
+const ICONS = { gift: Gift, truck: Truck, clock: Clock };
+const items = site.announcements.map((a) => ({ icon: ICONS[a.icon as keyof typeof ICONS] ?? Gift, text: a.text }));
 
 // Twee identieke helften, zodat translateX(-50%) exact één periode is (geen sprong in de loop).
 export function AnnouncementBar() {
