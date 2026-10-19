@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+:root {
+  --ivory: #faf9f6;
+  --sand: #f3f1ec;
+  --ink: #1a1a1a;
+  --obsidian: #121212;
+  --muted: #737373;
+  --muted-strong: #5c5c5c;
+  --gold: #c5a880;
+  --line: rgba(0, 0, 0, 0.07);
+  --line-strong: rgba(0, 0, 0, 0.2);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+  --color-obsidian: var(--obsidian);
+  --color-taupe: var(--muted);
+  --color-taupe-strong: var(--muted-strong);
+  --color-gold: var(--gold);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-cormorant);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 8rem;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h2 em,
+h1 em {
+  font-style: italic;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.on-dark :focus-visible,
+[data-vaul-drawer] :focus-visible {
+  outline-color: var(--gold);
+}
+
+/* Browser-oppervlakken in het palet: scrollbar. */
+html {
+  scrollbar-color: rgba(0, 0, 0, 0.25) var(--ivory);
+}
+
+/* Lucide-iconen overal op 1.5px. */
+svg.lucide {
+  stroke-width: 1.5;
+}
+
+/* Tactiele pressable: alleen transform/kleur, met een vaste lijst properties. */
+.press {
+  transition:
+    transform 100ms var(--ease-out),
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    opacity 200ms ease;
+}
+.press:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* Primaire actie is obsidian; goud is voorbehouden aan micro-accenten. */
+.btn-primary {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.btn-primary:hover:not(:disabled) {
+  background: #0d0d0d;
+}
+.btn-light {
+  background: var(--ivory);
+  color: var(--ink);
+}
+.btn-light:hover:not(:disabled) {
+  background: #fffdf9;
+}
+
+.ticker-track {
+  animation: ticker 40s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+/* Modals blijven gecentreerd: translate in de keyframe zodat Tailwind-utilities niet botsen. */
+@keyframes pop-center {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.97);
+  }
+}
+
+/* Cart-teller: kort, eenmalig, ease-out (geen veer). */
+@keyframes bump {
+  40% {
+    transform: scale(1.2);
+  }
+}
+.bump {
+  animation: bump 300ms var(--ease-out);
+}
+
+/* Cadeau ontgrendeld: eenmalige gouden ring. */
+@keyframes ring {
+  from {
+    box-shadow: 0 0 0 0 rgba(197, 168, 128, 0.7);
+  }
+  to {
+    box-shadow: 0 0 0 14px rgba(197, 168, 128, 0);
+  }
+}
+.ring-once {
+  animation: ring 900ms var(--ease-out);
+}
+
+/* Hero-entree in pure CSS (draait zonder JS). rise-y animeert alleen positie, zodat de LCP-kop meteen zichtbaar is. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@keyframes rise-y {
+  from {
+    transform: translateY(12px);
+  }
+}
+.rise {
+  animation: rise 500ms var(--ease-out) both;
+}
+.rise-y {
+  animation: rise-y 500ms var(--ease-out) both;
+}
+
+/* De vaste mobiele CTA op productpagina's mag het einde van de footer niet afdekken. */
+@media (max-width: 1023px) {
+  body:has([data-sticky-cta]) footer {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+[data-vaul-overlay] {
+  background: rgba(18, 18, 18, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  /* Ticker wordt een statische, rustige rij: alleen de eerste helft, centraal. */
+  .ticker-track {
+    width: 100%;
+    justify-content: center;
+  }
+  .ticker-half:last-child {
+    display: none;
+  }
+  .ticker-half {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
