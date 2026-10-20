@@ -13,7 +13,8 @@ const filters = [
 
 export function ProductGrid() {
   const [filter, setFilter] = useState<(typeof filters)[number]["id"]>("all");
-  const shown = products.filter((p) => filter === "all" || p.kind === filter);
+  // Uitverkocht achteraan: de eerste rij toont altijd wat je nu kunt kopen (sort is stabiel, de CMS-volgorde blijft verder intact).
+  const shown = products.filter((p) => filter === "all" || p.kind === filter).sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut));
 
   return (
     <section id="collectie" className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-32">

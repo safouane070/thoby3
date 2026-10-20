@@ -1,6 +1,7 @@
 // Inhoud komt uit content/*.json (bewerkbaar via Pages CMS); dit bestand geeft er typen en afgeleide waarden aan.
 import productData from "@/content/products.json";
 import shop from "@/content/shop.json";
+import site from "@/content/site.json";
 
 // Bron: thoby3.com WooCommerce Store API (gesynchroniseerd met scripts/sync-woo.mjs). Prijzen in EUR incl. btw.
 // Afwijking t.o.v. de gevraagde interface: maten zijn S–XL met lichaamslengte (zoals de echte shop),
@@ -11,6 +12,12 @@ export type Fit = ThobeFit;
 export interface ThobeSize {
   label: string;
   bodyHeight: string;
+  /** Lichaamslengte in cm, uit bodyHeight ("1.70 – 1.78 m" → 170–178); check-content eist dat dit leesbaar is. */
+  min: number;
+  max: number;
+  /** Optionele kledingmaten in cm uit het CMS; leeg = niet tonen. */
+  length: string;
+  chest: Record<ThobeFit, string>;
   availableFits: ThobeFit[];
 }
 
@@ -37,7 +44,25 @@ export interface Product {
 export type WooVariation = { size: string; fit: ThobeFit; giftBox: boolean; wooId: number };
 
 const BOTH: ThobeFit[] = ["slim", "broad"];
-export const SIZES: ThobeSize[] = shop.sizes.map((s) => ({ ...s, availableFits: BOTH }));
+const cm = (m: string) => Math.round(parseFloat(m.replace(",", ".")) * 100);
+export const SIZES: ThobeSize[] = shop.sizes.map((s) => {
+  const [min, max] = s.bodyHeight.match(/\d+[.,]\d+/g)?.map(cm) ?? [0, 0];
+  return { label: s.label, bodyHeight: s.bodyHeight, min, max, length: s.length, chest: { slim: s.chestSlim, broad: s.chestBroad }, availableFits: BOTH };
+});
+/** Toon de kledingmaten-kolommen alleen als ze in het CMS zijn ingevuld. */
+export const HAS_MEASUREMENTS = SIZES.some((s) => s.length || s.chest.slim || s.chest.broad);
+
+/**
+ * Maatadvies op lichaamslengte (cm). Op een grens (bijv. 170) wint de langere maat: korter laten maken kan, langer niet.
+ * Onder de kleinste maat: kleinste + inkorten; boven de grootste: geen advies (contact).
+ */
+export function adviseSize(height: number): { size?: string; note?: "shorten" | "contact" } {
+  if (!Number.isFinite(height) || height < 100 || height > 250) return {};
+  const first = SIZES[0], last = SIZES[SIZES.length - 1];
+  if (height < first.min) return { size: first.label, note: "shorten" };
+  if (height > last.max) return { note: "contact" };
+  return { size: [...SIZES].reverse().find((s) => height >= s.min)!.label };
+}
 export const FITS = shop.fits as { id: ThobeFit; label: string; note: string }[];
 
 // Blur-up voor string-src foto's (Next maakt die alleen zelf voor statische imports): zand, de achtergrond van elke productfoto.
@@ -49,11 +74,17 @@ export const REWARD_FROM = shop.rewardFrom;
 export const GIFT_VALUE = shop.giftValue;
 export const eur = (n: number) => new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(n).replace(/\s/g, "");
 export const SHIPPING_COPY = shop.shippingText;
+export const EXCHANGE_COPY = shop.exchangeText;
+
+/** WhatsApp-link met een vooraf ingevuld bericht. */
+export const whatsapp = (text?: string) => `https://wa.me/${site.contact.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
 
 export const products: Product[] = productData.map((p) => ({
   ...p,
   kind: p.kind as Product["kind"],
   currency: "EUR",
+  // Van-prijs alleen bij een echte, tijdelijke actie (CMS-schakelaar): een vaste doorgestreepte prijs is misleidend (Omnibus).
+  compareAt: shop.showCompareAt && "compareAt" in p ? p.compareAt : undefined,
   colors: "color" in p && p.color ? [p.color] : [],
   sizes: p.kind === "thobe" ? SIZES : [],
   variations: "variations" in p ? (p.variations as WooVariation[]) : undefined,

@@ -2,22 +2,35 @@
   "rewardFrom": 50,
   "giftValue": 13.48,
   "giftBoxPrice": 5,
+  "showCompareAt": false,
   "sizes": [
     {
       "label": "S",
-      "bodyHeight": "1.60 – 1.70 m"
+      "bodyHeight": "1.60 – 1.70 m",
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": ""
     },
     {
       "label": "M",
-      "bodyHeight": "1.70 – 1.78 m"
+      "bodyHeight": "1.70 – 1.78 m",
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": ""
     },
     {
       "label": "L",
-      "bodyHeight": "1.78 – 1.87 m"
+      "bodyHeight": "1.78 – 1.87 m",
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": ""
     },
     {
       "label": "XL",
-      "bodyHeight": "1.87 – 1.95 m"
+      "bodyHeight": "1.87 – 1.95 m",
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": ""
     }
   ],
   "fits": [
@@ -37,5 +50,6 @@
     "description": "De perfecte balans tussen luxe uitstraling en ademend comfort: zachte textuur op de huid en een subtiele glans die de hele dag meegaat."
   },
   "shippingText": "Gratis verzending vanaf €50 in Nederland en de rest van Europa.",
+  "exchangeText": "Gratis maatruil binnen 14 dagen",
   "checkoutLink": "https://thoby3.com/checkout-link/"
 }

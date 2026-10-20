@@ -44,14 +44,42 @@ for (const [i, p] of products.entries()) {
 if (shop.fits.map((f) => f.id).sort().join() !== "broad,slim") fail("Pasvormen: de codes moeten slim en broad zijn");
 if (new Set(shop.sizes.map((s) => s.label)).size !== shop.sizes.length) fail("Maten: een maat komt twee keer voor");
 for (const k of ["rewardFrom", "giftValue", "giftBoxPrice"]) if (!(shop[k] >= 0)) fail(`Winkel: ${k} moet een bedrag zijn`);
+if (typeof shop.showCompareAt !== "boolean") fail("Winkel: 'Van-prijs tonen' moet aan of uit staan");
+
+// Maattabel: de maathulp rekent met de lichaamslengte, dus die moet leesbaar zijn en oplopen zonder gaten.
+let prevMax = 0;
+for (const s of shop.sizes) {
+  const m = (s.bodyHeight ?? "").match(/^\s*(\d[.,]\d{2})\s*[–-]\s*(\d[.,]\d{2})\s*m\s*$/);
+  if (!m) { fail(`Maat ${s.label}: lichaamslengte "${s.bodyHeight}" moet zo geschreven zijn: 1.70 – 1.78 m`); continue; }
+  const [min, max] = [m[1], m[2]].map((v) => Math.round(parseFloat(v.replace(",", ".")) * 100));
+  if (min >= max) fail(`Maat ${s.label}: van-lengte moet kleiner zijn dan tot-lengte`);
+  if (prevMax && min > prevMax) fail(`Maat ${s.label}: er zit een gat in de maattabel (${prevMax} → ${min} cm)`);
+  prevMax = max;
+  for (const [k, label] of [["length", "lengte"], ["chestSlim", "borstomvang slank"], ["chestBroad", "borstomvang breed"]])
+    if (s[k] && !/^\d{2,3}$/.test(String(s[k]).trim())) fail(`Maat ${s.label}: ${label} "${s[k]}" moet een getal in cm zijn (bijv. 112), of leeg`);
+}
 
 for (const [where, slug] of [["Homepagina, uitgelicht product", home.hero.featuredProduct], ["Homepagina, knop cadeaubalk", home.craft.giftProduct]])
   if (!slugs.has(slug)) fail(`${where}: product "${slug}" bestaat niet`);
 image("Homepagina, grote foto", home.hero.image);
 image("Homepagina, blok Vóór 17:00", home.usp.image);
 for (const d of home.fabric.details) image(`Homepagina, detailfoto ${d.label}`, d.image);
-for (const u of home.usp.items) if (!["shield", "leaf", "headset", "truck"].includes(u.icon)) fail(`Homepagina, belofte "${u.title}": onbekend icoon ${u.icon}`);
-for (const a of site.announcements) if (!["gift", "truck", "clock"].includes(a.icon)) fail(`Aankondiging "${a.text}": onbekend icoon ${a.icon}`);
+for (const u of home.usp.items) if (!["truck", "exchange", "whatsapp", "shield"].includes(u.icon)) fail(`Homepagina, belofte "${u.title}": onbekend icoon ${u.icon}`);
+for (const a of site.announcements) if (!["gift", "truck", "clock", "exchange"].includes(a.icon)) fail(`Aankondiging "${a.text}": onbekend icoon ${a.icon}`);
+for (const [i, q] of (home.faq?.items ?? []).entries()) if (!q.q?.trim() || !q.a?.trim()) fail(`Veelgestelde vraag ${i + 1}: vraag en antwoord zijn allebei nodig`);
+if (site.newsletter.action && !/^https:\/\//.test(site.newsletter.action)) fail("Nieuwsbrief: formulier-adres moet met https:// beginnen (of leeg)");
+if (site.newsletter.action && !/^[\w\-[\]]+$/.test(site.newsletter.field ?? "")) fail("Nieuwsbrief: veldnaam voor e-mail ontbreekt (bijv. EMAIL)");
+
+// Reviews: alleen echte klantreviews. Ze verschijnen op de site én als sterren in Google.
+const reviews = read("reviews.json");
+for (const [i, r] of reviews.entries()) {
+  const at = `Review ${i + 1} (${r.name ?? "zonder naam"})`;
+  if (!r.name?.trim()) fail(`${at}: naam ontbreekt`);
+  if (!r.text?.trim()) fail(`${at}: tekst ontbreekt`);
+  if (!Number.isInteger(r.rating) || r.rating < 1 || r.rating > 5) fail(`${at}: sterren moeten 1 t/m 5 zijn`);
+  if (r.product && !slugs.has(r.product)) fail(`${at}: product "${r.product}" bestaat niet`);
+  if (r.date && !/^\d{4}-\d{2}-\d{2}$/.test(r.date)) fail(`${at}: datum moet zo: 2026-10-20`);
+}
 if (!/^\d{8,15}$/.test(site.contact.whatsapp)) fail("Contact: WhatsApp-nummer moet alleen cijfers met landcode zijn (bijv. 31641344799)");
 
 // Juridische pagina's: de HTML uit het CMS wordt letterlijk getoond, dus alleen een vaste set tags en veilige links mag erin.
@@ -81,10 +109,12 @@ for (const p of legal) {
   }
 }
 
-// Wettelijk verplicht voor een webshop (art. 3:15d BW): pas bij de echte livegang afgedwongen.
-if (process.env.SITE_LIVE === "true")
-  for (const [k, label] of [["name", "Bedrijfsnaam"], ["kvk", "KvK-nummer"], ["btw", "Btw-id"], ["address", "Vestigingsadres"]])
-    if (!site.company?.[k]?.trim()) fail(`Bedrijfsgegevens: ${label} ontbreekt (verplicht voor livegang)`);
+// Wettelijk verplicht voor een webshop (art. 3:15d BW): bij de echte livegang een fout, op de preview een waarschuwing.
+for (const [k, label] of [["name", "Bedrijfsnaam"], ["kvk", "KvK-nummer"], ["btw", "Btw-id"], ["address", "Vestigingsadres"]])
+  if (!site.company?.[k]?.trim()) {
+    const msg = `Bedrijfsgegevens: ${label} ontbreekt (verplicht voor livegang)`;
+    if (process.env.SITE_LIVE === "true") fail(msg); else console.warn(`! ${msg}`);
+  }
 
 if (errors.length) {
   console.error(`\nDe inhoud heeft ${errors.length} fout(en); de site is niet opnieuw gepubliceerd:\n- ${errors.join("\n- ")}\n`);

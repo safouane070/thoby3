@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
-import { Check, ChevronRight, Gift, Heart, Layers } from "lucide-react";
+import { ArrowLeftRight, Bell, Check, ChevronRight, Gift, Heart, Layers, MessageCircle, Truck, X } from "lucide-react";
 import { ToggleGroup } from "radix-ui";
-import { BLUR, FITS, GIFT_BOX_PRICE, GIFT_VALUE, SIZES, discountPct, isThobe, products, type Fit, type Product } from "@/lib/products";
+import { BLUR, EXCHANGE_COPY, FITS, GIFT_BOX_PRICE, GIFT_VALUE, HAS_MEASUREMENTS, SHIPPING_COPY, SIZES, discountPct, isThobe, products, whatsapp, type Fit, type Product } from "@/lib/products";
 import { FabricSpotlight } from "./FabricSpotlight";
 import { FitSilhouette } from "./FitSilhouette";
 import { FitToggle } from "./FitToggle";
 import { Price } from "./Price";
+import { SizeAdvisor } from "./SizeAdvisor";
 import { useStore } from "./StoreProvider";
 
 // Vaul hoort niet in de eerste bundel: de viewer laadt bij hover/focus op de foto, of bij de klik zelf.
@@ -48,7 +49,7 @@ function Gallery({ product }: { product: Product }) {
       <div onPointerMove={move} onPointerLeave={() => setZoom(false)} className="relative order-1 aspect-[3/4] cursor-zoom-in overflow-hidden border border-line bg-sand lg:order-2">
         <div ref={inner} className={`absolute inset-0 transition-transform duration-200 ease-out ${zoom ? "scale-[2.2]" : "scale-100"}`}>
           {product.gallery.map((src, i) => seen.includes(i) && (
-            <Image key={src} src={src} alt={i === img ? `${product.name}, foto ${i + 1}` : ""} fill loading={i === 0 ? "eager" : undefined} fetchPriority={i === 0 ? "high" : undefined} sizes="(min-width:1024px) 55vw, 100vw" quality={90}
+            <Image key={src} src={src} alt={i === img ? `${product.name}, foto ${i + 1}` : ""} fill loading={i === 0 ? "eager" : undefined} fetchPriority={i === 0 ? "high" : undefined} sizes="(min-width:1024px) 55vw, 100vw"
               placeholder="blur" blurDataURL={BLUR}
               className={`object-cover mix-blend-multiply transition-opacity duration-300 ease-in-out ${i === img ? "opacity-100" : "opacity-0"}`} />
           ))}
@@ -98,6 +99,8 @@ export function ProductDetail({ product }: { product: Product }) {
   const thobe = isThobe(product);
   const [giftBox, setGiftBox] = useState(false);
   const [missing, setMissing] = useState(false);
+  // Mobiel: de vaste CTA klapt zelf een maatkiezer uit (scrollen naar de maten bleek onbetrouwbaar en kost een extra stap).
+  const [picker, setPicker] = useState(false);
   const wished = wishlist.includes(product.slug);
 
   // Maat en pasvorm leven in de URL (?size=M&fit=broad): delen of herladen toont exact dezelfde keuze.
@@ -121,6 +124,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
   const submit = () => {
     if (product.soldOut) return;
+    setPicker(false);
     if (thobe && !size) {
       setMissing(true);
       // Op mobiel staat de CTA vast onderin; breng de maatkeuze zelf in beeld en focus.
@@ -132,7 +136,15 @@ export function ProductDetail({ product }: { product: Product }) {
     add(thobe ? { slug: product.slug, size, fit, giftBox } : { slug: product.slug });
   };
 
-  const label = product.soldOut ? "Uitverkocht" : thobe && !size ? "Kies je maat" : "In winkelwagen";
+  const label = thobe && !size ? "Kies je maat" : "In winkelwagen";
+  const fitLabel = FITS.find((f) => f.id === fit)!.label;
+  const sizeInfo = SIZES.find((s) => s.label === size);
+  const notify = whatsapp(`Hoi THOBY3, laat me weten wanneer de ${thobe ? "Thobe " : ""}${product.name} weer op voorraad is${size ? ` (maat ${size}, ${fitLabel.toLowerCase()})` : ""}.`);
+  const pickFromSticky = (s: string) => {
+    chooseSize(s);
+    setPicker(false);
+    add({ slug: product.slug, size: s, fit, giftBox });
+  };
   const total = product.price + (giftBox ? GIFT_BOX_PRICE : 0);
   const cta = "press btn-primary flex-1 py-4 text-xs font-medium uppercase tracking-[0.14em] disabled:cursor-not-allowed disabled:opacity-50";
 
@@ -178,7 +190,13 @@ export function ProductDetail({ product }: { product: Product }) {
                   ))}
                 </ToggleGroup.Root>
                 {missing && !size && <p role="alert" className="mt-2 text-sm text-red-700">Kies eerst een maat.</p>}
+                {HAS_MEASUREMENTS && sizeInfo && (sizeInfo.chest[fit] || sizeInfo.length) && (
+                  <p className="mt-2 text-xs text-taupe-strong">
+                    Maat {sizeInfo.label} · {fitLabel}: {[sizeInfo.chest[fit] && `borstomvang ${sizeInfo.chest[fit]} cm`, sizeInfo.length && `lengte ${sizeInfo.length} cm`].filter(Boolean).join(", ")}
+                  </p>
+                )}
                 <p className="mt-2 text-xs text-taupe">Kort en vol postuur? Kies een lange maat en laat deze inkorten.</p>
+                {!product.soldOut && <SizeAdvisor onPick={chooseSize} className="mt-5 border-t border-line pt-5" />}
               </div>
 
               <label className="flex cursor-pointer items-center gap-4 border border-line p-4 transition-colors duration-200 hover:border-line-strong">
@@ -189,16 +207,33 @@ export function ProductDetail({ product }: { product: Product }) {
               </label>
 
               <div className="flex flex-col gap-3 text-[0.8125rem] sm:flex-row sm:items-center sm:justify-between">
-                <p className="flex items-center gap-2"><Gift size={16} className="shrink-0 text-ink" aria-hidden /> {product.badge}, t.w.v. {money(GIFT_VALUE)}</p>
+                {product.badge ? <p className="flex items-center gap-2"><Gift size={16} className="shrink-0 text-ink" aria-hidden /> {product.badge}, t.w.v. {money(GIFT_VALUE)}</p> : <span />}
                 <FabricSpotlight className="press flex min-h-12 items-center gap-2 underline lg:min-h-8 decoration-line-strong underline-offset-4 hover:decoration-ink"><Layers size={16} aria-hidden /> Over de stof</FabricSpotlight>
               </div>
             </div>
           )}
 
+          {product.soldOut && (
+            <div className="mt-8 border border-line bg-sand p-5">
+              <p className="font-medium">Binnenkort weer op voorraad</p>
+              <p className="mt-1 text-sm text-taupe-strong">Stuur ons een berichtje, dan laten we het je als eerste weten.</p>
+            </div>
+          )}
+
           <div className="mt-8 hidden gap-3 lg:flex">
-            <button onClick={submit} disabled={product.soldOut} className={cta}>{label} · {money(total)}</button>
+            {product.soldOut
+              ? <a href={notify} target="_blank" rel="noopener noreferrer" className={`${cta} flex items-center justify-center gap-2`}><Bell size={16} aria-hidden /> Laat het me weten</a>
+              : <button onClick={submit} className={cta}>{label} · {money(total)}</button>}
             <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line hover:border-line-strong"><Heart size={18} className={wished ? "fill-ink text-ink" : ""} /></button>
           </div>
+
+          <ul className="mt-8 space-y-3 text-[0.8125rem]">
+            <li className="flex items-start gap-3"><Truck size={16} className="mt-0.5 shrink-0" aria-hidden /> {SHIPPING_COPY} Vóór 17:00 besteld, vandaag verzonden.</li>
+            {thobe && <li className="flex items-start gap-3"><ArrowLeftRight size={16} className="mt-0.5 shrink-0" aria-hidden /> {EXCHANGE_COPY}: past hij niet, dan ruil je kosteloos.</li>}
+            <li className="flex items-start gap-3"><MessageCircle size={16} className="mt-0.5 shrink-0" aria-hidden />
+              <a href={whatsapp(`Hoi THOBY3, ik heb een vraag over de ${thobe ? "Thobe " : ""}${product.name}.`)} target="_blank" rel="noopener noreferrer" className="underline decoration-line-strong underline-offset-4 hover:decoration-ink">Vraag over je maat? Stuur ons een WhatsApp</a>
+            </li>
+          </ul>
 
           <div className="mt-12 space-y-4 border-t border-line pt-8 text-sm leading-relaxed text-taupe">
             {product.description.map((d) => <p key={d}>{d}</p>)}
@@ -206,9 +241,32 @@ export function ProductDetail({ product }: { product: Product }) {
         </div>
       </div>
 
-      <div data-sticky-cta className="fixed inset-x-0 bottom-0 z-30 flex gap-2 border-t border-line bg-ivory/90 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
-        <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line"><Heart size={18} className={wished ? "fill-ink text-ink" : ""} /></button>
-        <button onClick={submit} disabled={product.soldOut} className={cta}>{label} · {money(total)}</button>
+      <div data-sticky-cta className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
+        {picker && (
+          <div id="sticky-sizes" className="mb-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Kies je maat</p>
+              <button onClick={() => setPicker(false)} aria-label="Maatkeuze sluiten" className="press -m-2 flex h-12 w-12 items-center justify-center"><X size={18} /></button>
+            </div>
+            <FitToggle value={fit} onChange={chooseFit} id="fit-sticky" />
+            <div className="grid grid-cols-4 gap-2">
+              {SIZES.map((s) => (
+                <button key={s.label} onClick={() => pickFromSticky(s.label)} className="press min-h-12 border border-line py-2.5 hover:border-ink">
+                  <span className="block font-serif text-xl">{s.label}</span>
+                  <span className="block text-[0.625rem] text-taupe">{s.bodyHeight.replace(" m", "")}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="flex gap-2">
+          <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line"><Heart size={18} className={wished ? "fill-ink text-ink" : ""} /></button>
+          {product.soldOut
+            ? <a href={notify} target="_blank" rel="noopener noreferrer" className={`${cta} flex items-center justify-center gap-2`}><Bell size={16} aria-hidden /> Laat het me weten</a>
+            : thobe && !size
+              ? <button onClick={() => setPicker((v) => !v)} aria-expanded={picker} aria-controls="sticky-sizes" className={cta}>{label} · {money(total)}</button>
+              : <button onClick={submit} className={cta}>{label} · {money(total)}</button>}
+        </div>
       </div>
     </div>
   );

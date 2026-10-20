@@ -1,27 +1,40 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import site from "@/content/site.json";
 
+const { action, field } = site.newsletter;
+
+// Zonder gekoppelde maildienst (CMS: Nieuwsbrief → Formulier-adres) tonen we geen formulier: een "Welkom!" zonder
+// dat het adres ergens wordt opgeslagen, is een belofte die we niet nakomen. Dan wijzen we naar Instagram.
 export function Newsletter() {
-  const [state, setState] = useState<"idle" | "error" | "done">("idle");
+  const [error, setError] = useState(false);
+
+  if (!action) {
+    return (
+      <a href={site.contact.instagram} target="_blank" rel="noopener noreferrer" className="press inline-flex min-h-12 items-center gap-2 border-b border-ivory/40 py-3 text-xs font-medium uppercase tracking-[0.14em] hover:border-gold">
+        Volg ons op Instagram <ArrowRight size={14} aria-hidden />
+      </a>
+    );
+  }
+
+  // Het formulier post rechtstreeks naar de maildienst (Mailchimp, Brevo, …); die toont zelf de bevestiging.
   const submit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const email = String(new FormData(e.currentTarget).get("email") ?? "").trim();
-    // Demo: geen backend. Koppel hier je mailprovider (bijv. Klaviyo/Mailchimp).
-    setState(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "done" : "error");
+    const email = String(new FormData(e.currentTarget).get(field) ?? "").trim();
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setError(!ok);
+    if (!ok) e.preventDefault();
   };
-  return state === "done" ? (
-    <p className="flex items-center gap-3 border border-gold/60 px-5 py-4 text-sm text-ivory"><Check size={16} aria-hidden /> Welkom bij THOBY3. Je hoort als eerste van onze nieuwe drops.</p>
-  ) : (
-    <form onSubmit={submit} noValidate className="max-w-md">
+  return (
+    <form action={action} method="post" target="_blank" onSubmit={submit} noValidate className="max-w-md">
       <label htmlFor="nl-email" className="sr-only">E-mailadres</label>
-      <div className={`flex border-b ${state === "error" ? "border-red-400" : "border-ivory/40 focus-within:border-gold"} transition-colors`}>
-        <input id="nl-email" name="email" type="email" autoComplete="email" placeholder="Je e-mailadres" aria-invalid={state === "error"} aria-describedby={state === "error" ? "nl-err" : undefined}
+      <div className={`flex border-b ${error ? "border-red-400" : "border-ivory/40 focus-within:border-gold"} transition-colors`}>
+        <input id="nl-email" name={field} type="email" autoComplete="email" placeholder="Je e-mailadres" aria-invalid={error} aria-describedby={error ? "nl-err" : undefined}
           className="min-w-0 flex-1 bg-transparent py-4 text-sm placeholder:text-ivory/60 focus:outline-none" />
         <button type="submit" className="press flex items-center gap-2 pl-4 text-xs font-medium uppercase tracking-[0.14em] text-ivory hover:text-ivory/70">Aanmelden <ArrowRight size={14} aria-hidden /></button>
       </div>
-      {state === "error" && <p id="nl-err" role="alert" className="mt-2 text-xs text-red-300">Vul een geldig e-mailadres in.</p>}
+      {error && <p id="nl-err" role="alert" className="mt-2 text-xs text-red-300">Vul een geldig e-mailadres in.</p>}
     </form>
   );
 }

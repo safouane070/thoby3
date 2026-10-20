@@ -104,17 +104,6 @@ svg.lucide {
   background: #fffdf9;
 }
 
-.ticker-track {
-  animation: ticker 40s linear infinite;
-}
-.ticker:hover .ticker-track {
-  animation-play-state: paused;
-}
-@keyframes ticker {
-  to {
-    transform: translateX(-50%);
-  }
-}
 
 @keyframes pop {
   from {
@@ -246,17 +235,5 @@ svg.lucide {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
-  }
-  /* Ticker wordt een statische, rustige rij: alleen de eerste helft, centraal. */
-  .ticker-track {
-    width: 100%;
-    justify-content: center;
-  }
-  .ticker-half:last-child {
-    display: none;
-  }
-  .ticker-half {
-    flex-wrap: wrap;
-    justify-content: center;
   }
 }

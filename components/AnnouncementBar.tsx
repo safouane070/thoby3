@@ -1,24 +1,35 @@
-import { Clock, Gift, Truck } from "lucide-react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { ArrowLeftRight, Clock, Gift, Truck } from "lucide-react";
 import site from "@/content/site.json";
 
-const ICONS = { gift: Gift, truck: Truck, clock: Clock };
+const ICONS = { gift: Gift, truck: Truck, clock: Clock, exchange: ArrowLeftRight };
 const items = site.announcements.map((a) => ({ icon: ICONS[a.icon as keyof typeof ICONS] ?? Gift, text: a.text }));
 
-// Twee identieke helften, zodat translateX(-50%) exact één periode is (geen sprong in de loop).
+// Eén rustige boodschap tegelijk (wissel elke 4,5 s) in plaats van een lopende band: leesbaar, en past bij de rest van de site.
+// Pauzeert bij hover/focus; met "minder beweging" blijft de eerste staan.
 export function AnnouncementBar() {
-  const half = [0, 1].map((n) => (
-    <div key={n} className="ticker-half flex shrink-0" aria-hidden={n === 1}>
-      {items.concat(items).map(({ icon: Icon, text }, i) => (
-        <span key={i} className="flex shrink-0 items-center gap-3 px-8 text-xs uppercase tracking-[0.18em]">
-          <Icon size={14} className="text-gold" aria-hidden /> {text}
-          <span className="ml-8 h-1 w-1 rounded-full bg-gold/60" aria-hidden />
-        </span>
-      ))}
-    </div>
-  ));
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused || items.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => setI((n) => (n + 1) % items.length), 4500);
+    return () => clearInterval(t);
+  }, [paused]);
+
   return (
-    <div className="ticker overflow-hidden bg-obsidian py-2.5 text-ivory" role="region" aria-label="Aanbiedingen">
-      <div className="ticker-track flex w-max">{half}</div>
+    <div role="region" aria-label="Aanbiedingen" className="bg-obsidian text-ivory"
+      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+      <div className="relative mx-auto h-9 max-w-[1440px] overflow-hidden">
+        {items.map(({ icon: Icon, text }, n) => (
+          <p key={text} aria-hidden={n !== i}
+            className={`absolute inset-0 flex items-center justify-center gap-2.5 whitespace-nowrap px-3 text-center text-[0.625rem] uppercase tracking-[0.08em] sm:px-5 sm:text-[0.6875rem] sm:tracking-[0.16em] transition-[opacity,transform] ease-[cubic-bezier(0.16,1,0.3,1)] ${n === i ? "translate-y-0 opacity-100 delay-200 duration-500" : "-translate-y-1.5 opacity-0 duration-200"}`}>
+            <Icon size={13} className="hidden shrink-0 text-gold min-[400px]:block" aria-hidden /> {text}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
