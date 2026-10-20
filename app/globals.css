@@ -184,6 +184,54 @@ svg.lucide {
   }
 }
 
+/* Juridische pagina's (HTML uit het CMS): rustige leesopmaak in de huisstijl. */
+.legal {
+  line-height: 1.7;
+  color: var(--muted-strong);
+}
+.legal h2 {
+  margin: 3rem 0 1rem;
+  font-family: var(--font-cormorant), serif;
+  font-size: 2rem;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.legal h3 {
+  margin: 2rem 0 0.5rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.legal p,
+.legal ul,
+.legal ol,
+.legal table {
+  margin: 0.75rem 0;
+}
+.legal ul,
+.legal ol {
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+.legal a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.legal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.legal th,
+.legal td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.6rem 0.5rem 0.6rem 0;
+  text-align: left;
+}
+.legal th {
+  font-weight: 500;
+  color: var(--ink);
+}
+
 [data-vaul-overlay] {
   background: rgba(18, 18, 18, 0.4);
 }

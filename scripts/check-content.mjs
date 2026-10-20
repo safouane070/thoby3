@@ -54,6 +54,38 @@ for (const u of home.usp.items) if (!["shield", "leaf", "headset", "truck"].incl
 for (const a of site.announcements) if (!["gift", "truck", "clock"].includes(a.icon)) fail(`Aankondiging "${a.text}": onbekend icoon ${a.icon}`);
 if (!/^\d{8,15}$/.test(site.contact.whatsapp)) fail("Contact: WhatsApp-nummer moet alleen cijfers met landcode zijn (bijv. 31641344799)");
 
+// Juridische pagina's: de HTML uit het CMS wordt letterlijk getoond, dus alleen een vaste set tags en veilige links mag erin.
+const legal = read("legal.json");
+const TAGS = new Set(["h2", "h3", "p", "ul", "ol", "li", "strong", "b", "em", "i", "br", "a", "table", "thead", "tbody", "tr", "th", "td"]);
+const RESERVED = new Set(["product", "img", "_img", "_next", "api"]);
+const legalSlugs = new Set();
+for (const p of legal) {
+  const at = `Juridische pagina "${p.title ?? p.slug}"`;
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(p.slug ?? "") || RESERVED.has(p.slug)) fail(`${at}: ongeldig adres "${p.slug}"`);
+  if (legalSlugs.has(p.slug)) fail(`${at}: adres "${p.slug}" komt twee keer voor`);
+  legalSlugs.add(p.slug);
+  if (!p.title) fail(`${at}: titel ontbreekt`);
+  for (const [, close, name, attrs] of (p.body ?? "").matchAll(/<(\/?)([a-zA-Z0-9]+)([^>]*)>/g)) {
+    const tag = name.toLowerCase();
+    if (!TAGS.has(tag)) { fail(`${at}: <${tag}> is niet toegestaan`); continue; }
+    if (close) continue;
+    const rest = attrs.replace(/\s*\/$/, "");
+    if (tag !== "a") { if (rest.trim()) fail(`${at}: <${tag}> mag geen attributen hebben (${rest.trim().slice(0, 40)})`); continue; }
+    const found = [...rest.matchAll(/([a-zA-Z-]+)\s*=\s*("([^"]*)"|'([^']*)')/g)];
+    if (rest.replace(/([a-zA-Z-]+)\s*=\s*("[^"]*"|'[^']*')/g, "").trim()) fail(`${at}: onleesbare link-attributen`);
+    for (const [, key, , dq, sq] of found) {
+      const value = dq ?? sq ?? "";
+      if (!["href", "title", "target", "rel"].includes(key.toLowerCase())) fail(`${at}: link-attribuut ${key} is niet toegestaan`);
+      if (key.toLowerCase() === "href" && !/^(https?:|mailto:|tel:|\/|#)/i.test(value.trim())) fail(`${at}: link "${value.slice(0, 40)}" is niet toegestaan`);
+    }
+  }
+}
+
+// Wettelijk verplicht voor een webshop (art. 3:15d BW): pas bij de echte livegang afgedwongen.
+if (process.env.SITE_LIVE === "true")
+  for (const [k, label] of [["name", "Bedrijfsnaam"], ["kvk", "KvK-nummer"], ["btw", "Btw-id"], ["address", "Vestigingsadres"]])
+    if (!site.company?.[k]?.trim()) fail(`Bedrijfsgegevens: ${label} ontbreekt (verplicht voor livegang)`);
+
 if (errors.length) {
   console.error(`\nDe inhoud heeft ${errors.length} fout(en); de site is niet opnieuw gepubliceerd:\n- ${errors.join("\n- ")}\n`);
   process.exit(1);
