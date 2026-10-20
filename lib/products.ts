@@ -54,11 +54,12 @@ export const HAS_MEASUREMENTS = SIZES.some((s) => s.length || s.chest.slim || s.
 
 /**
  * Maatadvies op lichaamslengte (cm). Op een grens (bijv. 170) wint de langere maat: korter laten maken kan, langer niet.
- * Onder de kleinste maat: kleinste + inkorten; boven de grootste: geen advies (contact).
+ * Tot 10 cm onder de kleinste maat: kleinste + inkorten. Daaronder of boven de grootste: persoonlijk advies.
  */
 export function adviseSize(height: number): { size?: string; note?: "shorten" | "contact" } {
   if (!Number.isFinite(height) || height < 100 || height > 250) return {};
   const first = SIZES[0], last = SIZES[SIZES.length - 1];
+  if (height < first.min - 10) return { note: "contact" };
   if (height < first.min) return { size: first.label, note: "shorten" };
   if (height > last.max) return { note: "contact" };
   return { size: [...SIZES].reverse().find((s) => height >= s.min)!.label };

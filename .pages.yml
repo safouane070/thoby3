@@ -167,6 +167,15 @@ content:
           - { name: title, label: Kop, type: string }
           - { name: titleItalic, label: Kop (schuin deel), type: string }
           - { name: text, label: Tekst, type: text }
+          - { name: image, label: Detailfoto, type: image, description: "Staande foto (4:5) van een detail, bijv. de manchet met het merkteken." }
+          - { name: imageAlt, label: Beschrijving van de foto, type: string }
+          - name: facts
+            label: Kenmerken (3 stuks)
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Kop, type: string }
+              - { name: value, label: Waarde, type: string }
           - { name: button, label: Tekst knop, type: string }
           - { name: giftText, label: Tekst cadeaubalk (de waarde komt er automatisch achter), type: string }
           - { name: giftButton, label: Tekst knop cadeaubalk, type: string }

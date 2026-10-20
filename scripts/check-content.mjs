@@ -63,6 +63,7 @@ for (const [where, slug] of [["Homepagina, uitgelicht product", home.hero.featur
   if (!slugs.has(slug)) fail(`${where}: product "${slug}" bestaat niet`);
 image("Homepagina, grote foto", home.hero.image);
 image("Homepagina, blok Vóór 17:00", home.usp.image);
+image("Homepagina, blok Kwaliteit", home.craft.image);
 for (const d of home.fabric.details) image(`Homepagina, detailfoto ${d.label}`, d.image);
 for (const u of home.usp.items) if (!["truck", "exchange", "whatsapp", "shield"].includes(u.icon)) fail(`Homepagina, belofte "${u.title}": onbekend icoon ${u.icon}`);
 for (const a of site.announcements) if (!["gift", "truck", "clock", "exchange"].includes(a.icon)) fail(`Aankondiging "${a.text}": onbekend icoon ${a.icon}`);

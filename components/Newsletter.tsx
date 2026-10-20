@@ -31,7 +31,7 @@ export function Newsletter() {
       <label htmlFor="nl-email" className="sr-only">E-mailadres</label>
       <div className={`flex border-b ${error ? "border-red-400" : "border-ivory/40 focus-within:border-gold"} transition-colors`}>
         <input id="nl-email" name={field} type="email" autoComplete="email" placeholder="Je e-mailadres" aria-invalid={error} aria-describedby={error ? "nl-err" : undefined}
-          className="min-w-0 flex-1 bg-transparent py-4 text-sm placeholder:text-ivory/60 focus:outline-none" />
+          className="field-input min-w-0 flex-1 bg-transparent py-4 text-sm placeholder:text-ivory/60" />
         <button type="submit" className="press flex items-center gap-2 pl-4 text-xs font-medium uppercase tracking-[0.14em] text-ivory hover:text-ivory/70">Aanmelden <ArrowRight size={14} aria-hidden /></button>
       </div>
       {error && <p id="nl-err" role="alert" className="mt-2 text-xs text-red-300">Vul een geldig e-mailadres in.</p>}

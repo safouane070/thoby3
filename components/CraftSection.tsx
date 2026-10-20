@@ -4,19 +4,30 @@ import { Gift } from "lucide-react";
 import home from "@/content/home.json";
 import { GIFT_VALUE } from "@/lib/products";
 import { Price } from "./Price";
+import { ClipReveal } from "./ClipReveal";
 
 export function CraftSection() {
   return (
     <>
-      <section id="vakmanschap" className="on-dark relative isolate flex min-h-[80svh] items-end overflow-hidden bg-obsidian text-ivory">
-        <Image src="/img/hero.jpg" alt="" fill sizes="100vw" className="-z-20 origin-bottom scale-[2.6] object-cover object-[50%_100%] saturate-[0.8] sepia-[0.18]" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-obsidian/90 via-obsidian/50 to-obsidian/20" />
-        <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-40 lg:px-10 lg:pb-24">
-          <h2 className="max-w-3xl font-serif text-5xl leading-[0.98] md:text-7xl">{home.craft.title} <em>{home.craft.titleItalic}</em></h2>
-          <p className="mt-8 max-w-xl leading-relaxed text-ivory/80">
-            {home.craft.text}
-          </p>
-          <Link href="/#collectie" className="press btn-light mt-10 inline-block px-8 py-4 text-sm font-medium">{home.craft.button}</Link>
+      {/* Scherpe detailfoto naast de tekst (zelfde opbouw als het pasvorm-blok), i.p.v. een opgeblazen uitsnede van de hero. */}
+      <section id="vakmanschap" className="on-dark bg-obsidian py-24 text-ivory lg:py-32">
+        <div className="mx-auto grid max-w-[1440px] items-center gap-14 px-5 lg:grid-cols-[6fr_5fr] lg:gap-24 lg:px-10">
+          <div>
+            <h2 className="max-w-xl font-serif text-5xl leading-[0.98] md:text-7xl">{home.craft.title} <em>{home.craft.titleItalic}</em></h2>
+            <p className="mt-8 max-w-lg leading-relaxed text-ivory/75">{home.craft.text}</p>
+            <dl className="mt-10 grid max-w-lg grid-cols-3 border-t border-white/15">
+              {home.craft.facts.map((f) => (
+                <div key={f.label} className="pr-4 pt-5">
+                  <dt className="text-xs text-ivory/55">{f.label}</dt>
+                  <dd className="mt-1.5 font-serif text-xl leading-tight sm:text-2xl">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <Link href="/#collectie" className="press btn-light mt-10 inline-flex min-h-12 items-center px-8 py-4 text-sm font-medium">{home.craft.button}</Link>
+          </div>
+          <ClipReveal className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden lg:max-w-none">
+            <Image src={home.craft.image} alt={home.craft.imageAlt} fill sizes="(min-width:1024px) 40vw, 100vw" className="object-cover object-[60%_30%]" />
+          </ClipReveal>
         </div>
       </section>
 
