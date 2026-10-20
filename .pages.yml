@@ -206,3 +206,22 @@ content:
         fields:
           - { name: title, label: Titel in Google, type: string }
           - { name: description, label: Omschrijving in Google, type: text }
+      - name: company
+        label: Bedrijfsgegevens (wettelijk verplicht — zonder deze gegevens kan de site niet live)
+        type: object
+        fields:
+          - { name: name, label: Bedrijfsnaam, type: string }
+          - { name: kvk, label: KvK-nummer, type: string }
+          - { name: btw, label: "Btw-identificatienummer (bijv. NL001234567B01)", type: string }
+          - { name: address, label: "Vestigingsadres (straat, postcode, plaats)", type: string }
+
+  - name: legal
+    label: Juridische pagina's
+    type: file
+    path: content/legal.json
+    format: json
+    list: true
+    fields:
+      - { name: slug, label: Adres van de pagina (niet wijzigen), type: string, readonly: true }
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: body, label: Tekst, type: rich-text, description: "Koppen, alinea's, lijsten, links en tabellen. Afbeeldingen en scripts worden geweigerd." }

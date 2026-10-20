@@ -1,0 +1,23 @@
+# Oude WordPress-adressen (uit thoby3.com/wp-sitemap.xml) naar de nieuwe site, zodat links en Google-resultaten blijven werken.
+# /cart, /checkout en /my-account zijn hier bewust niet: die horen bij WooCommerce en verhuizen bij de livegang mee (zie README).
+
+/product/sewak                   /product/siwak            301
+/product/sewak/                  /product/siwak            301
+/product/thobe-caramel-sands     /product/caramel-sands    301
+/product/thobe-caramel-sands/    /product/caramel-sands    301
+
+/shop                            /#collectie               301
+/shop/                           /#collectie               301
+/product-category/*              /#collectie               301
+/about-us                        /#vakmanschap             301
+/about-us/                       /#vakmanschap             301
+/contact                         /#contact                 301
+/contact/                        /#contact                 301
+/wishlist/                       /                         301
+/compare/                        /                         301
+
+# Demo-pagina's van het WordPress-thema
+/portfolio/*                     /                         301
+/project-cat/*                   /                         301
+/author/*                        /                         301
+/woodmart_slider/*               /                         301

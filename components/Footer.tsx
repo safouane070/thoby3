@@ -7,6 +7,9 @@ import { isThobe, products } from "@/lib/products";
 
 const { contact } = site;
 const tel = contact.phone.replace(/[^+\d]/g, "");
+// Wettelijk verplichte bedrijfsgegevens; alleen ingevulde velden verschijnen (bij livegang eist check-content ze allemaal).
+const { company } = site;
+const companyLine = [company.kvk && `KvK ${company.kvk}`, company.btw && `Btw ${company.btw}`, company.address].filter(Boolean).join(" · ");
 
 // 48px tapdoel op touch, 32px op desktop; de hoogte vervangt de oude space-y-3.
 const LINK = "inline-flex min-h-12 items-center gap-2 transition-colors duration-200 hover:text-gold lg:min-h-8";
@@ -39,7 +42,13 @@ export function Footer() {
             <h3 className="text-sm font-medium text-ivory">Juridisch</h3>
             <ul className="mt-3 text-sm text-ivory/75">
               {site.legal.map((l) => (
-                <li key={l.url}><a href={l.url} target="_blank" rel="noopener noreferrer" className={LINK}>{l.label}</a></li>
+                <li key={l.url}>
+                  {l.url.startsWith("/") ? (
+                    <Link href={l.url} className={LINK}>{l.label}</Link>
+                  ) : (
+                    <a href={l.url} target="_blank" rel="noopener noreferrer" className={LINK}>{l.label}</a>
+                  )}
+                </li>
               ))}
             </ul>
           </nav>
@@ -56,7 +65,10 @@ export function Footer() {
         </div>
 
         <div className="mt-20 flex flex-col items-start justify-between gap-6 border-t border-ivory/15 pt-8 md:flex-row md:items-center">
-          <p className="text-xs text-ivory/50">© {new Date().getFullYear()} THOBY3®. Alle rechten voorbehouden.</p>
+          <div className="space-y-1 text-xs text-ivory/50">
+            <p>© {new Date().getFullYear()} {company.name || "THOBY3"}®. Alle rechten voorbehouden.</p>
+            {companyLine && <p>{companyLine}</p>}
+          </div>
           <div className="flex flex-col gap-3 md:items-end">
             <ul className="flex flex-wrap gap-2" aria-label="Betaalmethodes">
               {PAYMENT_METHODS.map((m) => (

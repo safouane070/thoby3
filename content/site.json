@@ -4,9 +4,18 @@
     "description": "Luxe thobes voor heren in satijn geweven katoen. Elke maat in twee pasvormen: slank en breed. Vóór 17:00 besteld, vandaag verzonden."
   },
   "announcements": [
-    { "icon": "gift", "text": "Vanaf €50 GRATIS Musk & Siwak t.w.v. €13,48" },
-    { "icon": "truck", "text": "Gratis verzending vanaf €50 in NL en EU" },
-    { "icon": "clock", "text": "Vóór 17:00 besteld, vandaag verzonden" }
+    {
+      "icon": "gift",
+      "text": "Vanaf €50 GRATIS Musk & Siwak t.w.v. €13,48"
+    },
+    {
+      "icon": "truck",
+      "text": "Gratis verzending vanaf €50 in NL en EU"
+    },
+    {
+      "icon": "clock",
+      "text": "Vóór 17:00 besteld, vandaag verzonden"
+    }
   ],
   "contact": {
     "email": "info@thoby3.com",
@@ -15,11 +24,23 @@
     "instagram": "https://www.instagram.com/thoby3.official"
   },
   "legal": [
-    { "label": "Algemene voorwaarden & privacy (AVG)", "url": "https://thoby3.com/algemene-voorwaarden-privacy-beleid/" },
-    { "label": "Levering & retour", "url": "https://thoby3.com/levering-retourbeleid/" }
+    {
+      "label": "Algemene voorwaarden & privacy (AVG)",
+      "url": "/algemene-voorwaarden-privacy-beleid"
+    },
+    {
+      "label": "Levering & retour",
+      "url": "/levering-retourbeleid"
+    }
   ],
   "newsletter": {
     "title": "Als eerste weten van nieuwe drops",
     "text": "Schrijf je in voor exclusieve collecties en vroege toegang."
+  },
+  "company": {
+    "name": "THOBY3",
+    "kvk": "",
+    "btw": "",
+    "address": ""
   }
 }
