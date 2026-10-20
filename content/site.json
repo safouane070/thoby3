@@ -13,6 +13,10 @@
       "text": "Gratis verzending vanaf €50 in NL en EU"
     },
     {
+      "icon": "exchange",
+      "text": "Gratis maatruil binnen 14 dagen"
+    },
+    {
       "icon": "clock",
       "text": "Vóór 17:00 besteld, vandaag verzonden"
     }
@@ -35,7 +39,9 @@
   ],
   "newsletter": {
     "title": "Als eerste weten van nieuwe drops",
-    "text": "Schrijf je in voor exclusieve collecties en vroege toegang."
+    "text": "Schrijf je in voor exclusieve collecties en vroege toegang.",
+    "action": "",
+    "field": "EMAIL"
   },
   "company": {
     "name": "THOBY3",

@@ -15,6 +15,7 @@ const nav = [
   { id: "collectie", href: "/#collectie", label: "Collectie" },
   { id: "pasvorm", href: "/#pasvorm", label: "Pasvorm" },
   { id: "vakmanschap", href: "/#vakmanschap", label: "Vakmanschap" },
+  { id: "faq", href: "/#faq", label: "Vragen" },
   { id: "contact", href: "/#contact", label: "Contact" },
 ];
 

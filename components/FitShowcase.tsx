@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import home from "@/content/home.json";
-import { FITS, SIZES, type Fit } from "@/lib/products";
+import { FITS, HAS_MEASUREMENTS, SIZES, type Fit } from "@/lib/products";
 import { FitSilhouette } from "./FitSilhouette";
 import { FitToggle } from "./FitToggle";
 import { Reveal } from "./Reveal";
+import { SizeAdvisor } from "./SizeAdvisor";
 
 export function FitShowcase() {
   const [fit, setFit] = useState<Fit>("slim");
@@ -27,14 +28,23 @@ export function FitShowcase() {
 
           <table className="mt-8 w-full max-w-md text-left text-sm">
             <caption className="sr-only">Maattabel</caption>
-            <thead><tr className="border-b border-white/15 text-xs text-ivory/60"><th className="py-2 font-normal">Maat</th><th className="py-2 font-normal">Lichaamslengte</th></tr></thead>
+            <thead>
+              <tr className="border-b border-white/15 text-xs text-ivory/60">
+                <th className="py-2 font-normal">Maat</th><th className="py-2 font-normal">Lichaamslengte</th>
+                {HAS_MEASUREMENTS && <><th className="py-2 font-normal">Borstomvang ({active.label.toLowerCase()})</th><th className="py-2 font-normal">Lengte thobe</th></>}
+              </tr>
+            </thead>
             <tbody>
               {SIZES.map((s) => (
-                <tr key={s.label} className="border-b border-white/10"><th className="py-3 font-serif text-xl font-medium">{s.label}</th><td className="py-3 text-ivory/80">{s.bodyHeight}</td></tr>
+                <tr key={s.label} className="border-b border-white/10">
+                  <th className="py-3 font-serif text-xl font-medium">{s.label}</th><td className="py-3 text-ivory/80">{s.bodyHeight}</td>
+                  {HAS_MEASUREMENTS && <><td className="py-3 text-ivory/80">{s.chest[fit] ? `${s.chest[fit]} cm` : "–"}</td><td className="py-3 text-ivory/80">{s.length ? `${s.length} cm` : "–"}</td></>}
+                </tr>
               ))}
             </tbody>
           </table>
-          <p className="mt-4 max-w-md text-xs leading-relaxed text-ivory/50">{home.fit.note}</p>
+          <p className="mt-4 max-w-md text-xs leading-relaxed text-ivory/60">{home.fit.note}</p>
+          <SizeAdvisor tone="dark" shopHref={(size) => `/product/${home.hero.featuredProduct}?${new URLSearchParams({ fit, size })}`} className="mt-8 max-w-md border-t border-white/15 pt-6" />
         </div>
 
         <Reveal className="relative mx-auto aspect-[1/1.5] w-full max-w-sm">

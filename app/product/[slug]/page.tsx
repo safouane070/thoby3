@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ProductDetail } from "@/components/ProductDetail";
 import { getProduct, products } from "@/lib/products";
-import { baseOpenGraph } from "@/lib/seo";
+import { SITE_URL, baseOpenGraph } from "@/lib/seo";
+import { average, reviewsFor } from "@/lib/reviews";
+import { Reviews } from "@/components/Reviews";
 
 // Statische export: alleen de producten uit content/products.json bestaan; andere slugs geven de 404-pagina.
 export const dynamicParams = false;
@@ -25,18 +27,43 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const product = getProduct((await params).slug);
   if (!product) notFound();
 
+  const url = `${SITE_URL}/product/${product.slug}`;
+  const own = reviewsFor(product.slug);
+  // Google wil absolute URL's; sterren alleen op basis van reviews over dít product.
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.kind === "thobe" ? `Thobe ${product.name}` : product.name,
     description: product.tagline,
-    image: product.gallery,
+    image: product.gallery.map((src) => SITE_URL + src),
+    url,
+    sku: product.id,
     brand: { "@type": "Brand", name: "THOBY3" },
+    ...(own.length > 0 && {
+      aggregateRating: { "@type": "AggregateRating", ratingValue: average(own), reviewCount: own.length, bestRating: 5, worstRating: 1 },
+      review: own.map((r) => ({
+        "@type": "Review",
+        author: { "@type": "Person", name: r.name },
+        reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+        reviewBody: r.text,
+        ...(r.date && { datePublished: r.date }),
+      })),
+    }),
     offers: {
       "@type": "Offer",
+      url,
       price: product.price.toFixed(2),
       priceCurrency: product.currency,
+      itemCondition: "https://schema.org/NewCondition",
       availability: product.soldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "NL",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 14,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+      },
     },
   };
 
@@ -44,6 +71,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <ProductDetail key={product.slug} product={product} />
+      <Reviews items={own} className="mx-auto max-w-[1440px] px-5 pb-24 lg:px-10" />
     </>
   );
 }

@@ -57,7 +57,9 @@ content:
       - { name: rewardFrom, label: Gratis verzending + cadeau vanaf (€), type: number, required: true, description: "Moet gelijk zijn aan de instelling in WooCommerce. Pas ook de aankondigingen bovenaan aan." }
       - { name: giftValue, label: Waarde van het gratis cadeau (€), type: number, required: true }
       - { name: giftBoxPrice, label: Meerprijs cadeaudoos (€), type: number, required: true, description: "Moet gelijk zijn aan het prijsverschil in WooCommerce (nu €5)." }
+      - { name: showCompareAt, label: Van-prijs en kortingslabel tonen, type: boolean, description: "Alleen aanzetten tijdens een echte, tijdelijke actie. De doorgestreepte prijs moet de laagste prijs van de afgelopen 30 dagen zijn (Omnibus-regels); anders is het misleidend." }
       - { name: shippingText, label: Verzendtekst, type: string }
+      - { name: exchangeText, label: Tekst maatruil, type: string, description: "Bijv. Gratis maatruil binnen 14 dagen (moet kloppen met de pagina Levering & retour)." }
       - { name: checkoutLink, label: Afrekenlink (niet wijzigen), type: string, readonly: true }
       - name: sizes
         label: Maten
@@ -66,7 +68,10 @@ content:
         description: "De letters moeten overeenkomen met de maten in WooCommerce (S, M, L, XL)."
         fields:
           - { name: label, label: Maat, type: string, required: true }
-          - { name: bodyHeight, label: Lichaamslengte, type: string, description: "Bijv. 1.70 – 1.78 m" }
+          - { name: bodyHeight, label: Lichaamslengte, type: string, required: true, description: "Precies zo: 1.70 – 1.78 m (de maathulp rekent hiermee)." }
+          - { name: length, label: Lengte thobe (cm), type: string, description: "Gemeten van schouder tot zoom. Leeg = niet tonen." }
+          - { name: chestSlim, label: Borstomvang slank (cm), type: string, description: "Omvang van de thobe op borsthoogte. Leeg = niet tonen." }
+          - { name: chestBroad, label: Borstomvang breed (cm), type: string, description: "Leeg = niet tonen." }
       - name: fits
         label: Pasvormen
         type: object
@@ -92,12 +97,13 @@ content:
         label: Grote foto bovenaan
         type: object
         fields:
+          - { name: eyebrow, label: Regeltje in het productkaartje (rechtsonder), type: string }
           - { name: title, label: Titel, type: string }
           - { name: titleItalic, label: Titel tweede regel (schuin), type: string }
           - { name: text, label: Introtekst, type: text }
-          - { name: buttonPrimary, label: Tekst hoofdknop, type: string }
-          - { name: buttonSecondary, label: Tekst tweede knop, type: string }
-          - { name: image, label: Foto, type: image, description: "Liggende foto, minstens 2000 pixels breed." }
+          - { name: buttonPrimary, label: Tekst hoofdknop (naar de collectie), type: string }
+          - { name: buttonSecondary, label: Tekst tweede knop (naar maten & pasvorm), type: string }
+          - { name: image, label: Foto, type: image, description: "Beeldvullende achtergrond: lucht bovenin (daar staat de titel), rustige ondergrond onderin (tekst en knoppen). Minstens 2000 pixels breed is het scherpst." }
           - { name: imageAlt, label: Beschrijving van de foto, type: string, description: "Voor blinde bezoekers en Google." }
           - { name: featuredProduct, label: Uitgelicht product (adres), type: string, description: "Het adres van het product in het kaartje rechtsonder, bijv. white-desert." }
       - name: usp
@@ -112,7 +118,7 @@ content:
             type: object
             list: true
             fields:
-              - { name: icon, label: Icoon, type: select, options: { values: [shield, leaf, headset, truck] } }
+              - { name: icon, label: Icoon, type: select, options: { values: [exchange, shield, whatsapp, truck] } }
               - { name: title, label: Vetgedrukte tekst, type: string }
               - { name: text, label: Tekst erachter, type: string }
               - { name: whatsapp, label: Tekst is een WhatsApp-link, type: boolean }
@@ -165,6 +171,25 @@ content:
           - { name: giftText, label: Tekst cadeaubalk (de waarde komt er automatisch achter), type: string }
           - { name: giftButton, label: Tekst knop cadeaubalk, type: string }
           - { name: giftProduct, label: Knop gaat naar product (adres), type: string }
+      - name: reviews
+        label: Kop boven de reviews
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: titleItalic, label: Kop (schuin deel), type: string }
+      - name: faq
+        label: Veelgestelde vragen
+        type: object
+        fields:
+          - { name: title, label: Kop, type: string }
+          - { name: titleItalic, label: Kop (schuin deel), type: string }
+          - name: items
+            label: Vragen
+            type: object
+            list: true
+            fields:
+              - { name: q, label: Vraag, type: string, required: true }
+              - { name: a, label: Antwoord, type: text, required: true }
 
   - name: site
     label: Aankondigingen, contact & Google
@@ -177,7 +202,7 @@ content:
         type: object
         list: true
         fields:
-          - { name: icon, label: Icoon, type: select, options: { values: [gift, truck, clock] } }
+          - { name: icon, label: Icoon, type: select, options: { values: [gift, truck, clock, exchange] } }
           - { name: text, label: Tekst, type: string }
       - name: contact
         label: Contactgegevens
@@ -200,6 +225,8 @@ content:
         fields:
           - { name: title, label: Kop, type: string }
           - { name: text, label: Tekst, type: string }
+          - { name: action, label: Formulier-adres van je maildienst, type: string, description: "Bijv. het 'action'-adres uit het insluitformulier van Mailchimp of Brevo (begint met https://). Leeg = geen formulier, alleen een link naar Instagram." }
+          - { name: field, label: Veldnaam voor het e-mailadres, type: string, description: "Uit hetzelfde insluitformulier; bij Mailchimp EMAIL, bij Brevo EMAIL." }
       - name: seo
         label: Google & delen (SEO)
         type: object
@@ -214,6 +241,20 @@ content:
           - { name: kvk, label: KvK-nummer, type: string }
           - { name: btw, label: "Btw-identificatienummer (bijv. NL001234567B01)", type: string }
           - { name: address, label: "Vestigingsadres (straat, postcode, plaats)", type: string }
+
+  - name: reviews
+    label: Reviews
+    type: file
+    path: content/reviews.json
+    format: json
+    list: true
+    fields:
+      - { name: name, label: Naam klant, type: string, required: true, description: "Alleen echte reviews, met toestemming. Bijv. Youssef of Youssef B." }
+      - { name: place, label: Woonplaats (mag leeg), type: string }
+      - { name: rating, label: Sterren (1–5), type: number, required: true }
+      - { name: text, label: Review, type: text, required: true }
+      - { name: product, label: Product (adres, mag leeg), type: string, description: "Bijv. white-desert. Alleen reviews met een product tellen mee voor de sterren in Google." }
+      - { name: date, label: Datum, type: date, options: { format: yyyy-MM-dd } }
 
   - name: legal
     label: Juridische pagina's

@@ -23,7 +23,7 @@ export function Footer() {
             {/* Embleem vanaf 96px hoog: daaronder wordt het woordmerk erin onleesbaar. */}
             <Emblem className="h-24 sm:h-28" />
             <h2 className="mt-8 max-w-[14ch] font-serif text-3xl leading-tight">{site.newsletter.title}</h2>
-            <p className="mb-6 mt-3 max-w-sm text-sm text-ivory/60">{site.newsletter.text}</p>
+            <p className="mb-6 mt-3 max-w-sm text-sm text-ivory/60">{site.newsletter.action ? site.newsletter.text : "Nieuwe drops en restocks zie je als eerste op Instagram."}</p>
             <Newsletter />
           </div>
 
@@ -35,6 +35,7 @@ export function Footer() {
                 <li key={p.slug}><Link href={`/product/${p.slug}`} className={LINK}>{p.name}</Link></li>
               ))}
               <li><Link href="/#pasvorm" className={LINK}>Maten & pasvorm</Link></li>
+              <li><Link href="/#faq" className={LINK}>Veelgestelde vragen</Link></li>
             </ul>
           </nav>
 

@@ -64,7 +64,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="pointer-events-none absolute left-3 top-3 flex flex-col items-start gap-1.5">
           {pct > 0 && <span className="bg-ink px-2 py-1 text-[0.6875rem] font-medium text-ivory">-{pct}%</span>}
-          {product.soldOut && <span className="border border-line-strong bg-ivory/90 px-2 py-1 text-[0.6875rem] font-medium">Uitverkocht</span>}
+          {product.soldOut && <span className="border border-line-strong bg-ivory/90 px-2 py-1 text-[0.6875rem] font-medium">Binnenkort terug</span>}
         </div>
 
         <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label={wished ? "Verwijder uit verlanglijst" : "Zet op verlanglijst"}

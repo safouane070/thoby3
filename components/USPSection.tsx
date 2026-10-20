@@ -1,10 +1,9 @@
 import Image from "next/image";
-import { Headset, Leaf, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeftRight, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import home from "@/content/home.json";
-import site from "@/content/site.json";
-import { SHIPPING_COPY } from "@/lib/products";
+import { SHIPPING_COPY, whatsapp } from "@/lib/products";
 
-const ICONS = { shield: ShieldCheck, leaf: Leaf, headset: Headset, truck: Truck };
+const ICONS = { shield: ShieldCheck, exchange: ArrowLeftRight, whatsapp: MessageCircle, truck: Truck };
 const usp = home.usp;
 
 // Korte beloftes uit de originele shop; geen kaarten, geen herhaling van de ticker.
@@ -32,7 +31,7 @@ export function USPSection() {
                   <span className="font-medium">{item.title}</span>
                   {item.text && " "}
                   {item.text && ("whatsapp" in item && item.whatsapp ? (
-                    <a href={`https://wa.me/${site.contact.whatsapp}`} target="_blank" rel="noopener noreferrer" className="text-taupe-strong underline decoration-line-strong underline-offset-4 hover:text-ink">{item.text}</a>
+                    <a href={whatsapp("Hoi THOBY3, ik twijfel over mijn maat.")} target="_blank" rel="noopener noreferrer" className="text-taupe-strong underline decoration-line-strong underline-offset-4 hover:text-ink">{item.text}</a>
                   ) : (
                     <span className="text-taupe-strong">{item.text}</span>
                   ))}
