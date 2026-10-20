@@ -1,0 +1,13 @@
+# Cloudflare Pages-headers. JS/CSS/fonts in /_next/static hebben een hash in de naam: veilig om een jaar te cachen.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# WebP-varianten hebben geen hash (zelfde naam na vervangen in het CMS), dus korter cachen.
+/_img/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
