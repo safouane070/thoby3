@@ -226,6 +226,17 @@ svg.lucide {
   color: var(--ink);
 }
 
+/* Maatkiezer in de vaste mobiele balk: korte entree, zodat de tik en het resultaat verbonden voelen. */
+.sheet-enter {
+  transition:
+    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  @starting-style {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
 /* FAQ-accordeon: hoogte uit Radix, open iets trager dan dicht (systeem reageert snel, gebruiker leest). */
 @keyframes faq-open {
   from {

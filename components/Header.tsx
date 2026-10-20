@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { Heart, Menu, ShoppingBag, X } from "lucide-react";
 import { AnnouncementBar } from "./AnnouncementBar";
@@ -18,6 +18,10 @@ const nav = [
   { id: "faq", href: "/#faq", label: "Vragen" },
   { id: "contact", href: "/#contact", label: "Contact" },
 ];
+
+// Gescrold = de aankondigingsbalk mag weg. Externe bron (scrollpositie) zonder effect of extra render bij laden.
+const subscribeScroll = (cb: () => void) => { window.addEventListener("scroll", cb, { passive: true }); return () => window.removeEventListener("scroll", cb); };
+const isScrolled = () => window.scrollY > 8;
 
 const artikelen = (n: number) => `${n} ${n === 1 ? "artikel" : "artikelen"}`;
 const SPRING = { type: "spring", stiffness: 400, damping: 35 } as const;
@@ -72,7 +76,7 @@ function HeaderPanel({ label, triggerClass, trigger, width, children }: {
       </button>
       {state !== "closed" && (
         <div ref={box} id={id} role="region" aria-label={label}
-          className={`absolute right-0 top-full z-[60] mt-3 origin-top-right rounded-2xl border border-line bg-ivory p-4 ${width} ${state === "open" ? "animate-[pop_160ms_var(--ease-out)]" : "animate-[pop_100ms_ease-in_reverse]"}`}>
+          className={`absolute right-0 top-full z-[60] mt-3 origin-top-right rounded-2xl border border-line bg-ivory p-4 ${width} ${state === "open" ? "animate-[pop_160ms_var(--ease-out)]" : "animate-[pop_120ms_cubic-bezier(0.23,1,0.32,1)_reverse]"}`}>
           {children(close)}
         </div>
       )}
@@ -115,6 +119,7 @@ function Wishlist() {
 export function Header() {
   const pathname = usePathname();
   const { count, setDrawerOpen } = useStore();
+  const scrolled = useSyncExternalStore(subscribeScroll, isScrolled, () => false);
   const [spy, setSpy] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
   const [menu, setMenu] = useState(false);
@@ -155,7 +160,7 @@ export function Header() {
   const active = hover ?? (onProduct ? "collectie" : pathname === "/" ? spy : null);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40">
+    <header className={`fixed inset-x-0 top-0 z-40 transition-transform duration-[250ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${scrolled ? "-translate-y-[calc(2.25rem+1px)]" : ""}`}>
       <AnnouncementBar />
       <div className="px-3 pt-3 sm:px-6">
         <div className="mx-auto max-w-[1200px] rounded-[28px] border border-black/[0.06] bg-[#FAF9F6]/90 backdrop-blur-md">
