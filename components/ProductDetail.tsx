@@ -196,7 +196,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   </p>
                 )}
                 <p className="mt-2 text-xs text-taupe">Kort en vol postuur? Kies een lange maat en laat deze inkorten.</p>
-                {!product.soldOut && <SizeAdvisor onPick={chooseSize} className="mt-5 border-t border-line pt-5" />}
+                {!product.soldOut && <SizeAdvisor onPick={chooseSize} fit={fit} className="mt-5 border-t border-line pt-5" />}
               </div>
 
               <label className="flex cursor-pointer items-center gap-4 border border-line p-4 transition-colors duration-200 hover:border-line-strong">

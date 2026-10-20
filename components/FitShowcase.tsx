@@ -44,7 +44,7 @@ export function FitShowcase() {
             </tbody>
           </table>
           <p className="mt-4 max-w-md text-xs leading-relaxed text-ivory/60">{home.fit.note}</p>
-          <SizeAdvisor tone="dark" shopHref={(size) => `/product/${home.hero.featuredProduct}?${new URLSearchParams({ fit, size })}`} className="mt-8 max-w-md border-t border-white/15 pt-6" />
+          <SizeAdvisor tone="dark" fit={fit} shopHref={(size) => `/product/${home.hero.featuredProduct}?${new URLSearchParams({ fit, size })}`} className="mt-8 max-w-md border-t border-white/15 pt-6" />
         </div>
 
         <Reveal className="relative mx-auto aspect-[1/1.5] w-full max-w-sm">

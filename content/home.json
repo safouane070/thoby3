@@ -89,6 +89,22 @@
     "title": "Kwaliteit tot in",
     "titleItalic": "elk detail",
     "text": "Bij THOBY3® geloven we in kwaliteit. Voor elke maat bieden we twee variaties, ontworpen voor twee posturen met dezelfde lengte. Dankzij onze snelle, betrouwbare levering hoef je niet lang te wachten op jouw bestelling.",
+    "image": "/img/cs-3.jpg",
+    "imageAlt": "Manchet met het geborduurde THOBY3-merkteken",
+    "facts": [
+      {
+        "label": "Stof",
+        "value": "Satijnkatoen"
+      },
+      {
+        "label": "Pasvormen",
+        "value": "Slank & breed"
+      },
+      {
+        "label": "Maten",
+        "value": "S t/m XL"
+      }
+    ],
     "button": "Naar de collectie",
     "giftText": "Vanaf €50 gratis Musk & Siwak, t.w.v.",
     "giftButton": "Bekijk de White Desert",

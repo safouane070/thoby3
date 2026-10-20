@@ -60,6 +60,11 @@ h1 em {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
+/* Velden met een eigen focus-onderlijn (wrapper met focus-within): geen tweede omlijning eromheen. */
+.field-input:focus,
+.field-input:focus-visible {
+  outline: none;
+}
 .on-dark :focus-visible,
 [data-vaul-drawer] :focus-visible {
   outline-color: var(--gold);
@@ -219,6 +224,34 @@ svg.lucide {
 .legal th {
   font-weight: 500;
   color: var(--ink);
+}
+
+/* FAQ-accordeon: hoogte uit Radix, open iets trager dan dicht (systeem reageert snel, gebruiker leest). */
+@keyframes faq-open {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+@keyframes faq-close {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+.faq-content[data-state="open"] {
+  animation: faq-open 260ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.faq-content[data-state="closed"] {
+  animation: faq-close 180ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 [data-vaul-overlay] {
