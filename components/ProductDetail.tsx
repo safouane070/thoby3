@@ -11,6 +11,7 @@ import { FabricSpotlight } from "./FabricSpotlight";
 import { FitSilhouette } from "./FitSilhouette";
 import { FitToggle } from "./FitToggle";
 import { Price } from "./Price";
+import { BADGE } from "./ProductCard";
 import { SizeAdvisor } from "./SizeAdvisor";
 import { useStore } from "./StoreProvider";
 
@@ -47,15 +48,15 @@ function Gallery({ product }: { product: Product }) {
         ))}
       </div>
       <div onPointerMove={move} onPointerLeave={() => setZoom(false)} className="relative order-1 aspect-[3/4] cursor-zoom-in overflow-hidden border border-line bg-sand lg:order-2">
-        <div ref={inner} className={`absolute inset-0 transition-transform duration-200 ease-out ${zoom ? "scale-[2.2]" : "scale-100"}`}>
+        <div ref={inner} className={`absolute inset-0 transition-transform duration-200 ease-out ${zoom ? "scale-[1.6]" : "scale-100"}`}>
           {product.gallery.map((src, i) => seen.includes(i) && (
             <Image key={src} src={src} alt={i === img ? `${product.name}, foto ${i + 1}` : ""} fill loading={i === 0 ? "eager" : undefined} fetchPriority={i === 0 ? "high" : undefined} sizes="(min-width:1024px) 55vw, 100vw"
               placeholder="blur" blurDataURL={BLUR}
-              className={`object-cover mix-blend-multiply transition-opacity duration-300 ease-in-out ${i === img ? "opacity-100" : "opacity-0"}`} />
+              className={`object-cover mix-blend-multiply transition-[opacity,filter] duration-200 ease-out ${i === img ? "opacity-100 blur-0" : "opacity-0 blur-[2px]"}`} />
           ))}
         </div>
         <button onPointerEnter={() => setViewerReady(true)} onFocus={() => setViewerReady(true)} onClick={() => { setViewerReady(true); setViewer(true); }} aria-label={`Vergroot foto ${img + 1} van ${product.name}`} className="absolute inset-0 cursor-zoom-in focus-visible:-outline-offset-4" />
-        {pct > 0 && <span className="pointer-events-none absolute left-3 top-3 bg-ink px-2 py-1 text-[0.6875rem] font-medium text-ivory">-{pct}%</span>}
+        {pct > 0 && <span className={`pointer-events-none absolute left-3 top-3 ${BADGE}`}>-{pct}%</span>}
       </div>
 
       {viewerReady && <ImageViewer open={viewer} onOpenChange={setViewer} src={product.gallery[img]} title={`${product.name}, foto ${img + 1}`} />}
@@ -146,7 +147,7 @@ export function ProductDetail({ product }: { product: Product }) {
     add({ slug: product.slug, size: s, fit, giftBox });
   };
   const total = product.price + (giftBox ? GIFT_BOX_PRICE : 0);
-  const cta = "press btn-primary flex-1 py-4 text-xs font-medium uppercase tracking-[0.14em] disabled:cursor-not-allowed disabled:opacity-50";
+  const cta = "press btn-primary min-h-12 flex-1 py-4 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50";
 
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-32 pt-40 lg:px-10 lg:pb-24">
@@ -243,7 +244,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
       <div data-sticky-cta className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
         {picker && (
-          <div id="sticky-sizes" className="mb-3 space-y-3">
+          <div id="sticky-sizes" className="sheet-enter mb-3 space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium">Kies je maat</p>
               <button onClick={() => setPicker(false)} aria-label="Maatkeuze sluiten" className="press -m-2 flex h-12 w-12 items-center justify-center"><X size={18} /></button>

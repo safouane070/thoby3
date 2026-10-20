@@ -41,12 +41,13 @@ export function Hero() {
         </div>
 
         <div style={rise(3)} className="rise hidden lg:block">
-          <Link href={`/product/${hero.slug}`} className="press flex w-[340px] items-center gap-5 bg-ivory p-3 text-ink hover:bg-white">
-            <div className="relative h-32 w-24 shrink-0 bg-sand">
+          <Link href={`/product/${hero.slug}`} className="press flex w-[360px] items-stretch bg-ivory text-ink hover:bg-white">
+            {/* Foto tegen de rand van de kaart: leest als beeldvlak, niet als een geplakt grijs blokje. */}
+            <div className="relative min-h-36 w-28 shrink-0 bg-sand">
               <Image src={hero.images.primary} alt={`Thobe ${hero.name}`} fill sizes="96px" className="object-cover object-top mix-blend-multiply" />
             </div>
-            <div>
-              <p className="text-xs font-medium">{content.eyebrow}</p>
+            <div className="self-center px-5 py-4">
+              <p className="text-xs font-medium text-taupe-strong">{content.eyebrow}</p>
               <p className="mt-1 font-serif text-2xl leading-tight">Thobe {hero.name}</p>
               <Price price={hero.price} compareAt={hero.compareAt} className="mt-1 text-sm" />
             </div>

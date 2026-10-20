@@ -288,13 +288,13 @@
     "price": 3.99,
     "soldOut": false,
     "images": {
-      "primary": "/img/siwak-2.jpg",
-      "lifestyle": "/img/siwak-1.png",
-      "detail": "/img/siwak-1.png"
+      "primary": "/img/siwak-1.png",
+      "lifestyle": "/img/siwak-2.jpg",
+      "detail": "/img/siwak-2.jpg"
     },
     "gallery": [
-      "/img/siwak-2.jpg",
-      "/img/siwak-1.png"
+      "/img/siwak-1.png",
+      "/img/siwak-2.jpg"
     ]
   }
 ]

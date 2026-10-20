@@ -37,6 +37,9 @@ function SizePicker({ product, fit, onClose }: { product: Product; fit: Fit; onC
   );
 }
 
+/** Eén labelstijl voor alles op een productfoto (korting, binnenkort terug). */
+export const BADGE = "border border-line-strong bg-ivory/90 px-2 py-1 text-[0.6875rem] font-medium text-ink";
+
 export function ProductCard({ product }: { product: Product }) {
   const { wishlist, toggleWish, add } = useStore();
   const [picking, setPicking] = useState(false);
@@ -51,20 +54,20 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group">
-      <div className="relative aspect-[3/4] overflow-hidden border border-line bg-sand transition-[border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-line-strong">
-        {/* Hover: trage zoom (1.03) + crossfade naar de sfeerfoto; alleen op apparaten met hover (Tailwind v4 group-hover). */}
-        <Link href={href} className="absolute inset-0 block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]" aria-label={product.name} tabIndex={-1}>
+      <div className="relative aspect-[3/4] overflow-hidden border border-line bg-sand transition-[border-color] duration-200 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:border-line-strong">
+        {/* Hover: alleen een rustige crossfade naar de sfeerfoto, en alleen met een muis (hoverImg). Hover zie je vaak: geen extra beweging. */}
+        <Link href={href} className="absolute inset-0 block" aria-label={product.name} tabIndex={-1}>
           <Image src={product.images.primary} alt={product.name} fill sizes="(min-width:1024px) 25vw, 50vw" placeholder="blur" blurDataURL={BLUR}
-            className={`object-cover mix-blend-multiply transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${hoverImg ? "group-hover:opacity-0" : ""}`} />
+            className={`object-cover mix-blend-multiply transition-opacity duration-[400ms] ease-[ease] ${hoverImg ? "group-hover:opacity-0" : ""}`} />
           {hoverImg && (
             <Image src={product.images.lifestyle} alt="" fill sizes="(min-width:1024px) 25vw, 50vw"
-              className="object-cover opacity-0 mix-blend-multiply transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100" />
+              className="object-cover opacity-0 mix-blend-multiply transition-opacity duration-[400ms] ease-[ease] group-hover:opacity-100" />
           )}
         </Link>
 
         <div className="pointer-events-none absolute left-3 top-3 flex flex-col items-start gap-1.5">
-          {pct > 0 && <span className="bg-ink px-2 py-1 text-[0.6875rem] font-medium text-ivory">-{pct}%</span>}
-          {product.soldOut && <span className="border border-line-strong bg-ivory/90 px-2 py-1 text-[0.6875rem] font-medium">Binnenkort terug</span>}
+          {pct > 0 && <span className={BADGE}>-{pct}%</span>}
+          {product.soldOut && <span className={BADGE}>Binnenkort terug</span>}
         </div>
 
         <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label={wished ? "Verwijder uit verlanglijst" : "Zet op verlanglijst"}
@@ -90,8 +93,9 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
 
       {thobe && !product.soldOut && (
-        <div className="mt-3 flex items-center gap-3">
-          <FitSilhouette fit={fit} className="hidden h-10 w-5 shrink-0 text-ink min-[360px]:block" />
+        // Op smalle kaarten (2 kolommen) geen formulier: de pasvorm kies je in de maatkiezer of op de productpagina.
+        <div className="mt-3 hidden items-center gap-3 md:flex">
+          <FitSilhouette fit={fit} className="h-10 w-5 shrink-0 text-ink" />
           <FitToggle value={fit} onChange={setFit} id={`fit-${product.slug}`} className="flex-1" />
         </div>
       )}

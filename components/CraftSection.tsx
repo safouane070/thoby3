@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Gift } from "lucide-react";
 import home from "@/content/home.json";
-import { GIFT_VALUE } from "@/lib/products";
+import { GIFT_VALUE, getProduct } from "@/lib/products";
+
+const GIFTS = ["musk", "siwak"].map((slug) => getProduct(slug)!.images.primary);
 import { Price } from "./Price";
 import { ClipReveal } from "./ClipReveal";
 
@@ -35,7 +37,7 @@ export function CraftSection() {
         <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between lg:px-10">
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
             <div className="flex shrink-0 -space-x-3" aria-hidden>
-              {["/img/musk-1.jpg", "/img/siwak-2.jpg"].map((src) => (
+              {GIFTS.map((src) => (
                 <div key={src} className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-sand bg-ivory">
                   <Image src={src} alt="" fill sizes="64px" className="object-cover" />
                 </div>
