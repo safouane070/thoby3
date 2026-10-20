@@ -10,18 +10,18 @@ const hero = getProduct(content.featuredProduct) ?? products[0];
 // CSS-entree in plaats van Framer: speelt al vóór hydration, dus de kop (LCP) wacht niet op JavaScript.
 const rise = (i: number) => ({ animationDelay: `${80 + i * 60}ms` });
 
-// Compositie: de kop staat in de lucht, de figuur op de duin blijft vrij, copy en CTA liggen op het zand.
+// Compositie: de kop staat in de lege lucht, de karavaan blijft vrij, copy en CTA liggen op de duinen.
 // Op mobiel staat alles binnen één scherm: de kop bovenaan, tekst en knoppen direct daaronder op het zand.
 export function Hero() {
   return (
     <section className="on-dark relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden bg-obsidian text-ivory">
-      <Image src={content.image} alt={content.imageAlt} fill preload sizes="100vw" className="-z-20 object-cover object-[78%_50%] saturate-[0.85] lg:object-[50%_55%]" />
+      <Image src={content.image} alt={content.imageAlt} fill preload sizes="100vw" className="-z-20 object-cover object-[50%_60%] saturate-[0.85]" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-obsidian/45 via-transparent via-30% to-obsidian/90 to-75%" />
 
       <div className="mx-auto w-full max-w-[1440px] px-5 pt-36 lg:px-10 lg:pt-44">
         {/* Alleen beweging, geen fade: een onzichtbare kop telt niet als LCP. */}
-        <h1 style={rise(0)} className="rise-y max-w-[11ch] font-serif text-[clamp(3rem,7.4vw,6.5rem)] font-medium leading-[0.95]">
-          {content.title} <em className="font-normal">{content.titleItalic}</em>
+        <h1 style={rise(0)} className="rise-y font-serif text-[clamp(2.75rem,6.4vw,6rem)] font-medium leading-[0.95]">
+          {content.title}<br /><em className="font-normal">{content.titleItalic}</em>
         </h1>
       </div>
 
