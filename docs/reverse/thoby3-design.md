@@ -2,7 +2,7 @@
 Bron: https://thoby3.com · gemeten op 2026-10-17 · viewport 799×609 (desktop pane)
 
 ## Stack (observed)
-WordPress + WooCommerce (wp-content, `/wp-json/wc/store/v1/products`), GTranslate-plugin voor taal. Geen Shopify/Next.
+WordPress met webshop-plugin (wp-content, `/wp-json/wc/store/v1/products`), GTranslate-plugin voor taal. Geen Shopify/Next.
 
 ## Design tokens (observed → vervangen)
 - Origineel: wit `#fff`, tekst grijs `#767676`/`#333`, fonts hkgroteskpro/Roboto/Montserrat/Lato, 14px basis, vrijwel geen radius of schaduw, accenten pastelblauw `#aad0eb` / paars.

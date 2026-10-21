@@ -42,3 +42,10 @@ next-env.d.ts
 
 # gegenereerd door scripts/images.mjs bij elke build
 /public/_img/
+
+# Impeccable: werkbestanden en screenshots (niet in de repo)
+/.impeccable/scratch/
+/.impeccable/review/
+
+# Cloudflare (wrangler pages dev)
+.wrangler/

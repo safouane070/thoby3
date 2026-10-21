@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/images.mjs && next dev",
-    "build": "node scripts/sync-woo.mjs --soft && node scripts/check-content.mjs && node scripts/images.mjs && next build",
+    "build": "node scripts/check-content.mjs && node scripts/images.mjs && next build && node scripts/flatten-prefetch.mjs",
     "lint": "eslint",
-    "sync:woo": "node scripts/sync-woo.mjs",
     "images": "node scripts/images.mjs",
-    "preview": "npx serve out -l 3112",
-    "check:content": "node scripts/check-content.mjs"
+    "preview": "wrangler pages dev out --port 3112",
+    "check:content": "node scripts/check-content.mjs",
+    "test": "node --test \"lib/**/*.test.mjs\""
   },
   "dependencies": {
     "framer-motion": "^14.3.0",
@@ -29,6 +29,7 @@
     "eslint-config-next": "16.4.2",
     "sharp": "^0.35.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.151.3"
   }
 }

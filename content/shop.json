@@ -1,5 +1,56 @@
 {
   "rewardFrom": 50,
+  "shipping": [
+    {
+      "country": "NL",
+      "name": "Nederland",
+      "price": 0,
+      "freeFrom": true,
+      "days": "1-2 werkdagen"
+    },
+    {
+      "country": "BE",
+      "name": "België",
+      "price": 4.99,
+      "freeFrom": true,
+      "days": "2-3 werkdagen"
+    },
+    {
+      "country": "LU",
+      "name": "Luxemburg",
+      "price": 4.99,
+      "freeFrom": true,
+      "days": "2-3 werkdagen"
+    },
+    {
+      "country": "DE",
+      "name": "Duitsland",
+      "price": 4.99,
+      "freeFrom": true,
+      "days": "2-3 werkdagen"
+    },
+    {
+      "country": "FR",
+      "name": "Frankrijk",
+      "price": 4.99,
+      "freeFrom": true,
+      "days": "2-4 werkdagen"
+    },
+    {
+      "country": "ES",
+      "name": "Spanje",
+      "price": 4.99,
+      "freeFrom": true,
+      "days": "4-6 werkdagen"
+    },
+    {
+      "country": "GB",
+      "name": "Verenigd Koninkrijk",
+      "price": 8.99,
+      "freeFrom": false,
+      "days": "4-5 werkdagen"
+    }
+  ],
   "giftValue": 13.48,
   "giftBoxPrice": 5,
   "showCompareAt": false,
@@ -7,30 +58,46 @@
     {
       "label": "S",
       "bodyHeight": "1.60 – 1.70 m",
-      "length": "",
-      "chestSlim": "",
-      "chestBroad": ""
+      "length": "137",
+      "chestSlim": "56",
+      "chestBroad": "60",
+      "shouldersSlim": "41",
+      "shouldersBroad": "44",
+      "sleeveSlim": "58",
+      "sleeveBroad": "58"
     },
     {
       "label": "M",
       "bodyHeight": "1.70 – 1.78 m",
-      "length": "",
-      "chestSlim": "",
-      "chestBroad": ""
+      "length": "142",
+      "chestSlim": "60",
+      "chestBroad": "64",
+      "shouldersSlim": "44",
+      "shouldersBroad": "47",
+      "sleeveSlim": "60",
+      "sleeveBroad": "60"
     },
     {
       "label": "L",
       "bodyHeight": "1.78 – 1.87 m",
-      "length": "",
-      "chestSlim": "",
-      "chestBroad": ""
+      "length": "147",
+      "chestSlim": "64",
+      "chestBroad": "68",
+      "shouldersSlim": "47",
+      "shouldersBroad": "50",
+      "sleeveSlim": "61",
+      "sleeveBroad": "61"
     },
     {
       "label": "XL",
       "bodyHeight": "1.87 – 1.95 m",
-      "length": "",
-      "chestSlim": "",
-      "chestBroad": ""
+      "length": "152",
+      "chestSlim": "68",
+      "chestBroad": "72",
+      "shouldersSlim": "50",
+      "shouldersBroad": "53",
+      "sleeveSlim": "62",
+      "sleeveBroad": "62"
     }
   ],
   "fits": [
@@ -46,11 +113,10 @@
     }
   ],
   "fabric": {
-    "material": "Satijn geweven katoen",
-    "description": "De perfecte balans tussen luxe uitstraling en ademend comfort: zachte textuur op de huid en een subtiele glans die de hele dag meegaat."
+    "material": "Satijnkatoen",
+    "description": "Katoen in satijnbinding: lange draden aan de oppervlakte geven een gladde, soepel vallende stof met een lichte glans. Het blijft katoen, dus het ademt."
   },
-  "shippingText": "Gratis verzending vanaf €50 in Nederland en de rest van Europa.",
+  "shippingText": "Gratis verzending in Nederland. Naar de rest van de EU gratis vanaf €50.",
   "exchangeText": "Gratis maatruil binnen 14 dagen",
-  "checkoutLink": "https://thoby3.com/checkout-link/",
-  "giftText": "Gratis Musk & Siwak bij deze thobe"
+  "giftText": "Gratis musk & siwak bij deze thobe"
 }

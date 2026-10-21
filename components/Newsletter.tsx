@@ -13,7 +13,7 @@ export function Newsletter() {
 
   if (!action) {
     return (
-      <a href={site.contact.instagram} target="_blank" rel="noopener noreferrer" className="press inline-flex min-h-12 items-center gap-2 border-b border-ivory/40 py-3 text-sm font-medium hover:border-gold">
+      <a href={site.contact.instagram} target="_blank" rel="noopener noreferrer" className="press tag inline-flex min-h-12 items-center gap-2 border-b border-paper/40 py-3 text-paper hover:border-gold hover:text-gold">
         Volg ons op Instagram <ArrowRight size={14} aria-hidden />
       </a>
     );

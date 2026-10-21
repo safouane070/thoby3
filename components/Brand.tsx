@@ -1,6 +1,6 @@
 // THOBY3-logo: gevectoriseerd (potrace, rechte polygonen) uit het officiële logo-PNG van thoby3.com.
 // Betaalmerken: Simple Icons (CC0: Visa, Mastercard, PayPal, Apple Pay); iDEAL als woordmerk in Inter 700.
-// Officiële betaallogo's van je betaalprovider (bijv. Mollie/Stripe brand assets) kunnen deze 1-op-1 vervangen.
+// Officiële betaallogo's van je betaalprovider (Mollie brand assets) kunnen deze 1-op-1 vervangen.
 
 // Het merk-verloop uit het origineel, voor plekken waar het logo in kleur staat (favicon).
 export const BRAND_GRADIENT = ["#39404f", "#267ee4"] as const;
@@ -13,7 +13,7 @@ const EMBLEM = "M506 239L31 239 31 806.5L31 1374 336.5 1374L642 1374 642 1330.5L
 /** Woordmerk "THOBY3" (uit het embleem). Kleur via currentColor; hoogte via className, breedte volgt. */
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox={WORDMARK_VIEWBOX} role="img" aria-label="THOBY3" className={`w-auto ${className}`} fill="currentColor">
+    <svg viewBox={WORDMARK_VIEWBOX} role="img" aria-label="THOBY3" className={className} fill="currentColor">
       <path fillRule="evenodd" d={WORDMARK} />
     </svg>
   );
@@ -22,7 +22,7 @@ export function Logo({ className = "" }: { className?: string }) {
 /** Volledig Kufi-embleem met woordmerk. Pas leesbaar vanaf ~80px hoog (de tekst is 1/9 van de hoogte). */
 export function Emblem({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox={EMBLEM_VIEWBOX} role="img" aria-label="THOBY3" className={`w-auto ${className}`} fill="currentColor">
+    <svg viewBox={EMBLEM_VIEWBOX} role="img" aria-label="THOBY3" className={className} fill="currentColor">
       <path fillRule="evenodd" d={EMBLEM} />
     </svg>
   );

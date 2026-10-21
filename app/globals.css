@@ -1,54 +1,69 @@
 @import "tailwindcss";
 
 :root {
-  --ivory: #faf9f6;
-  --sand: #f3f1ec;
-  --ink: #1a1a1a;
-  --obsidian: #121212;
-  --muted: #737373;
-  --muted-strong: #5c5c5c;
-  --gold: #c5a880;
-  --line: rgba(0, 0, 0, 0.07);
-  --line-strong: rgba(0, 0, 0, 0.2);
+  /* De doos: matzwart karton, goudfolie, het antraciet van het deksel. Buiten de doos: zand. */
+  --board: #151516;
+  --board-raised: #1e1e20;
+  --lid: #3a3b3d;
+  --sand: #e8e2da;
+  --paper: #f4f1ec;
+  /* Achter productfoto's: warm, zodat het koele studiogrijs via mix-blend-multiply bij het zand gaat horen. */
+  --studio: #f2ede6;
+  --ink: #151516;
+  --muted: #5a544c;
+  --muted-strong: #47423c;
+  --muted-dark: #a09b93;
+  --gold: #d2b15c;
+  --gold-ink: #7a5c1e;
+  --line: rgba(21, 21, 22, 0.14);
+  --line-strong: rgba(21, 21, 22, 0.42);
+  --line-dark: rgba(243, 240, 234, 0.16);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
-  --color-ivory: var(--ivory);
+  --color-board: var(--board);
+  --color-board-raised: var(--board-raised);
+  --color-lid: var(--lid);
   --color-sand: var(--sand);
+  --color-paper: var(--paper);
+  --color-studio: var(--studio);
   --color-ink: var(--ink);
-  --color-obsidian: var(--obsidian);
-  --color-taupe: var(--muted);
-  --color-taupe-strong: var(--muted-strong);
   --color-gold: var(--gold);
+  --color-gold-ink: var(--gold-ink);
+  --color-muted: var(--muted);
+  --color-muted-dark: var(--muted-dark);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-cormorant);
+  --color-line-dark: var(--line-dark);
+  /* Oude namen wijzen naar het nieuwe palet, zodat lade, dialogen en juridische pagina's meegaan. */
+  --color-ivory: var(--paper);
+  --color-obsidian: var(--board);
+  --color-taupe: var(--muted);
+  --color-taupe-strong: var(--muted-strong);
+  --font-sans: var(--face-text);
+  --font-serif: var(--face-display);
+  --font-display: var(--face-display);
+  --font-kufi: var(--face-kufi);
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 8rem;
+  scroll-padding-top: 6rem;
+  scrollbar-color: rgba(21, 21, 22, 0.35) var(--sand);
 }
 
 body {
-  background: var(--ivory);
+  background: var(--sand);
   color: var(--ink);
-  font-family: var(--font-inter), system-ui, sans-serif;
-  letter-spacing: -0.01em;
+  font-family: var(--face-text), system-ui, sans-serif;
+  font-feature-settings: "ss01";
 }
 
 h1,
 h2,
 h3 {
-  letter-spacing: -0.02em;
   text-wrap: balance;
-}
-
-h2 em,
-h1 em {
-  font-style: italic;
 }
 
 ::selection {
@@ -65,14 +80,12 @@ h1 em {
 .field-input:focus-visible {
   outline: none;
 }
-.on-dark :focus-visible,
-[data-vaul-drawer] :focus-visible {
-  outline-color: var(--gold);
+.field-input {
+  caret-color: var(--gold);
 }
-
-/* Browser-oppervlakken in het palet: scrollbar. */
-html {
-  scrollbar-color: rgba(0, 0, 0, 0.25) var(--ivory);
+.on-dark :focus-visible,
+[data-vaul-drawer] .on-dark :focus-visible {
+  outline-color: var(--gold);
 }
 
 /* Lucide-iconen overal op 1.5px. */
@@ -93,22 +106,61 @@ svg.lucide {
   transform: scale(0.97);
 }
 
-/* Primaire actie is obsidian; goud is voorbehouden aan micro-accenten. */
-.btn-primary {
-  background: var(--ink);
-  color: var(--ivory);
-}
-.btn-primary:hover:not(:disabled) {
-  background: #0d0d0d;
-}
-.btn-light {
-  background: var(--ivory);
-  color: var(--ink);
-}
-.btn-light:hover:not(:disabled) {
-  background: #fffdf9;
-}
+/* Eigen componentklassen in de components-laag: Tailwind-utilities mogen ze per plek overschrijven. */
+@layer components {
+  /* Koppen: smalle kapitalen zoals de print in het deksel; staan rechtop als de thobe zelf. */
+  .display {
+    font-family: var(--face-display), sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.86;
+    letter-spacing: -0.005em;
+  }
+  /* Labels zoals op het hangtag: klein, kapitalen, ruim gespatieerd. */
+  .tag {
+    font-family: var(--face-display), sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.8125rem;
+    line-height: 1.2;
+  }
+  .num {
+    font-family: var(--face-display), sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
 
+  /* Matzwart karton: korrel uit een foto van de echte doos (public/tex/board.webp), naadloos gespiegeld. */
+  .board {
+    background-color: var(--board);
+    background-image: url("/tex/board.webp");
+    background-size: 1400px 280px;
+    color: var(--paper);
+  }
+
+  /* Primaire actie: goudfolie op zwart (de banderol). Secundair: zwart karton. */
+  .btn-gold {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .btn-gold:hover:not(:disabled) {
+    background: #dcbd6c;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #2a2a2c;
+  }
+  .btn-light {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .btn-light:hover:not(:disabled) {
+    background: #fff;
+  }
+}
 
 @keyframes pop {
   from {
@@ -142,10 +194,10 @@ svg.lucide {
 /* Cadeau ontgrendeld: eenmalige gouden ring. */
 @keyframes ring {
   from {
-    box-shadow: 0 0 0 0 rgba(197, 168, 128, 0.7);
+    box-shadow: 0 0 0 0 rgba(210, 177, 92, 0.7);
   }
   to {
-    box-shadow: 0 0 0 14px rgba(197, 168, 128, 0);
+    box-shadow: 0 0 0 14px rgba(210, 177, 92, 0);
   }
 }
 .ring-once {
@@ -170,6 +222,15 @@ svg.lucide {
 .rise-y {
   animation: rise-y 500ms var(--ease-out) both;
 }
+/* De doos komt tot rust in het zand: alleen schaal, de foto is meteen zichtbaar (LCP). */
+@keyframes settle {
+  from {
+    transform: scale(1.06);
+  }
+}
+.settle {
+  animation: settle 1600ms var(--ease-out) both;
+}
 
 /* De vaste mobiele CTA op productpagina's mag het einde van de footer niet afdekken. */
 @media (max-width: 1023px) {
@@ -185,9 +246,11 @@ svg.lucide {
 }
 .legal h2 {
   margin: 3rem 0 1rem;
-  font-family: var(--font-cormorant), serif;
+  font-family: var(--face-display), sans-serif;
   font-size: 2rem;
-  line-height: 1.1;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
   color: var(--ink);
 }
 .legal h3 {
@@ -280,4 +343,14 @@ svg.lucide {
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
   }
+}
+
+/* Mollie-kaartvelden (iframes): rand en focus op onze container, gelijk aan de gewone velden op /afrekenen. */
+.mollie-field:has(.has-focus),
+.mollie-field.has-focus {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.mollie-field:has(.is-invalid.is-touched) {
+  border-color: #a3341f;
 }

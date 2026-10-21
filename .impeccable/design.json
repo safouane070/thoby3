@@ -1,0 +1,442 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-21T18:47:18.915Z",
+  "title": "Design System: THOBY3",
+  "extensions": {
+    "colorMeta": {
+      "gold": {
+        "role": "primary",
+        "displayName": "Gold Foil",
+        "tonalRamp": [
+          "#3c3011",
+          "#68531d",
+          "#947629",
+          "#c09935",
+          "#d3b35f",
+          "#e0c98f",
+          "#ede0bf",
+          "#f9f5eb"
+        ]
+      },
+      "gold-hover": {
+        "role": "primary",
+        "displayName": "Gold Foil Hover",
+        "tonalRamp": [
+          "#3e310f",
+          "#6b5519",
+          "#987824",
+          "#c69c2f",
+          "#d8b55a",
+          "#e4cb8c",
+          "#efe1bd",
+          "#faf6ea"
+        ]
+      },
+      "gold-ink": {
+        "role": "primary",
+        "displayName": "Gold Ink",
+        "tonalRamp": [
+          "#3d2e0f",
+          "#6a501a",
+          "#977225",
+          "#c49430",
+          "#d7ae5b",
+          "#e3c78c",
+          "#efdfbe",
+          "#faf5eb"
+        ]
+      },
+      "board": {
+        "role": "neutral",
+        "displayName": "Matte Board",
+        "tonalRamp": [
+          "#252527",
+          "#414144",
+          "#5c5c61",
+          "#78787d",
+          "#97979b",
+          "#b6b6b9",
+          "#d5d5d7",
+          "#f2f2f3"
+        ]
+      },
+      "board-raised": {
+        "role": "neutral",
+        "displayName": "Board Raised",
+        "tonalRamp": [
+          "#252527",
+          "#404044",
+          "#5b5b61",
+          "#76767e",
+          "#96969c",
+          "#b5b5ba",
+          "#d5d5d8",
+          "#f2f2f3"
+        ]
+      },
+      "lid": {
+        "role": "neutral",
+        "displayName": "Lid Anthracite",
+        "tonalRamp": [
+          "#252627",
+          "#414244",
+          "#5c5e61",
+          "#77797d",
+          "#96989c",
+          "#b6b7b9",
+          "#d5d6d7",
+          "#f2f2f3"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "#252527",
+          "#414144",
+          "#5c5c61",
+          "#78787d",
+          "#97979b",
+          "#b6b6b9",
+          "#d5d5d7",
+          "#f2f2f3"
+        ]
+      },
+      "ink-hover": {
+        "role": "neutral",
+        "displayName": "Ink Hover",
+        "tonalRamp": [
+          "#252527",
+          "#414144",
+          "#5c5c61",
+          "#78787d",
+          "#97979b",
+          "#b6b6b9",
+          "#d5d5d7",
+          "#f2f2f3"
+        ]
+      },
+      "sand": {
+        "role": "neutral",
+        "displayName": "Sand",
+        "tonalRamp": [
+          "#2f281d",
+          "#524533",
+          "#746148",
+          "#977e5e",
+          "#b19c81",
+          "#c8baa7",
+          "#e0d8cd",
+          "#f5f3ef"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "tonalRamp": [
+          "#30291c",
+          "#544731",
+          "#786545",
+          "#9b835a",
+          "#b4a07e",
+          "#cbbca5",
+          "#e1d9cb",
+          "#f6f3ef"
+        ]
+      },
+      "studio": {
+        "role": "neutral",
+        "displayName": "Studio Grey",
+        "tonalRamp": [
+          "#252725",
+          "#404440",
+          "#5b615b",
+          "#777e77",
+          "#969c96",
+          "#b5bab5",
+          "#d5d7d5",
+          "#f2f3f2"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "#292723",
+          "#48433d",
+          "#665f56",
+          "#857c70",
+          "#a29a90",
+          "#beb8b2",
+          "#dad7d3",
+          "#f3f2f1"
+        ]
+      },
+      "muted-strong": {
+        "role": "neutral",
+        "displayName": "Muted Strong",
+        "tonalRamp": [
+          "#292723",
+          "#48433d",
+          "#665f56",
+          "#857b70",
+          "#a29a90",
+          "#beb8b2",
+          "#dad7d3",
+          "#f3f2f1"
+        ]
+      },
+      "muted-dark": {
+        "role": "neutral",
+        "displayName": "Muted Dark",
+        "tonalRamp": [
+          "#292724",
+          "#47433e",
+          "#646058",
+          "#827c73",
+          "#a09b92",
+          "#bcb9b3",
+          "#d9d7d4",
+          "#f3f2f1"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line"
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Line Strong"
+      },
+      "line-dark": {
+        "role": "neutral",
+        "displayName": "Line on Board"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Section headings, two-line uppercase stacks; no label above."
+      },
+      "display-hero": {
+        "displayName": "Display Hero",
+        "purpose": "Hero h1 only."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names on cards, banderol, drawer."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running copy, 34-52ch, muted on light / muted-dark on board."
+      },
+      "label": {
+        "displayName": "Label (hang tag)",
+        "purpose": "Buttons, legends, nav, captions, small print, table heads."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Prices, size codes, measurements, height input."
+      },
+      "arabic": {
+        "displayName": "Arabic (Reem Kufi)",
+        "purpose": "Arabic greeting in the box section only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "lid-cast",
+        "value": "0 24px 48px -12px rgba(0,0,0,0.6)",
+        "purpose": "Only on the lifting lid in LidReveal; the system's single drop shadow."
+      },
+      {
+        "name": "gold-inset-rule",
+        "value": "inset 0 0 0 1px var(--gold)",
+        "purpose": "Second hairline marking an active choice on board (1.5px on the gift-box option). Not elevation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "House easing: hero rise/settle, card picker, cart progress."
+      },
+      {
+        "name": "ease-out-quick",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Accordion (open 260ms / close 180ms), sheet entry, header hide."
+      },
+      {
+        "name": "rise",
+        "value": "500ms translateY(12px) + fade, stagger 80ms + 70ms*i",
+        "purpose": "Hero entrance only; h1 uses rise-y (position only) so the LCP heading is visible at once."
+      },
+      {
+        "name": "settle",
+        "value": "1600ms scale(1.06) -> 1",
+        "purpose": "Hero box photo coming to rest in the sand."
+      },
+      {
+        "name": "lid-reveal",
+        "value": "scroll-linked: y 0 -> -104%, rotateX 0 -> 32deg, shade 0.55 -> 0",
+        "purpose": "The one authored scroll moment; mounted after paint, never under reduced motion."
+      },
+      {
+        "name": "diagram-spring",
+        "value": "spring stiffness 260, damping 32",
+        "purpose": "Thobe scale diagram morph and the header's active nav rule."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.97), 100ms",
+        "purpose": "Tactile press on every button."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Gold Button",
+      "kind": "button",
+      "refersTo": "button-gold",
+      "description": "The single gold-filled primary action per region.",
+      "html": "<button class=\"ds-btn-gold\">IN WINKELWAGEN <span class=\"ds-num\">€89</span></button>",
+      "css": ".ds-btn-gold { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8125rem; line-height: 1.2; background: var(--gold, #d2b15c); color: var(--ink, #151516); border: 0; border-radius: 0; min-height: 56px; padding: 0 28px; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; transition: transform 100ms cubic-bezier(0.16,1,0.3,1), background-color 200ms ease; } .ds-btn-gold:hover { background: #dcbd6c; } .ds-btn-gold:active { transform: scale(0.97); } .ds-btn-gold:focus-visible { outline: 2px solid var(--ink, #151516); outline-offset: 3px; } .ds-num { font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: 0; }"
+    },
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Filled action on sand when gold is not in play.",
+      "html": "<button class=\"ds-btn-ink\">SHOP WHITE DESERT IN M-1</button>",
+      "css": ".ds-btn-ink { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8125rem; line-height: 1.2; background: var(--ink, #151516); color: var(--paper, #f4f1ec); border: 0; border-radius: 0; min-height: 56px; padding: 0 28px; cursor: pointer; transition: transform 100ms cubic-bezier(0.16,1,0.3,1), background-color 200ms ease; } .ds-btn-ink:hover { background: #2a2a2c; } .ds-btn-ink:active { transform: scale(0.97); } .ds-btn-ink:focus-visible { outline: 2px solid var(--ink, #151516); outline-offset: 3px; }"
+    },
+    {
+      "name": "Choice on Board",
+      "kind": "chip",
+      "refersTo": "choice-dark",
+      "description": "Fit/size option on board; active = gold outline with inset rule and gold text, no fill.",
+      "html": "<div class=\"ds-board ds-row\"><button class=\"ds-choice-d\" aria-pressed=\"true\">SLANK <span>-1</span></button><button class=\"ds-choice-d\" aria-pressed=\"false\">BREED <span>-2</span></button></div>",
+      "css": ".ds-board { background-color: var(--board, #151516); background-image: url('/tex/board.webp'); background-size: 1400px 280px; color: var(--paper, #f4f1ec); padding: 20px; } .ds-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; } .ds-choice-d { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8125rem; line-height: 1.2; min-height: 48px; background: transparent; color: var(--paper, #f4f1ec); border: 1px solid rgba(243,240,234,0.16); border-radius: 0; cursor: pointer; transition: border-color 200ms ease, color 200ms ease; } .ds-choice-d span { opacity: 0.7; margin-left: 6px; } .ds-choice-d:hover { border-color: rgba(244,241,236,0.6); } .ds-choice-d[aria-pressed=true] { border-color: var(--gold, #d2b15c); color: var(--gold, #d2b15c); box-shadow: inset 0 0 0 1px var(--gold, #d2b15c); } .ds-choice-d:focus-visible { outline: 2px solid var(--gold, #d2b15c); outline-offset: 3px; }"
+    },
+    {
+      "name": "Choice on Sand",
+      "kind": "chip",
+      "refersTo": "choice-light",
+      "description": "Fit/size option on light ground; active = ink fill with gold lettering.",
+      "html": "<div class=\"ds-row4\"><button class=\"ds-choice-l\">S</button><button class=\"ds-choice-l\" aria-pressed=\"true\">M</button><button class=\"ds-choice-l\">L</button><button class=\"ds-choice-l\">XL</button></div>",
+      "css": ".ds-row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: var(--sand, #e8e2da); padding: 20px; } .ds-choice-l { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 1.25rem; line-height: 0.86; min-height: 48px; background: transparent; color: var(--ink, #151516); border: 1px solid rgba(21,21,22,0.42); border-radius: 0; cursor: pointer; transition: border-color 200ms ease, background-color 200ms ease, color 200ms ease; } .ds-choice-l:hover { border-color: var(--ink, #151516); } .ds-choice-l[aria-pressed=true] { background: var(--ink, #151516); border-color: var(--ink, #151516); color: var(--gold, #d2b15c); } .ds-choice-l:focus-visible { outline: 2px solid var(--ink, #151516); outline-offset: 3px; }"
+    },
+    {
+      "name": "Size-code Chips",
+      "kind": "chip",
+      "refersTo": "size-code-chip",
+      "description": "Woven neck-label codes S-1 ... XL-2 on the feature card.",
+      "html": "<ul class=\"ds-codes\"><li>S-1</li><li>S-2</li><li>M-1</li><li>M-2</li><li>L-1</li><li>L-2</li><li>XL-1</li><li>XL-2</li></ul>",
+      "css": ".ds-codes { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 0; padding: 0; } .ds-codes li { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 0.75rem; line-height: 1; padding: 2px 6px; border: 1px solid rgba(21,21,22,0.7); background: #fbfaf8; color: var(--ink, #151516); }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "product-card",
+      "description": "Hang tag: studio-grey photo ground, paper body with line edge, display name, tabular price.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-photo\"></div><div class=\"ds-card-body\"><h3>White Desert</h3><span class=\"ds-price\">€89</span><p>8 MATEN · S-1 T/M XL-2</p></div></article>",
+      "css": ".ds-card { width: 260px; background: var(--sand, #e8e2da); } .ds-card-photo { aspect-ratio: 3/4; background: #eeefee; } .ds-card-body { background: var(--paper, #f4f1ec); border: 1px solid rgba(21,21,22,0.14); border-top: 0; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; } .ds-card-body h3 { margin: 0; font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 800; text-transform: uppercase; line-height: 0.86; font-size: 1.75rem; color: var(--ink, #151516); } .ds-price { font-family: var(--face-display), 'Big Shoulders', sans-serif; font-variant-numeric: tabular-nums; font-weight: 600; font-size: 1.125rem; } .ds-card-body p { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8125rem; line-height: 1.2; font-size: 0.75rem; color: var(--muted, #5a544c); width: 100%; margin: 12px 0 0; }"
+    },
+    {
+      "name": "Height Input",
+      "kind": "input",
+      "refersTo": "body",
+      "description": "Size advisor field: underline only, big numerals, gold caret.",
+      "html": "<label class=\"ds-field\"><input inputmode=\"numeric\" placeholder=\"178\" maxlength=\"3\"><span>CM</span></label>",
+      "css": ".ds-field { display: inline-flex; align-items: baseline; gap: 8px; border-bottom: 2px solid rgba(21,21,22,0.42); padding-bottom: 4px; transition: border-color 200ms ease; } .ds-field:focus-within { border-color: var(--ink, #151516); } .ds-field input { width: 3ch; border: 0; background: transparent; outline: none; caret-color: var(--gold, #d2b15c); font-family: var(--face-display), 'Big Shoulders', sans-serif; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 3rem; line-height: 1; color: var(--ink, #151516); } .ds-field input::placeholder { color: rgba(21,21,22,0.25); } .ds-field span { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8125rem; line-height: 1.2; color: var(--muted, #5a544c); }"
+    },
+    {
+      "name": "Header Bar",
+      "kind": "nav",
+      "refersTo": "choice-dark",
+      "description": "Board bar with gold/40 bottom rule; active link gold with a 1px gold underline.",
+      "html": "<nav class=\"ds-nav\"><a>COLLECTIE</a><a class=\"on\" aria-current=\"location\">PASVORM</a><a>DE DOOS</a></nav>",
+      "css": ".ds-nav { background-color: var(--board, #151516); background-image: url('/tex/board.webp'); background-size: 1400px 280px; color: var(--paper, #f4f1ec); border-bottom: 1px solid rgba(210,177,92,0.4); height: 56px; display: flex; align-items: center; justify-content: center; } .ds-nav a { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8125rem; line-height: 1.2; position: relative; padding: 8px 16px; color: rgba(244,241,236,0.8); text-decoration: none; cursor: pointer; transition: color 200ms ease; } .ds-nav a:hover { color: var(--paper, #f4f1ec); } .ds-nav a.on { color: var(--gold, #d2b15c); } .ds-nav a.on::after { content: ''; position: absolute; left: 16px; right: 16px; bottom: -1px; height: 1px; background: var(--gold, #d2b15c); } .ds-nav a:focus-visible { outline: 2px solid var(--gold, #d2b15c); outline-offset: 3px; }"
+    },
+    {
+      "name": "Banderol",
+      "kind": "custom",
+      "refersTo": "button-gold",
+      "description": "Signature: grained board strip with two gold hairlines, the working size picker and the gold add-to-cart.",
+      "html": "<div class=\"ds-band\"><strong>WHITE DESERT</strong><button class=\"ds-band-btn\">IN WINKELWAGEN €89</button></div>",
+      "css": ".ds-band { background-color: var(--board, #151516); background-image: url('/tex/board.webp'); background-size: 1400px 280px; color: var(--paper, #f4f1ec); position: relative; display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 32px 40px; } .ds-band::before, .ds-band::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: rgba(210,177,92,0.6); } .ds-band::before { top: 6px; } .ds-band::after { bottom: 6px; } .ds-band strong { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 800; text-transform: uppercase; line-height: 0.86; font-size: 2rem; } .ds-band-btn { font-family: var(--face-display), 'Big Shoulders', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8125rem; line-height: 1.2; background: var(--gold, #d2b15c); color: var(--ink, #151516); border: 0; border-radius: 0; min-height: 56px; padding: 0 28px; cursor: pointer; transition: background-color 200ms ease, transform 100ms cubic-bezier(0.16,1,0.3,1); } .ds-band-btn:hover { background: #dcbd6c; } .ds-band-btn:active { transform: scale(0.97); } .ds-band-btn:focus-visible { outline: 2px solid var(--gold, #d2b15c); outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Gift Box",
+    "overview": "The site is the THOBY3 box. Sections outside the box sit on sand: the hero photo of the box in the sand, the collection, the size map, the FAQ. Sections inside the box sit on matte black board with real cardboard grain: the header bar, the hero banderol, the box section, the fabric section, the footer. Gold foil is scarce and literal. It marks the kufi emblem, the hairlines along the banderol and the bar edges, the one gold-filled action in a region, and the choice the visitor has just made.\n\nThe forms come from the packaging. Corners are square. Lines are thin. Headings are narrow uppercase stacks like the print inside the lid. Labels look like hang tags, and size codes look like woven neck labels. Photography is real product and real box. Studio packshots sit on a pale grey studio ground and blend into it with multiply. Depth comes from changing ground (sand, paper, board), never from shadow. The one cast shadow belongs to the lid as it lifts off.",
+    "keyCharacteristics": [
+      "Two grounds tell the story: sand is outside the box, grained board is inside it.",
+      "Gold marks the emblem, hairlines, the one primary action and the active choice. Nothing else.",
+      "Every corner is square. No pills, no radius.",
+      "Headings are two-line uppercase Big Shoulders stacks, with no label above them.",
+      "Size codes run S-1 to XL-2 (-1 slim, -2 broad) and are the product's own vocabulary."
+    ],
+    "rules": [
+      {
+        "name": "The One Burning Plane Rule",
+        "body": "Gold lights up only what matters right now: the emblem, the hairlines, the one gold-filled action in a region, and the active choice. It is never used for headings, labels, numerals, prices or table column heads. Those stay in ink, paper or muted.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Grounds Rule",
+        "body": "Sand means outside the box. Board means inside it. A section takes one ground or the other, with paper as the only layer laid on sand. Board is never shown without its grain.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ground-Aware Choice Rule",
+        "body": "On board, an active choice is a gold outline: gold border plus a 1px inset gold rule (`box-shadow: inset 0 0 0 1px var(--gold)`), with gold text and no fill. On sand or paper, an active choice is an ink fill with gold lettering.",
+        "section": "colors"
+      },
+      {
+        "name": "The Lid Print Rule",
+        "body": "A section heading is a two-line uppercase display stack and starts its section. There is no eyebrow, kicker or category label above it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Neck Label Rule",
+        "body": "Sizes are written as codes (S-1, S-2, M-1 to XL-2), where -1 means slim and -2 means broad. They are set in numerals, never spelled out as words.",
+        "section": "typography"
+      },
+      {
+        "name": "The Only Shadow Is the Box's Rule",
+        "body": "The lid's cast shadow is the system's only drop shadow. Everything else stays flat.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** set every section on either sand (outside the box) or grained board (inside it), with paper as the only layer on sand.",
+      "**Do** keep one gold-filled action per region, and make active choices a gold outline on board or an ink fill with gold text on light ground.",
+      "**Do** write section headings as two-line uppercase display stacks and start the section with them.",
+      "**Do** write sizes as codes (S-1 to XL-2) in tabular Big Shoulders numerals.",
+      "**Do** blend studio packshots into the studio grey with multiply.",
+      "**Do** limit entrance motion to the hero's rise/settle (500ms and 1600ms, `cubic-bezier(0.16,1,0.3,1)`), keep the lid reveal as the one scroll-linked moment, and gate all motion behind prefers-reduced-motion."
+    ],
+    "donts": [
+      "**Don't** use gold for headings, labels, numerals, prices or column heads.",
+      "**Don't** round a corner or use a pill shape.",
+      "**Don't** add drop shadows. The lid's cast shadow is the only one.",
+      "**Don't** put an eyebrow, kicker or category label above a heading.",
+      "**Don't** show board without its grain, or put board text in anything but paper, muted-dark or gold."
+    ]
+  }
+}

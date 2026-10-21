@@ -1,40 +1,38 @@
-"use client";
-
-import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import home from "@/content/home.json";
-import { products } from "@/lib/products";
+import { GIFT_BOX_PRICE, eur, isThobe, products } from "@/lib/products";
 import { ProductCard } from "./ProductCard";
 
-const filters = [
-  { id: "all", label: "Alles" },
-  { id: "thobe", label: "Thobes" },
-  { id: "accessory", label: "Accessoires" },
-] as const;
+// Uitverkocht achteraan (sort is stabiel, de CMS-volgorde blijft verder intact). De eerste leverbare thobe staat groot.
+const sorted = [...products].sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut));
+const feature = sorted.find((p) => isThobe(p) && !p.soldOut) ?? sorted[0];
+const rest = sorted.filter((p) => p !== feature);
 
 export function ProductGrid() {
-  const [filter, setFilter] = useState<(typeof filters)[number]["id"]>("all");
-  // Uitverkocht achteraan: de eerste rij toont altijd wat je nu kunt kopen (sort is stabiel, de CMS-volgorde blijft verder intact).
-  const shown = products.filter((p) => filter === "all" || p.kind === filter).sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut));
-
   return (
-    <section id="collectie" className="mx-auto max-w-[1440px] px-5 pb-24 pt-12 lg:px-10 lg:pb-32 lg:pt-16">
-      <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
-        <div>
-          <h2 className="font-serif text-5xl leading-none md:text-7xl">{home.collection.title} <em>{home.collection.titleItalic}</em></h2>
-          <p className="mt-5 max-w-md text-taupe">{home.collection.text}</p>
+    <section id="collectie" aria-labelledby="collectie-title" className="bg-sand">
+      <div className="mx-auto max-w-[1440px] px-5 py-20 lg:px-10 lg:py-28">
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+          <h2 id="collectie-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{home.collection.title}{home.collection.titleSecond && <><br />{home.collection.titleSecond}</>}</h2>
+          <p className="max-w-[44ch] leading-relaxed text-muted lg:pb-2">{home.collection.text}</p>
         </div>
-        <div role="group" aria-label="Filter collectie" className="flex border border-line p-0.5">
-          {filters.map((f) => (
-            <button key={f.id} aria-pressed={filter === f.id} onClick={() => setFilter(f.id)}
-              className={`press min-h-12 px-4 py-2 text-xs font-medium lg:min-h-0 ${filter === f.id ? "bg-ink text-ivory" : "text-taupe hover:text-ink"}`}>
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 lg:grid-cols-4 lg:gap-x-8">
-        {shown.map((p) => <ProductCard key={p.slug} product={p} />)}
+        <div className="mt-12 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 lg:mt-16 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-10">
+          <div className="col-span-2 lg:col-span-6 lg:row-span-2"><ProductCard product={feature} feature /></div>
+          {rest.map((p) => <div key={p.slug} className="lg:col-span-3"><ProductCard product={p} /></div>)}
+
+          {/* De geschenkdoos als vierde tegel: geen product, wel een keuze bij elke thobe. */}
+          <Link href="/#doos" className="group relative flex min-h-64 flex-col justify-end overflow-hidden bg-board p-4 text-paper sm:p-5 lg:col-span-3">
+            <Image src="/img/box-sand.jpg" alt="" fill sizes="(min-width:1024px) 25vw, 50vw" className="object-cover object-[55%_40%] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]" />
+            <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-board/90 via-board/30 to-transparent" />
+            <span className="relative">
+              <span className="display block text-[clamp(1.125rem,5.2vw,1.75rem)] lg:text-[1.75rem]">In de geschenkdoos</span>
+              <span className="tag mt-2 flex items-center gap-2 text-paper/85">Bij elke thobe, + {eur(GIFT_BOX_PRICE)} <ArrowRight size={14} aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5" /></span>
+            </span>
+          </Link>
+        </div>
       </div>
     </section>
   );

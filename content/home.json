@@ -1,70 +1,93 @@
 {
   "hero": {
-    "eyebrow": "Slank of breed · S t/m XL",
-    "title": "Thobes die écht passen.",
-    "titleItalic": "Slank of breed.",
-    "text": "Satijngeweven katoen, elke maat in twee pasvormen met dezelfde lengte. Vóór 17:00 besteld, vandaag verstuurd.",
-    "buttonPrimary": "Shop de collectie",
-    "buttonSecondary": "Vind je maat",
-    "image": "/img/hero.jpg",
-    "imageAlt": "Karavaan kamelen op een duin bij zonsondergang",
+    "title": "Eén lengte.",
+    "titleSecond": "Twee pasvormen.",
+    "text": "Elke maat van S tot XL bestaat in slank en breed, allebei even lang. Satijnkatoen. Ma t/m za vóór 17:00 besteld, dezelfde dag verstuurd.",
+    "buttonPrimary": "In winkelwagen",
+    "buttonSecondary": "Hulp bij je maat",
+    "image": "/img/box-held-wd.jpg",
+    "imageAlt": "Iemand in de White Desert-thobe houdt de matzwarte THOBY3-geschenkdoos met het gouden kufi-logo vast",
     "featuredProduct": "white-desert"
   },
-  "usp": {
-    "title": "Vóór 17:00 besteld, vandaag onderweg.",
-    "image": "/img/wd-2.jpg",
-    "imageAlt": "Manchet van de White Desert thobe met het THOBY3-merkteken",
-    "items": [
-      {
-        "icon": "exchange",
-        "title": "Gratis maatruil.",
-        "text": "Past hij niet? Binnen 14 dagen ruil je kosteloos."
-      },
-      {
-        "icon": "shield",
-        "title": "Vertrouwd en veilig betalen",
-        "text": "met iDEAL, creditcard, PayPal of Apple Pay."
-      },
-      {
-        "icon": "whatsapp",
-        "title": "Twijfel je over je maat?",
-        "text": "Stuur ons een bericht via WhatsApp.",
-        "whatsapp": true
-      }
-    ]
-  },
   "collection": {
-    "title": "De",
-    "titleItalic": "collectie",
-    "text": "Satijngeweven katoen in vier lengtes, elke maat in twee pasvormen."
+    "title": "De collectie",
+    "titleSecond": "",
+    "text": "Twee kleuren, elk in acht maten: S tot XL, slank en breed. Bij elke thobe krijg je musk en een siwak cadeau."
   },
+  "box": {
+    "greetingArabic": "السلام عليكم",
+    "greeting": "Assalamu'alaikum",
+    "title": "Klaar voor",
+    "titleSecond": "de masjid",
+    "text": "Dat staat in het deksel van de THOBY3-geschenkdoos, met drie stappen eronder. Je thobe ligt gevouwen onder een zwarte banderol met het logo in goudfolie. Om te geven, of om zelf te houden.",
+    "steps": [
+      {
+        "icon": "wudu",
+        "title": "Neem thuis wudu"
+      },
+      {
+        "icon": "thobe",
+        "title": "Trek je thobe aan"
+      },
+      {
+        "icon": "masjid",
+        "title": "Loop naar de masjid"
+      }
+    ],
+    "image": "/img/box-open-wd.jpg",
+    "imageAlt": "Bovenaanzicht van de open geschenkdoos: de White Desert gevouwen onder een zwarte banderol met het gouden THOBY3-logo",
+    "button": "Kies je maat en de doos",
+    "product": "white-desert"
+  },
+  "promises": [
+    {
+      "icon": "truck",
+      "title": "Vandaag verstuurd",
+      "text": "Ma t/m za vóór 17:00 besteld, dezelfde dag onderweg."
+    },
+    {
+      "icon": "exchange",
+      "title": "Gratis maatruil",
+      "text": "Past hij niet? Binnen 14 dagen ruil je kosteloos."
+    },
+    {
+      "icon": "shield",
+      "title": "Veilig betalen",
+      "text": "iDEAL, creditcard, PayPal of Apple Pay."
+    },
+    {
+      "icon": "whatsapp",
+      "title": "Twijfel je over je maat?",
+      "text": "Stuur ons een WhatsApp.",
+      "whatsapp": true
+    }
+  ],
   "fit": {
-    "title": "Twee pasvormen.",
-    "titleItalic": "Eén lengte.",
-    "text": "Elke maat is ontworpen voor twee posturen met dezelfde lengte. Zo zit je thobe niet alleen op de juiste lengte, maar ook precies zoals jij gebouwd bent.",
-    "note": "Kort en vol postuur? Kies een lange maat en laat deze inkorten."
+    "title": "Maatkaart",
+    "titleSecond": "",
+    "text": "Slank (-1) en breed (-2) zijn in elke maat even lang; ze verschillen in borst en schouders. Kies een maat en pasvorm: de tekening rechts staat op schaal.",
+    "note": "Kort en vol postuur? Kies breed in de maat die bij je lengte past. Te lang? Laat hem inkorten."
   },
   "fabric": {
-    "title": "Satijn geweven",
-    "titleItalic": "katoen",
-    "text": "Onze thobes zijn gemaakt van hoogwaardig satijn geweven katoen. De perfecte balans tussen luxe uitstraling en ademend comfort. De zachte textuur voelt heerlijk op de huid, terwijl de subtiele glans een verfijnde look geeft die de hele dag meegaat.",
+    "title": "Satijnkatoen",
+    "text": "Katoen in satijnbinding: de draden liggen lang aan de oppervlakte. Daardoor valt de stof soepel, voelt hij glad aan en heeft hij een lichte glans. En omdat het katoen is, ademt hij.",
     "button": "Alle stofeigenschappen",
     "properties": [
       {
-        "label": "Uitstraling",
-        "text": "Luxe, met een subtiele glans die de hele dag elegant blijft."
+        "label": "Glans",
+        "text": "Licht, door de satijnbinding. Geen glimmende kunstvezel."
       },
       {
-        "label": "Comfort",
-        "text": "Ademend katoen, aangenaam op warme dagen én bij formele gelegenheden."
+        "label": "Draagcomfort",
+        "text": "Katoen ademt, dus ook prettig op een warme vrijdag in een volle masjid."
       },
       {
-        "label": "Gevoel",
-        "text": "Een zachte textuur die heerlijk op de huid ligt."
+        "label": "Afwerking",
+        "text": "Opstaande kraag, knoopsluiting, borstzak, zijzakken en het THOBY3-merkje op de manchet."
       },
       {
         "label": "Onderhoud",
-        "text": "Behoudt zijn vorm en kleur, ook na veelvuldig wassen. Volg altijd het waslabel."
+        "text": "Volg het waslabel. Binnenstebuiten wassen en lauw strijken houdt de glans het langst mooi."
       }
     ],
     "details": [
@@ -83,48 +106,23 @@
         "image": "/img/wd-2.jpg",
         "alt": "Manchet met THOBY3-merkteken"
       }
-    ]
-  },
-  "craft": {
-    "title": "Kwaliteit tot in",
-    "titleItalic": "elk detail",
-    "text": "Bij THOBY3® geloven we in kwaliteit. Voor elke maat bieden we twee variaties, ontworpen voor twee posturen met dezelfde lengte. Dankzij onze snelle, betrouwbare levering hoef je niet lang te wachten op jouw bestelling.",
-    "image": "/img/cs-3.jpg",
-    "imageAlt": "Manchet met het geborduurde THOBY3-merkteken",
-    "facts": [
-      {
-        "label": "Stof",
-        "value": "Satijnkatoen"
-      },
-      {
-        "label": "Pasvormen",
-        "value": "Slank & breed"
-      },
-      {
-        "label": "Maten",
-        "value": "S t/m XL"
-      }
     ],
-    "button": "Naar de collectie",
-    "giftText": "Bij elke thobe gratis Musk & Siwak, t.w.v.",
-    "giftButton": "Bekijk de White Desert",
-    "giftProduct": "white-desert"
+    "titleSecond": ""
   },
   "reviews": {
     "title": "Wat klanten",
-    "titleItalic": "zeggen"
+    "titleSecond": "zeggen"
   },
   "faq": {
-    "title": "Veelgestelde",
-    "titleItalic": "vragen",
+    "title": "Vragen",
     "items": [
       {
         "q": "Welke maat moet ik kiezen?",
-        "a": "Kies op je lichaamslengte: S 1.60–1.70 m, M 1.70–1.78 m, L 1.78–1.87 m en XL 1.87–1.95 m. Zit je precies op de grens of heb je een kort en vol postuur? Kies dan de langere maat en laat hem inkorten."
+        "a": "Kies op je lichaamslengte: S 160–170 cm, M 170–178 cm, L 178–187 cm en XL 187–195 cm. Zit je precies op de grens? Kies de langere maat: inkorten kan altijd, langer maken niet."
       },
       {
         "q": "Slank of breed: wat is het verschil?",
-        "a": "Beide pasvormen hebben per maat dezelfde lengte. Slank is gestroomlijnd om schouders en taille, voor een atletische of slanke bouw. Breed is ruimer om borst en buik, voor een volle of brede bouw."
+        "a": "Beide pasvormen hebben per maat dezelfde lengte. Slank is smaller om schouders en taille, voor een atletische of slanke bouw. Breed is ruimer om borst en buik (4 cm meer borstwijdte), voor een volle of brede bouw."
       },
       {
         "q": "Mijn maat past niet. Kan ik ruilen?",
@@ -136,20 +134,21 @@
       },
       {
         "q": "Wat kost verzending?",
-        "a": "Vanaf €50 verzenden we gratis binnen Nederland en de EU. De tarieven onder €50 en de levertijd per land staan op de pagina Levering & retour."
+        "a": "Binnen Nederland verzenden we altijd gratis. Naar de rest van de EU is verzending gratis vanaf €50; daaronder staan de tarieven per land op de pagina Levering & retour."
       },
       {
         "q": "Kan ik mijn thobe laten inkorten?",
-        "a": "Ja, bij elke kleermaker. Vooral bij een kort en vol postuur raden we aan een langere maat te kiezen en die te laten inkorten: zo zit hij ruim genoeg én op de juiste lengte."
+        "a": "Ja, bij elke kleermaker. Heb je een kort en vol postuur, kies dan breed in de maat die bij je lengte past. Valt hij nog te lang, laat hem dan inkorten."
       },
       {
         "q": "Hoe was ik mijn thobe?",
-        "a": "Volg altijd het waslabel in de thobe. Satijnkatoen behoudt zijn vorm en kleur, ook na veelvuldig wassen."
+        "a": "Volg het waslabel in de thobe. Was hem binnenstebuiten en strijk lauw, dan blijft de glans van het satijnkatoen het langst mooi."
       },
       {
         "q": "Hoe kan ik betalen?",
-        "a": "Met iDEAL, Visa, Mastercard, PayPal en Apple Pay, in de beveiligde checkout op thoby3.com."
+        "a": "Met iDEAL, Visa, Mastercard, PayPal en Apple Pay, in de beveiligde checkout."
       }
-    ]
+    ],
+    "titleSecond": ""
   }
 }
