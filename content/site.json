@@ -6,7 +6,7 @@
   "announcements": [
     {
       "icon": "gift",
-      "text": "Vanaf €50 GRATIS Musk & Siwak t.w.v. €13,48"
+      "text": "Gratis Musk & Siwak bij elke thobe t.w.v. €13,48"
     },
     {
       "icon": "truck",
@@ -15,10 +15,6 @@
     {
       "icon": "exchange",
       "text": "Gratis maatruil binnen 14 dagen"
-    },
-    {
-      "icon": "clock",
-      "text": "Vóór 17:00 besteld, vandaag verzonden"
     }
   ],
   "contact": {

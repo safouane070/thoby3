@@ -16,7 +16,7 @@ export function ImageViewer({ open, onOpenChange, src, title }: { open: boolean;
           <Drawer.Description className="sr-only">Veeg omlaag of druk op Esc om te sluiten.</Drawer.Description>
           <Drawer.Close aria-label="Sluit foto" className="press absolute right-3 top-3 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-ivory/90 lg:h-10 lg:w-10"><X size={18} /></Drawer.Close>
           <div className="relative m-4 flex-1">
-            <Image src={src} alt={title} fill sizes="100vw" quality={90} className="object-contain" />
+            <Image src={src} alt={title} fill sizes="100vw" className="object-contain" />
           </div>
         </Drawer.Content>
       </Drawer.Portal>

@@ -19,7 +19,6 @@ content:
       - { name: kind, label: Soort, type: select, required: true, options: { values: [thobe, accessory] }, description: "thobe = met maten en pasvormen; accessory = zonder maten (Musk, Siwak)." }
       - { name: tagline, label: Korte omschrijving, type: text, description: "Eén zin onder de naam en in Google." }
       - { name: description, label: Beschrijving (alinea's), type: text, list: true }
-      - { name: badge, label: Label bij het cadeau (mag leeg), type: string, description: "Bijv. Vanaf €50 gratis Musk & Siwak" }
       - name: color
         label: Kleur
         type: object
@@ -54,8 +53,9 @@ content:
     path: content/shop.json
     format: json
     fields:
-      - { name: rewardFrom, label: Gratis verzending + cadeau vanaf (€), type: number, required: true, description: "Moet gelijk zijn aan de instelling in WooCommerce. Pas ook de aankondigingen bovenaan aan." }
+      - { name: rewardFrom, label: Gratis verzending (EU) vanaf (€), type: number, required: true, description: "Moet gelijk zijn aan de instelling in WooCommerce. Pas ook de aankondigingen bovenaan aan." }
       - { name: giftValue, label: Waarde van het gratis cadeau (€), type: number, required: true }
+      - { name: giftText, label: Tekst cadeau op de productpagina van een thobe, type: string, description: "De waarde komt er automatisch achter, bijv. Gratis Musk & Siwak bij deze thobe" }
       - { name: giftBoxPrice, label: Meerprijs cadeaudoos (€), type: number, required: true, description: "Moet gelijk zijn aan het prijsverschil in WooCommerce (nu €5)." }
       - { name: showCompareAt, label: Van-prijs en kortingslabel tonen, type: boolean, description: "Alleen aanzetten tijdens een echte, tijdelijke actie. De doorgestreepte prijs moet de laagste prijs van de afgelopen 30 dagen zijn (Omnibus-regels); anders is het misleidend." }
       - { name: shippingText, label: Verzendtekst, type: string }
