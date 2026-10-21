@@ -18,7 +18,7 @@ export function Reviews({ items, id = "reviews", className = "" }: { items: Revi
   return (
     <section id={id} aria-labelledby={`${id}-title`} className={className}>
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
-        <h2 id={`${id}-title`} className="font-serif text-5xl leading-none md:text-6xl">{home.reviews.title} <em>{home.reviews.titleItalic}</em></h2>
+        <h2 id={`${id}-title`} className="display text-[clamp(2.75rem,6vw,5.25rem)]">{home.reviews.title} {home.reviews.titleSecond}</h2>
         <p className="flex items-center gap-3 text-sm"><Stars rating={avg} size={16} /> <span><strong className="font-medium">{avg.toLocaleString("nl-NL")}</strong> / 5 · {items.length} {items.length === 1 ? "review" : "reviews"}</span></p>
       </div>
       <ul className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">

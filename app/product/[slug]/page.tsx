@@ -5,6 +5,7 @@ import { getProduct, products } from "@/lib/products";
 import { SITE_URL, baseOpenGraph } from "@/lib/seo";
 import { average, reviewsFor } from "@/lib/reviews";
 import { Reviews } from "@/components/Reviews";
+import { ProductCard } from "@/components/ProductCard";
 
 // Statische export: alleen de producten uit content/products.json bestaan; andere slugs geven de 404-pagina.
 export const dynamicParams = false;
@@ -37,7 +38,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     description: product.tagline,
     image: product.gallery.map((src) => SITE_URL + src),
     url,
-    sku: product.id,
+    sku: product.slug,
     brand: { "@type": "Brand", name: "THOBY3" },
     ...(own.length > 0 && {
       aggregateRating: { "@type": "AggregateRating", ratingValue: average(own), reviewCount: own.length, bestRating: 5, worstRating: 1 },
@@ -72,6 +73,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <ProductDetail key={product.slug} product={product} />
       <Reviews items={own} className="mx-auto max-w-[1440px] px-5 pb-24 lg:px-10" />
+      <section aria-labelledby="meer-title" className="mx-auto max-w-[1440px] border-t border-line px-5 pb-24 pt-16 lg:px-10 lg:pb-28">
+        <h2 id="meer-title" className="display text-[clamp(2rem,3.2vw,2.75rem)]">Meer van THOBY3</h2>
+        <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
+          {/* Leverbaar eerst (sort is stabiel), zodat een uitverkochte thobe nooit de eerste suggestie is. */}
+          {products.filter((p) => p.slug !== product.slug).sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut)).map((p) => (
+            <li key={p.slug}><ProductCard product={p} /></li>
+          ))}
+        </ul>
+      </section>
     </>
   );
 }

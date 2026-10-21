@@ -1,9 +1,10 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { FITS, REWARD_FROM, GIFT_BOX_PRICE, SIZES, checkoutUrl, eur, getProduct, wooId, type Fit } from "@/lib/products";
+import { FITS, REWARD_FROM, GIFT_BOX_PRICE, SIZES, eur, getProduct, type Fit } from "@/lib/products";
+import { MAX_QTY } from "@/lib/order";
 
-export const MAX_QTY = 10;
+export { MAX_QTY };
 const STORAGE_KEY = "thoby3.store.v1";
 
 // localStorage is door de gebruiker aan te passen: alleen bestaande, leverbare producten, maten en geldige aantallen komen terug.
@@ -21,23 +22,27 @@ export type NewLine = Omit<Line, "id" | "qty">;
 
 type Store = {
   lines: Line[];
+  /** Pas true als de winkelwagen uit localStorage is ingelezen (daarvoor is hij altijd leeg). */
+  ready: boolean;
   count: number;
   subtotal: number;
   /** Cadeau (Musk & Siwak) zodra er een thobe in de winkelwagen ligt. */
   giftUnlocked: boolean;
+  /** Eén set Musk & Siwak per thobe, zoals de site belooft. */
+  giftSets: number;
   /** Gratis verzending (EU) vanaf REWARD_FROM. */
   freeShipping: boolean;
   remainingForShipping: number;
   add: (l: NewLine) => void;
   setQty: (id: string, qty: number) => void;
+  /** Na een geslaagde betaling. */
+  clear: () => void;
   lineUnit: (l: Line) => number;
   drawerOpen: boolean;
   setDrawerOpen: (v: boolean) => void;
   wishlist: string[];
   toggleWish: (slug: string) => void;
   money: (amount: number) => string;
-  /** Link naar de WooCommerce-checkout met deze winkelwagen; null als een regel geen WooCommerce-ID heeft. */
-  checkoutHref: string | null;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -95,25 +100,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const clear = useCallback(() => setLines([]), []);
   const toggleWish = useCallback((slug: string) => setWishlist((w) => (w.includes(slug) ? w.filter((s) => s !== slug) : [...w, slug])), []);
 
   const value = useMemo<Store>(() => {
     const subtotal = lines.reduce((sum, l) => sum + lineUnit(l) * l.qty, 0);
-    const items = lines.map((l) => ({ id: wooId(getProduct(l.slug)!, l.size, l.fit, l.giftBox), qty: l.qty }));
-    // Liever geen link dan een bestelling waarin stilletjes een regel ontbreekt.
-    const complete = items.length > 0 && items.every((i) => i.id !== undefined);
+    const giftSets = lines.reduce((n, l) => n + (getProduct(l.slug)?.kind === "thobe" ? l.qty : 0), 0);
     return {
       lines,
+      ready,
       count: lines.reduce((n, l) => n + l.qty, 0),
       subtotal,
-      giftUnlocked: lines.some((l) => getProduct(l.slug)?.kind === "thobe"),
+      giftUnlocked: giftSets > 0,
+      giftSets,
       freeShipping: subtotal >= REWARD_FROM,
       remainingForShipping: Math.max(0, REWARD_FROM - subtotal),
-      add, setQty, lineUnit, drawerOpen, setDrawerOpen, wishlist, toggleWish,
+      add, setQty, clear, lineUnit, drawerOpen, setDrawerOpen, wishlist, toggleWish,
       money: eur,
-      checkoutHref: complete ? checkoutUrl(items as { id: number; qty: number }[]) : null,
     };
-  }, [lines, drawerOpen, wishlist, add, setQty, lineUnit, toggleWish]);
+  }, [lines, ready, drawerOpen, wishlist, add, setQty, clear, lineUnit, toggleWish]);
 
   return (
     <Ctx.Provider value={value}>

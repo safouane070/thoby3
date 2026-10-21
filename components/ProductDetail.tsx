@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
 import { ArrowLeftRight, Bell, Check, ChevronRight, Gift, Heart, Layers, MessageCircle, Truck, X } from "lucide-react";
 import { ToggleGroup } from "radix-ui";
-import { BLUR, EXCHANGE_COPY, FITS, GIFT_BOX_PRICE, GIFT_TEXT, GIFT_VALUE, HAS_MEASUREMENTS, SHIPPING_COPY, SIZES, discountPct, isThobe, products, whatsapp, type Fit, type Product } from "@/lib/products";
+import { BLUR, EXCHANGE_COPY, FITS, GIFT_BOX_PRICE, GIFT_TEXT, HAS_MEASUREMENTS, SHIPPING_COPY, SIZES, discountPct, isThobe, products, sizeCode, whatsapp, type Fit, type Product } from "@/lib/products";
 import { FabricSpotlight } from "./FabricSpotlight";
 import { FitToggle } from "./FitToggle";
 import { Price } from "./Price";
@@ -36,18 +36,19 @@ function Gallery({ product }: { product: Product }) {
     setZoom(true);
   };
 
+  // Desktop: de galerij blijft staan terwijl je door de keuzes scrolt; de foto past altijd in beeld.
   return (
-    <div className="grid gap-3 lg:grid-cols-[88px_1fr]">
+    <div className="grid gap-3 lg:sticky lg:top-28 lg:grid-cols-[88px_1fr] lg:self-start">
       <div className="order-2 flex gap-2 overflow-x-auto lg:order-1 lg:flex-col" role="group" aria-label="Productfoto's">
         {product.gallery.map((src, i) => (
           <button key={src} aria-pressed={i === img} aria-label={`${product.name}, foto ${i + 1} bekijken`} onPointerEnter={() => warm(i)} onFocus={() => warm(i)} onClick={() => { warm(i); setImg(i); }}
-            className={`press relative aspect-[3/4] w-20 shrink-0 border bg-sand lg:w-full ${i === img ? "border-ink" : "border-line opacity-70 [@media(hover:hover)]:hover:opacity-100"}`}>
+            className={`press relative aspect-[3/4] w-20 shrink-0 border bg-studio lg:w-full ${i === img ? "border-ink" : "border-transparent opacity-70 [@media(hover:hover)]:hover:opacity-100"}`}>
             {/* Eager: zelfde bron als de grote foto; lazy hier laat Next de LCP-foto als lazy zien. 5× 88px kost niets. */}
             <Image src={src} alt="" fill sizes="88px" loading="eager" className="object-cover mix-blend-multiply" />
           </button>
         ))}
       </div>
-      <div onPointerMove={move} onPointerLeave={() => setZoom(false)} className="relative order-1 aspect-[3/4] cursor-zoom-in overflow-hidden border border-line bg-sand lg:order-2">
+      <div onPointerMove={move} onPointerLeave={() => setZoom(false)} className="relative order-1 aspect-[3/4] cursor-zoom-in overflow-hidden bg-studio lg:order-2 lg:w-[min(100%,calc((100vh-9rem)*0.75))]">
         <div ref={inner} className={`absolute inset-0 transition-transform duration-200 ease-out ${zoom ? "scale-[1.6]" : "scale-100"}`}>
           {product.gallery.map((src, i) => seen.includes(i) && (
             <Image key={src} src={src} alt={i === img ? `${product.name}, foto ${i + 1}` : ""} fill loading={i === 0 ? "eager" : undefined} fetchPriority={i === 0 ? "high" : undefined} sizes="(min-width:1024px) 55vw, 100vw"
@@ -68,14 +69,14 @@ function Gallery({ product }: { product: Product }) {
 function Colorways({ product, query }: { product: Product; query: string }) {
   return (
     <div>
-      <p className="text-sm font-medium">Kleur <span className="ml-2 font-normal text-taupe">{product.colors[0].name}</span></p>
+      <p className="tag">Kleur <span className="ml-2 normal-case tracking-normal text-muted">{product.colors[0].name}</span></p>
       <ul className="mt-3 flex gap-3">
         {products.filter(isThobe).map((p) => (
           <li key={p.slug}>
             <Link href={`/product/${p.slug}${query}`} aria-label={`${p.colors[0].name}${p.soldOut ? ", uitverkocht" : ""}`} aria-current={p.slug === product.slug ? "page" : undefined}
-              className={`press relative block h-12 w-12 rounded-full border p-1 lg:h-10 lg:w-10 ${p.slug === product.slug ? "border-ink" : "border-line hover:border-line-strong"}`}>
-              <span className="block h-full w-full rounded-full border border-black/10" style={{ background: p.colors[0].hex }} />
-              {p.soldOut && <span aria-hidden className="absolute inset-1 rounded-full" style={{ background: "linear-gradient(135deg, transparent 46%, rgba(26,26,26,.55) 47% 53%, transparent 54%)" }} />}
+              className={`press relative block h-12 w-12 border p-1 ${p.slug === product.slug ? "border-ink" : "border-line hover:border-line-strong"}`}>
+              <span className="block h-full w-full border border-black/10" style={{ background: p.colors[0].hex }} />
+              {p.soldOut && <span aria-hidden className="absolute inset-1" style={{ background: "linear-gradient(135deg, transparent 46%, rgba(26,26,26,.55) 47% 53%, transparent 54%)" }} />}
             </Link>
           </li>
         ))}
@@ -98,7 +99,6 @@ function subscribeUrl(onChange: () => void) {
 export function ProductDetail({ product }: { product: Product }) {
   const { add, wishlist, toggleWish, money } = useStore();
   const thobe = isThobe(product);
-  const [giftBox, setGiftBox] = useState(false);
   const [missing, setMissing] = useState(false);
   // Mobiel: de vaste CTA klapt zelf een maatkiezer uit (scrollen naar de maten bleek onbetrouwbaar en kost een extra stap).
   const [picker, setPicker] = useState(false);
@@ -111,9 +111,10 @@ export function ProductDetail({ product }: { product: Product }) {
   const fit: Fit = params.get("fit") === "broad" ? "broad" : "slim";
   const urlSize = params.get("size");
   const size = urlSize && SIZES.some((x) => x.label === urlSize) ? urlSize : "";
+  const giftBox = thobe && params.get("box") === "1";
 
   // history.replaceState synct met useSearchParams zonder navigatie of extra history-entry (Next docs: Native History API).
-  const syncUrl = (patch: { size?: string; fit?: Fit }) => {
+  const syncUrl = (patch: { size?: string; fit?: Fit; box?: string }) => {
     const q = new URLSearchParams(window.location.search);
     for (const [k, v] of Object.entries(patch)) if (v) q.set(k, v); else q.delete(k);
     window.history.replaceState(window.history.state, "", `?${q}`);
@@ -121,7 +122,8 @@ export function ProductDetail({ product }: { product: Product }) {
   };
   const chooseSize = (v: string) => { setMissing(false); syncUrl({ size: v }); };
   const chooseFit = (f: Fit) => syncUrl({ fit: f });
-  const query = `?${new URLSearchParams({ fit, ...(size && { size }) })}`;
+  const setGiftBox = (on: boolean) => syncUrl({ box: on ? "1" : "" });
+  const query = `?${new URLSearchParams({ fit, ...(size && { size }), ...(giftBox && { box: "1" }) })}`;
 
   const submit = () => {
     if (product.soldOut) return;
@@ -147,11 +149,11 @@ export function ProductDetail({ product }: { product: Product }) {
     add({ slug: product.slug, size: s, fit, giftBox });
   };
   const total = product.price + (giftBox ? GIFT_BOX_PRICE : 0);
-  const cta = "press btn-primary min-h-12 flex-1 py-4 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50";
+  const cta = "press btn-gold tag min-h-14 flex-1 py-4 !text-[0.9375rem] disabled:cursor-not-allowed disabled:opacity-50";
 
   return (
-    <div className="mx-auto max-w-[1440px] px-5 pb-32 pt-40 lg:px-10 lg:pb-24">
-      <nav aria-label="Kruimelpad" className="mb-8 flex items-center gap-2 text-xs text-taupe">
+    <div className="mx-auto max-w-[1440px] px-5 pb-32 pt-32 lg:px-10 lg:pb-24 lg:pt-36">
+      <nav aria-label="Kruimelpad" className="tag mb-8 flex items-center gap-2 !text-[0.75rem] text-muted">
         <Link href="/" className="-m-4 inline-block p-4 hover:text-ink">Home</Link><ChevronRight size={12} aria-hidden />
         <Link href="/#collectie" className="-my-4 inline-block py-4 hover:text-ink">Collectie</Link><ChevronRight size={12} aria-hidden />
         <span className="text-ink" aria-current="page">{product.name}</span>
@@ -160,61 +162,65 @@ export function ProductDetail({ product }: { product: Product }) {
       <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-20">
         <Gallery product={product} />
 
-        <div className="[@media(min-height:960px)]:lg:sticky [@media(min-height:960px)]:lg:top-40 lg:self-start">
-          <h1 className="font-serif text-5xl leading-none md:text-6xl">{thobe ? "Thobe " : ""}<em>{product.name}</em></h1>
-          <div className="mt-5 flex items-baseline gap-2"><Price price={product.price} compareAt={product.compareAt} className="text-xl" /><span className="text-xs text-taupe">incl. btw</span></div>
-          <p className="mt-5 max-w-lg leading-relaxed text-taupe">{product.tagline}</p>
+        <div>
+          <h1 className="display text-[clamp(3rem,5vw,4.75rem)]">{thobe && <span className="sr-only">Thobe </span>}{product.name}</h1>
+          <div className="mt-4 flex items-baseline gap-2"><Price price={product.price} compareAt={product.compareAt} className="num text-3xl font-bold" /><span className="text-xs text-muted">incl. btw</span></div>
+          <p className="mt-5 max-w-[48ch] leading-relaxed text-muted">{product.tagline}</p>
 
           {thobe && (
             <div className="mt-8 space-y-7">
               <Colorways product={product} query={query} />
               <div>
-                <p className="text-sm font-medium">Pasvorm <span className="ml-2 font-normal text-taupe">zelfde lengte, twee posturen</span></p>
+                <p className="tag">Pasvorm <span className="ml-2 normal-case tracking-normal text-muted">zelfde lengte, twee posturen</span></p>
                 <div className="mt-3">
                   <FitToggle value={fit} onChange={chooseFit} id="fit-detail" />
-                  <p className="mt-2 text-xs leading-snug text-taupe" aria-live="polite">{FITS.find((f) => f.id === fit)!.note}</p>
+                  <p className="mt-2 text-sm leading-snug text-muted" aria-live="polite">{FITS.find((f) => f.id === fit)!.note}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-sm font-medium" id="size-label">Maat</p>
+                <p className="tag" id="size-label">Maat</p>
                 <ToggleGroup.Root id="size-group" type="single" value={size} onValueChange={(v) => v && chooseSize(v)} disabled={product.soldOut} aria-labelledby="size-label" className="mt-3 grid grid-cols-4 gap-2">
                   {SIZES.map((s) => (
                     <ToggleGroup.Item key={s.label} value={s.label}
-                      className="press border border-line py-3 hover:border-line-strong data-[state=on]:border-ink data-[state=on]:bg-ink data-[state=on]:text-ivory disabled:cursor-not-allowed disabled:opacity-40">
-                      <span className="block font-serif text-xl">{s.label}</span>
-                      <span className="block text-[0.625rem] opacity-70">{s.bodyHeight.replace(" m", "")}</span>
+                      className="press border border-line-strong py-2.5 hover:border-ink data-[state=on]:border-ink data-[state=on]:bg-ink data-[state=on]:text-gold disabled:cursor-not-allowed disabled:opacity-40">
+                      <span className="display block text-2xl">{sizeCode(s.label, fit)}</span>
+                      <span className="num block text-xs opacity-70">{s.bodyHeight.replace(" cm", "")}</span>
                     </ToggleGroup.Item>
                   ))}
                 </ToggleGroup.Root>
-                {missing && !size && <p role="alert" className="mt-2 text-sm text-red-700">Kies eerst een maat.</p>}
-                {HAS_MEASUREMENTS && sizeInfo && (sizeInfo.chest[fit] || sizeInfo.length) && (
-                  <p className="mt-2 text-xs text-taupe-strong">
-                    Maat {sizeInfo.label} · {fitLabel}: {[sizeInfo.chest[fit] && `borstomvang ${sizeInfo.chest[fit]} cm`, sizeInfo.length && `lengte ${sizeInfo.length} cm`].filter(Boolean).join(", ")}
-                  </p>
+                {missing && !size && <p role="alert" className="mt-2 text-sm font-semibold text-[#9b2c1f]">Kies eerst een maat.</p>}
+                {HAS_MEASUREMENTS && sizeInfo && (
+                  <dl className="num mt-3 grid grid-cols-4 border-y border-line text-center">
+                    {([["Borst", sizeInfo.chest[fit]], ["Schouders", sizeInfo.shoulders[fit]], ["Mouw", sizeInfo.sleeve[fit]], ["Lengte", sizeInfo.length]] as const).map(([k, v]) => (
+                      <div key={k} className="py-2.5 [&:not(:first-child)]:border-l [&:not(:first-child)]:border-line"><dt className="tag !text-[0.6875rem] text-muted">{k}</dt><dd className="text-lg font-bold">{v} cm</dd></div>
+                    ))}
+                  </dl>
                 )}
-                <p className="mt-2 text-xs text-taupe">Kort en vol postuur? Kies een lange maat en laat deze inkorten.</p>
-                {!product.soldOut && <SizeAdvisor onPick={chooseSize} fit={fit} className="mt-5 border-t border-line pt-5" />}
+                <p className="mt-2 text-xs text-muted">{sizeInfo ? `${sizeCode(sizeInfo.label, fit)}, plat gemeten. ` : ""}Kort en vol postuur? Kies breed in de maat bij je lengte en laat hem zo nodig inkorten.</p>
+                {!product.soldOut && <SizeAdvisor onPick={chooseSize} fit={fit} className="mt-6 border-t border-line pt-6" />}
               </div>
 
-              <label className="flex cursor-pointer items-center gap-4 border border-line p-4 transition-colors duration-200 hover:border-line-strong">
+              {/* De geschenkdoos als keuze met foto. Staat in de URL (?box=1), zodat de link vanaf de homepage hem aanzet. */}
+              <label className={`board on-dark flex cursor-pointer items-center gap-4 p-3 pr-4 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold ${giftBox ? "shadow-[inset_0_0_0_1.5px_var(--gold)]" : ""}`}>
                 <input type="checkbox" checked={giftBox} onChange={(e) => setGiftBox(e.target.checked)} className="peer sr-only" />
-                <span className="flex h-5 w-5 items-center justify-center border border-ink peer-checked:bg-ink peer-checked:text-ivory peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-ink" aria-hidden>{giftBox && <Check size={13} />}</span>
-                <span className="flex-1 text-sm">Cadeaudoos toevoegen</span>
-                <span className="text-sm text-taupe">+ {money(GIFT_BOX_PRICE)}</span>
+                <span className="relative h-16 w-16 shrink-0 overflow-hidden"><Image src="/img/box-sand.jpg" alt="" fill sizes="64px" className="object-cover" /></span>
+                <span className="flex-1 text-sm leading-snug"><span className="display block text-xl text-paper">In de geschenkdoos</span><span className="text-muted-dark">Matzwart, goudfolie, banderol</span></span>
+                <span className="num text-base font-bold text-paper">+ {money(GIFT_BOX_PRICE)}</span>
+                <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center border border-paper/50 text-ink peer-checked:border-gold peer-checked:bg-gold">{giftBox && <Check size={13} strokeWidth={2.5} />}</span>
               </label>
 
               <div className="flex flex-col gap-3 text-[0.8125rem] sm:flex-row sm:items-center sm:justify-between">
-                <p className="flex items-center gap-2"><Gift size={16} className="shrink-0 text-ink" aria-hidden /> {GIFT_TEXT}, t.w.v. {money(GIFT_VALUE)}</p>
+                <p className="flex items-center gap-2"><Gift size={16} className="shrink-0 text-gold-ink" aria-hidden /> {GIFT_TEXT}</p>
                 <FabricSpotlight className="press flex min-h-12 items-center gap-2 underline lg:min-h-8 decoration-line-strong underline-offset-4 hover:decoration-ink"><Layers size={16} aria-hidden /> Over de stof</FabricSpotlight>
               </div>
             </div>
           )}
 
           {product.soldOut && (
-            <div className="mt-8 border border-line bg-sand p-5">
+            <div className="mt-8 border border-line-strong p-5">
               <p className="font-medium">Binnenkort weer op voorraad</p>
-              <p className="mt-1 text-sm text-taupe-strong">Stuur ons een berichtje, dan laten we het je als eerste weten.</p>
+              <p className="mt-1 text-sm text-muted">Stuur ons een berichtje, dan laten we het je als eerste weten.</p>
             </div>
           )}
 
@@ -222,7 +228,7 @@ export function ProductDetail({ product }: { product: Product }) {
             {product.soldOut
               ? <a href={notify} target="_blank" rel="noopener noreferrer" className={`${cta} flex items-center justify-center gap-2`}><Bell size={16} aria-hidden /> Laat het me weten</a>
               : <button onClick={submit} className={cta}>{label} · {money(total)}</button>}
-            <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line hover:border-line-strong"><Heart size={18} className={wished ? "fill-ink text-ink" : ""} /></button>
+            <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line-strong hover:border-ink"><Heart size={18} className={wished ? "fill-ink text-ink" : ""} /></button>
           </div>
 
           <ul className="mt-8 space-y-3 text-[0.8125rem]">
@@ -233,32 +239,32 @@ export function ProductDetail({ product }: { product: Product }) {
             </li>
           </ul>
 
-          <div className="mt-12 space-y-4 border-t border-line pt-8 text-sm leading-relaxed text-taupe">
+          <div className="mt-12 max-w-[60ch] space-y-4 border-t border-line pt-8 leading-relaxed text-muted">
             {product.description.map((d) => <p key={d}>{d}</p>)}
           </div>
         </div>
       </div>
 
-      <div data-sticky-cta className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
+      <div data-sticky-cta className="board on-dark fixed inset-x-0 bottom-0 z-30 border-t border-gold/40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden">
         {picker && (
           <div id="sticky-sizes" className="sheet-enter mb-3 space-y-3">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Kies je maat</p>
+              <p className="tag">Kies je maat</p>
               <button onClick={() => setPicker(false)} aria-label="Maatkeuze sluiten" className="press -m-2 flex h-12 w-12 items-center justify-center"><X size={18} /></button>
             </div>
-            <FitToggle value={fit} onChange={chooseFit} id="fit-sticky" />
+            <FitToggle value={fit} onChange={chooseFit} id="fit-sticky" tone="dark" />
             <div className="grid grid-cols-4 gap-2">
               {SIZES.map((s) => (
-                <button key={s.label} onClick={() => pickFromSticky(s.label)} className="press min-h-12 border border-line py-2.5 hover:border-ink">
-                  <span className="block font-serif text-xl">{s.label}</span>
-                  <span className="block text-[0.625rem] text-taupe">{s.bodyHeight.replace(" m", "")}</span>
+                <button key={s.label} onClick={() => pickFromSticky(s.label)} className="press min-h-12 border border-line-dark py-2 hover:border-gold">
+                  <span className="display block text-xl">{sizeCode(s.label, fit)}</span>
+                  <span className="num block text-xs text-muted-dark">{s.bodyHeight.replace(" cm", "")}</span>
                 </button>
               ))}
             </div>
           </div>
         )}
         <div className="flex gap-2">
-          <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line"><Heart size={18} className={wished ? "fill-ink text-ink" : ""} /></button>
+          <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line-dark"><Heart size={18} className={wished ? "fill-gold text-gold" : ""} /></button>
           {product.soldOut
             ? <a href={notify} target="_blank" rel="noopener noreferrer" className={`${cta} flex items-center justify-center gap-2`}><Bell size={16} aria-hidden /> Laat het me weten</a>
             : thobe && !size

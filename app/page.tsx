@@ -3,12 +3,11 @@ import { Hero } from "@/components/Hero";
 import { SITE_URL, baseOpenGraph } from "@/lib/seo";
 import site from "@/content/site.json";
 import { reviews } from "@/lib/reviews";
-import { USPSection } from "@/components/USPSection";
 import { ProductGrid } from "@/components/ProductGrid";
+import { BoxSection } from "@/components/BoxSection";
 import { Reviews } from "@/components/Reviews";
 import { FitShowcase } from "@/components/FitShowcase";
 import { FabricSection } from "@/components/FabricSection";
-import { CraftSection } from "@/components/CraftSection";
 import { Faq, faqJsonLd } from "@/components/Faq";
 
 export const metadata: Metadata = {
@@ -45,12 +44,11 @@ export default function Home() {
       {ld(orgJsonLd)}
       {ld(faqJsonLd)}
       <Hero />
-      <USPSection />
       <ProductGrid />
-      <Reviews items={reviews} className="mx-auto max-w-[1440px] px-5 pb-24 lg:px-10 lg:pb-32" />
+      <Reviews items={reviews} className="mx-auto max-w-[1440px] px-5 py-20 lg:px-10 lg:py-28" />
+      <BoxSection />
       <FitShowcase />
       <FabricSection />
-      <CraftSection />
       <Faq />
     </>
   );
