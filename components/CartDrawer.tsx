@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { Gift, Lock, Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { Gift, Lock, Minus, Plus, ShoppingBag, Truck, X } from "lucide-react";
 import { Drawer } from "vaul";
 import { FITS, REWARD_FROM, getProduct } from "@/lib/products";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -14,18 +14,18 @@ const GIFTS = [getProduct("musk")!, getProduct("siwak")!];
 const TAP = { type: "spring", stiffness: 500, damping: 30 } as const;
 const BURST = Array.from({ length: 10 }, (_, i) => (i / 10) * Math.PI * 2);
 
-// Eén drempel (€50): gratis verzending én cadeau. De badge krijgt bij het ontgrendelen eenmalig een ring en een korte burst.
+// Voortgang naar gratis verzending (€50). Het rondje krijgt bij het halen eenmalig een ring en een korte burst.
 function Reward({ progress, unlocked, burst, children }: { progress: number; unlocked: boolean; burst: number; children: ReactNode }) {
   return (
     <div>
       <p className="text-[0.8125rem]" aria-live="polite">{children}</p>
       <div className="mt-3 flex items-center gap-3">
-        <div className="h-0.5 flex-1 overflow-hidden bg-black/[0.08]" role="progressbar" aria-label="Voortgang naar gratis verzending en cadeau" aria-valuenow={Math.round(progress * 100)} aria-valuemin={0} aria-valuemax={100}>
+        <div className="h-0.5 flex-1 overflow-hidden bg-black/[0.08]" role="progressbar" aria-label="Voortgang naar gratis verzending" aria-valuenow={Math.round(progress * 100)} aria-valuemin={0} aria-valuemax={100}>
           <m.div className="h-full origin-left bg-gold" initial={false} animate={{ scaleX: progress }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} />
         </div>
         <span className="relative">
           <span key={burst} className={`flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-300 ${unlocked ? "border-gold bg-gold text-ink" : "border-line-strong text-taupe"} ${burst ? "ring-once" : ""}`}>
-            <Gift size={16} aria-hidden />
+            <Truck size={16} aria-hidden />
           </span>
           {burst > 0 && (
             <span key={`b${burst}`} aria-hidden className="pointer-events-none absolute inset-0">
@@ -56,22 +56,22 @@ function Qty({ qty, name, onChange }: { qty: number; name: string; onChange: (n:
 }
 
 export function CartDrawer() {
-  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, remainingForReward, money, count, checkoutHref } = useStore();
+  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, freeShipping, remainingForShipping, money, count, checkoutHref } = useStore();
   // Mobiel: bottom sheet die je omlaag wegveegt; vanaf tablet: zijlade rechts.
   const desktop = useMediaQuery("(min-width: 768px)");
 
   // CartDrawer blijft altijd gemount, dus de overgang "nog niet -> ontgrendeld" wordt hier gezien (ook als add() de lade net opent).
   // De burst start na de slide-in (350ms) zodat hij niet onder de animatie verdwijnt.
-  const was = useRef(giftUnlocked);
+  const was = useRef(freeShipping);
   const [burst, setBurst] = useState(0);
   useEffect(() => {
-    if (giftUnlocked && !was.current) {
+    if (freeShipping && !was.current) {
       const t = setTimeout(() => setBurst((n) => n + 1), 350);
       was.current = true;
       return () => clearTimeout(t);
     }
-    was.current = giftUnlocked;
-  }, [giftUnlocked]);
+    was.current = freeShipping;
+  }, [freeShipping]);
 
   return (
     <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen} direction={desktop ? "right" : "bottom"}>
@@ -85,12 +85,16 @@ export function CartDrawer() {
           </div>
           <Drawer.Description className="sr-only">Je geselecteerde producten, cadeau en verzendvoortgang.</Drawer.Description>
 
-          <div className={`border-b bg-sand px-6 py-5 transition-[border-color,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${giftUnlocked ? "border-gold/40 shadow-[inset_0_0_0_1px_rgba(197,168,128,0.4)]" : "border-line"}`}>
-            <Reward progress={Math.min(1, subtotal / REWARD_FROM)} unlocked={giftUnlocked} burst={burst}>
-              {giftUnlocked
-                ? <strong className="font-medium">Gratis verzending en gratis Musk & Siwak ontgrendeld</strong>
-                : <>Nog <strong className="font-medium">{money(remainingForReward)}</strong> tot gratis verzending en je gratis Musk & Siwak</>}
+          <div className={`border-b bg-sand px-6 py-5 transition-[border-color,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${freeShipping ? "border-gold/40 shadow-[inset_0_0_0_1px_rgba(197,168,128,0.4)]" : "border-line"}`}>
+            <Reward progress={Math.min(1, subtotal / REWARD_FROM)} unlocked={freeShipping} burst={burst}>
+              {freeShipping
+                ? <strong className="font-medium">Gratis verzending in Nederland en de EU</strong>
+                : <>Nog <strong className="font-medium">{money(remainingForShipping)}</strong> tot gratis verzending in de EU <span className="text-taupe-strong">(Nederland is altijd gratis)</span></>}
             </Reward>
+            <p className="mt-3 flex items-center gap-2 text-[0.8125rem]">
+              <Gift size={15} className="shrink-0" aria-hidden />
+              {giftUnlocked ? <strong className="font-medium">Gratis Musk & Siwak zit bij je bestelling</strong> : "Bij elke thobe krijg je gratis Musk & Siwak"}
+            </p>
           </div>
 
           <div className="flex-1 overflow-y-auto px-6" data-vaul-no-drag>
@@ -134,7 +138,7 @@ export function CartDrawer() {
           {lines.length > 0 && (
             <div className="border-t border-line px-6 py-5">
               <div className="flex items-baseline justify-between"><span className="text-sm text-taupe">Subtotaal incl. btw</span><span className="font-serif text-3xl tabular-nums">{money(subtotal)}</span></div>
-              <p className="mt-1 text-xs text-taupe">{giftUnlocked ? "Gratis verzending" : "Verzending wordt bij het afrekenen berekend."}</p>
+              <p className="mt-1 text-xs text-taupe">{freeShipping ? "Gratis verzending" : "Verzending wordt bij het afrekenen berekend."}</p>
               {/* Betalen, voorraad en bestellingen lopen via de bestaande WooCommerce-shop; de link zet de hele winkelwagen daar klaar. */}
               {checkoutHref ? (
                 <a href={checkoutHref} className="press btn-primary mt-4 flex min-h-12 w-full items-center justify-center py-4 text-sm font-medium">Afrekenen</a>

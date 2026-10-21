@@ -16,7 +16,7 @@ export function TextureViewer({ id, sizes }: { id: string; sizes: string }) {
     <div>
       <div className="relative aspect-[3/4] border border-line bg-sand">
         <m.div key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="absolute inset-0">
-          <Magnifier src={active.src} alt={active.alt} sizes={sizes} className="h-full w-full" />
+          <Magnifier src={active.src} alt={active.alt} sizes={sizes} eager={id === "modal"} className="h-full w-full" />
         </m.div>
       </div>
       <ToggleGroup.Root type="single" value={tex} onValueChange={(v) => v && setTex(v)} aria-label="Detail kiezen" className="mt-3 flex border border-line p-0.5">

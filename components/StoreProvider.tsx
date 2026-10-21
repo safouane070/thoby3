@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { FITS, REWARD_FROM, GIFT_BOX_PRICE, SIZES, checkoutUrl, eur, getProduct, wooId, type Fit } from "@/lib/products";
 
 export const MAX_QTY = 10;
@@ -23,8 +23,11 @@ type Store = {
   lines: Line[];
   count: number;
   subtotal: number;
+  /** Cadeau (Musk & Siwak) zodra er een thobe in de winkelwagen ligt. */
   giftUnlocked: boolean;
-  remainingForReward: number;
+  /** Gratis verzending (EU) vanaf REWARD_FROM. */
+  freeShipping: boolean;
+  remainingForShipping: number;
   add: (l: NewLine) => void;
   setQty: (id: string, qty: number) => void;
   lineUnit: (l: Line) => number;
@@ -49,25 +52,27 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [announcement, setAnnouncement] = useState("");
-  const hydrated = useRef(false);
+  // State (geen ref): pas in de render ná het inlezen staat ready op true. Met een ref schreef het opslaan-effect bij een
+  // dubbele mount (React Strict Mode) de lege beginstand weg vóór het inlezen, en was de winkelwagen na herladen leeg.
+  const [ready, setReady] = useState(false);
 
-  // Opslaan staat vóór inlezen: bij mount slaat hij over, daarna schrijft elke wijziging weg.
   useEffect(() => {
-    if (!hydrated.current) return;
+    if (!ready) return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ lines, wishlist })); } catch {}
-  }, [lines, wishlist]);
+  }, [lines, wishlist, ready]);
 
   useEffect(() => {
+    // Eenmalig inlezen uit een extern systeem na hydration; SSR kent localStorage niet.
+    /* eslint-disable react-hooks/set-state-in-effect */
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
       if (saved) {
-        // Eenmalig inlezen uit een extern systeem na hydration; SSR kent localStorage niet.
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLines(Array.isArray(saved.lines) ? saved.lines.filter(isLine) : []);
         setWishlist(Array.isArray(saved.wishlist) ? saved.wishlist.filter((s: unknown) => typeof s === "string" && getProduct(s)) : []);
       }
     } catch {}
-    hydrated.current = true;
+    setReady(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const lineUnit = useCallback((l: Line) => (getProduct(l.slug)?.price ?? 0) + (l.giftBox ? GIFT_BOX_PRICE : 0), []);
@@ -101,8 +106,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       lines,
       count: lines.reduce((n, l) => n + l.qty, 0),
       subtotal,
-      giftUnlocked: subtotal >= REWARD_FROM,
-      remainingForReward: Math.max(0, REWARD_FROM - subtotal),
+      giftUnlocked: lines.some((l) => getProduct(l.slug)?.kind === "thobe"),
+      freeShipping: subtotal >= REWARD_FROM,
+      remainingForShipping: Math.max(0, REWARD_FROM - subtotal),
       add, setQty, lineUnit, drawerOpen, setDrawerOpen, wishlist, toggleWish,
       money: eur,
       checkoutHref: complete ? checkoutUrl(items as { id: number; qty: number }[]) : null,

@@ -5,7 +5,8 @@ import Image, { getImageProps } from "next/image";
 
 // Loep op macrofoto's: een rond venster dat 2.6x inzoomt op de pointer. Alleen voor muis/pen;
 // op touch blijft het een gewone foto zodat scrollen niet wordt geblokkeerd.
-export function Magnifier({ src, alt, sizes, className = "" }: { src: string; alt: string; sizes: string; className?: string }) {
+// eager: in het stofvenster staat de foto direct in beeld (anders meldt Next een lazy LCP-foto).
+export function Magnifier({ src, alt, sizes, eager = false, className = "" }: { src: string; alt: string; sizes: string; eager?: boolean; className?: string }) {
   const box = useRef<HTMLDivElement>(null);
   const lens = useRef<HTMLDivElement>(null);
   const [on, setOn] = useState(false);
@@ -27,7 +28,7 @@ export function Magnifier({ src, alt, sizes, className = "" }: { src: string; al
 
   return (
     <div ref={box} onPointerMove={move} onPointerLeave={() => setOn(false)} className={`relative cursor-zoom-in overflow-hidden ${className}`}>
-      <Image src={src} alt={alt} fill sizes={sizes} quality={90} className="object-cover" />
+      <Image src={src} alt={alt} fill sizes={sizes} loading={eager ? "eager" : undefined} className="object-cover" />
       <div
         ref={lens}
         aria-hidden

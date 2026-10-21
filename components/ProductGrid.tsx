@@ -17,7 +17,7 @@ export function ProductGrid() {
   const shown = products.filter((p) => filter === "all" || p.kind === filter).sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut));
 
   return (
-    <section id="collectie" className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-32">
+    <section id="collectie" className="mx-auto max-w-[1440px] px-5 pb-24 pt-12 lg:px-10 lg:pb-32 lg:pt-16">
       <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
         <div>
           <h2 className="font-serif text-5xl leading-none md:text-7xl">{home.collection.title} <em>{home.collection.titleItalic}</em></h2>

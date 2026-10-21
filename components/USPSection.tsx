@@ -9,7 +9,7 @@ const usp = home.usp;
 // Korte beloftes uit de originele shop; geen kaarten, geen herhaling van de ticker.
 export function USPSection() {
   return (
-    <section aria-labelledby="usp-title" className="mx-auto grid max-w-[1440px] items-center gap-12 px-5 py-24 lg:grid-cols-[5fr_6fr] lg:gap-24 lg:px-10 lg:py-32">
+    <section aria-labelledby="usp-title" className="mx-auto grid max-w-[1440px] items-center gap-12 px-5 pb-12 pt-24 lg:grid-cols-[5fr_6fr] lg:gap-24 lg:px-10 lg:pb-16 lg:pt-32">
       <div className="relative order-last aspect-[4/5] overflow-hidden border border-line bg-sand lg:order-first">
         <Image src={usp.image} alt={usp.imageAlt} fill sizes="(min-width:1024px) 40vw, 100vw" className="object-cover" />
       </div>

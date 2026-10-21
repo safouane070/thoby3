@@ -6,9 +6,8 @@ import dynamic from "next/dynamic";
 import { useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
 import { ArrowLeftRight, Bell, Check, ChevronRight, Gift, Heart, Layers, MessageCircle, Truck, X } from "lucide-react";
 import { ToggleGroup } from "radix-ui";
-import { BLUR, EXCHANGE_COPY, FITS, GIFT_BOX_PRICE, GIFT_VALUE, HAS_MEASUREMENTS, SHIPPING_COPY, SIZES, discountPct, isThobe, products, whatsapp, type Fit, type Product } from "@/lib/products";
+import { BLUR, EXCHANGE_COPY, FITS, GIFT_BOX_PRICE, GIFT_TEXT, GIFT_VALUE, HAS_MEASUREMENTS, SHIPPING_COPY, SIZES, discountPct, isThobe, products, whatsapp, type Fit, type Product } from "@/lib/products";
 import { FabricSpotlight } from "./FabricSpotlight";
-import { FitSilhouette } from "./FitSilhouette";
 import { FitToggle } from "./FitToggle";
 import { Price } from "./Price";
 import { BADGE } from "./ProductCard";
@@ -42,8 +41,9 @@ function Gallery({ product }: { product: Product }) {
       <div className="order-2 flex gap-2 overflow-x-auto lg:order-1 lg:flex-col" role="group" aria-label="Productfoto's">
         {product.gallery.map((src, i) => (
           <button key={src} aria-pressed={i === img} aria-label={`${product.name}, foto ${i + 1} bekijken`} onPointerEnter={() => warm(i)} onFocus={() => warm(i)} onClick={() => { warm(i); setImg(i); }}
-            className={`press relative aspect-[3/4] w-20 shrink-0 border bg-sand lg:w-full ${i === img ? "border-ink" : "border-line opacity-70 hover:opacity-100"}`}>
-            <Image src={src} alt="" fill sizes="88px" className="object-cover mix-blend-multiply" />
+            className={`press relative aspect-[3/4] w-20 shrink-0 border bg-sand lg:w-full ${i === img ? "border-ink" : "border-line opacity-70 [@media(hover:hover)]:hover:opacity-100"}`}>
+            {/* Eager: zelfde bron als de grote foto; lazy hier laat Next de LCP-foto als lazy zien. 5× 88px kost niets. */}
+            <Image src={src} alt="" fill sizes="88px" loading="eager" className="object-cover mix-blend-multiply" />
           </button>
         ))}
       </div>
@@ -170,12 +170,9 @@ export function ProductDetail({ product }: { product: Product }) {
               <Colorways product={product} query={query} />
               <div>
                 <p className="text-sm font-medium">Pasvorm <span className="ml-2 font-normal text-taupe">zelfde lengte, twee posturen</span></p>
-                <div className="mt-3 flex items-center gap-4">
-                  <FitSilhouette fit={fit} className="h-16 w-8 shrink-0 text-ink" />
-                  <div className="flex-1">
-                    <FitToggle value={fit} onChange={chooseFit} id="fit-detail" />
-                    <p className="mt-2 text-xs leading-snug text-taupe" aria-live="polite">{FITS.find((f) => f.id === fit)!.note}</p>
-                  </div>
+                <div className="mt-3">
+                  <FitToggle value={fit} onChange={chooseFit} id="fit-detail" />
+                  <p className="mt-2 text-xs leading-snug text-taupe" aria-live="polite">{FITS.find((f) => f.id === fit)!.note}</p>
                 </div>
               </div>
 
@@ -208,7 +205,7 @@ export function ProductDetail({ product }: { product: Product }) {
               </label>
 
               <div className="flex flex-col gap-3 text-[0.8125rem] sm:flex-row sm:items-center sm:justify-between">
-                {product.badge ? <p className="flex items-center gap-2"><Gift size={16} className="shrink-0 text-ink" aria-hidden /> {product.badge}, t.w.v. {money(GIFT_VALUE)}</p> : <span />}
+                <p className="flex items-center gap-2"><Gift size={16} className="shrink-0 text-ink" aria-hidden /> {GIFT_TEXT}, t.w.v. {money(GIFT_VALUE)}</p>
                 <FabricSpotlight className="press flex min-h-12 items-center gap-2 underline lg:min-h-8 decoration-line-strong underline-offset-4 hover:decoration-ink"><Layers size={16} aria-hidden /> Over de stof</FabricSpotlight>
               </div>
             </div>

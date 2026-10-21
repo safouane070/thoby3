@@ -29,7 +29,6 @@
       "/img/wd-4.jpg",
       "/img/wd-5.jpg"
     ],
-    "badge": "Vanaf €50 gratis Musk & Siwak",
     "variations": [
       {
         "size": "S",
@@ -262,7 +261,7 @@
     "kind": "accessory",
     "tagline": "THOBY3 Musk, 5 ml.",
     "description": [
-      "THOBY3 Musk. Gratis bij je bestelling vanaf €50."
+      "THOBY3 Musk. Gratis bij elke bestelling met een thobe."
     ],
     "price": 5.99,
     "soldOut": false,
@@ -283,7 +282,7 @@
     "kind": "accessory",
     "tagline": "Siwak in een handige houder.",
     "description": [
-      "THOBY3 Siwak met houder. Gratis bij je bestelling vanaf €50."
+      "THOBY3 Siwak met houder. Gratis bij elke bestelling met een thobe."
     ],
     "price": 3.99,
     "soldOut": false,

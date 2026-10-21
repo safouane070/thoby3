@@ -36,7 +36,6 @@ export interface Product {
   sizes: ThobeSize[];
   images: { primary: string; lifestyle: string; detail: string };
   gallery: string[];
-  badge?: string;
   // WooCommerce: elke maat × pasvorm × cadeaudoos is een eigen variatie (bijgewerkt met npm run sync:woo).
   variations?: WooVariation[];
 }
@@ -70,9 +69,10 @@ export const FITS = shop.fits as { id: ThobeFit; label: string; note: string }[]
 export const BLUR = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 4"><rect width="3" height="4" fill="#f3f1ec"/></svg>')}`;
 
 export const GIFT_BOX_PRICE = shop.giftBoxPrice;
-// Eén drempel: vanaf dit bedrag gratis verzending én gratis Musk & Siwak.
+// Gratis verzending (EU) vanaf dit bedrag. Het cadeau (Musk & Siwak) hoort bij elke thobe, los van dit bedrag.
 export const REWARD_FROM = shop.rewardFrom;
 export const GIFT_VALUE = shop.giftValue;
+export const GIFT_TEXT = shop.giftText;
 export const eur = (n: number) => new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(n).replace(/\s/g, "");
 export const SHIPPING_COPY = shop.shippingText;
 export const EXCHANGE_COPY = shop.exchangeText;
