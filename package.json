@@ -9,7 +9,7 @@
     "images": "node scripts/images.mjs",
     "preview": "wrangler pages dev out --port 3112",
     "check:content": "node scripts/check-content.mjs",
-    "test": "node --test \"lib/**/*.test.mjs\""
+    "test": "esbuild lib/order.test.mjs --bundle --platform=node --format=esm --log-level=warning --outfile=.wrangler/test/order.test.mjs && node --test .wrangler/test/order.test.mjs"
   },
   "dependencies": {
     "framer-motion": "^14.3.0",
