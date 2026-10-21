@@ -1,7 +1,7 @@
 // Prijsberekening van een bestelling, gedeeld door de afrekenpagina (weergave) en functions/api/checkout.ts (wat er
 // echt betaald wordt). Alleen relatieve imports: de Cloudflare-functie kent de @/-alias niet.
-import productData from "../content/products.json" with { type: "json" };
-import shop from "../content/shop.json" with { type: "json" };
+import productData from "../content/products.json";
+import shop from "../content/shop.json";
 
 export type CartLine = { slug: string; size?: string; fit?: string; giftBox?: boolean; qty: number };
 /** Bedragen in centen. */
