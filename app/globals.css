@@ -5,18 +5,19 @@
   --board: #151516;
   --board-raised: #1e1e20;
   --lid: #3a3b3d;
-  --sand: #e8e2da;
-  --paper: #f4f1ec;
+  --sand: #f5f2ec;
+  --paper: #fbfaf8;
   /* Achter productfoto's: warm, zodat het koele studiogrijs via mix-blend-multiply bij het zand gaat horen. */
-  --studio: #f2ede6;
-  --ink: #151516;
-  --muted: #5a544c;
+  --studio: #efebe4;
+  --ink: #1a1a1a;
+  --muted: #5e5850;
   --muted-strong: #47423c;
   --muted-dark: #a09b93;
-  --gold: #d2b15c;
+  --gold: #d4af37;
   --gold-ink: #7a5c1e;
-  --line: rgba(21, 21, 22, 0.14);
-  --line-strong: rgba(21, 21, 22, 0.42);
+  /* Haarlijnen: zacht genoeg om te scheiden zonder te kaderen; -strong voor keuzeknoppen en tabelkoppen. */
+  --line: rgba(26, 26, 26, 0.08);
+  --line-strong: rgba(26, 26, 26, 0.22);
   --line-dark: rgba(243, 240, 234, 0.16);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -50,7 +51,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
-  scrollbar-color: rgba(21, 21, 22, 0.35) var(--sand);
+  scrollbar-color: rgba(26, 26, 26, 0.3) var(--sand);
 }
 
 body {
@@ -108,13 +109,16 @@ svg.lucide {
 
 /* Eigen componentklassen in de components-laag: Tailwind-utilities mogen ze per plek overschrijven. */
 @layer components {
-  /* Koppen: smalle kapitalen zoals de print in het deksel; staan rechtop als de thobe zelf. */
+  /* Koppen: redactionele serif, gewone kast, strak gespatieerd. Instrument Serif heeft alleen 400: nooit vet zetten. */
   .display {
-    font-family: var(--face-display), sans-serif;
-    font-weight: 800;
-    text-transform: uppercase;
-    line-height: 0.86;
-    letter-spacing: -0.005em;
+    font-family: var(--face-display), serif;
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.015em;
+  }
+  /* De tweede regel van een kop: cursief, zoals in een modeblad. */
+  .display em {
+    font-style: italic;
   }
   /* Kapitalen zijn voor knoppen, menu en fotolabels; gewone labels (velden, tabellen, kleine print) zijn .caption. */
   .caption {
@@ -124,15 +128,15 @@ svg.lucide {
   }
   /* Labels zoals op het hangtag: klein, kapitalen, ruim gespatieerd. */
   .tag {
-    font-family: var(--face-display), sans-serif;
-    font-weight: 600;
+    font-family: var(--face-text), sans-serif;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.8125rem;
+    letter-spacing: 0.16em;
+    font-size: 0.75rem;
     line-height: 1.2;
   }
   .num {
-    font-family: var(--face-display), sans-serif;
+    font-family: var(--face-text), sans-serif;
     font-variant-numeric: tabular-nums;
   }
 
@@ -150,14 +154,14 @@ svg.lucide {
     color: var(--ink);
   }
   .btn-gold:hover:not(:disabled) {
-    background: #dcbd6c;
+    background: #ddbd52;
   }
   .btn-primary {
     background: var(--ink);
     color: var(--paper);
   }
   .btn-primary:hover:not(:disabled) {
-    background: #2a2a2c;
+    background: #2e2e2e;
   }
   .btn-light {
     background: var(--paper);
@@ -200,10 +204,10 @@ svg.lucide {
 /* Cadeau ontgrendeld: eenmalige gouden ring. */
 @keyframes ring {
   from {
-    box-shadow: 0 0 0 0 rgba(210, 177, 92, 0.7);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
   }
   to {
-    box-shadow: 0 0 0 14px rgba(210, 177, 92, 0);
+    box-shadow: 0 0 0 14px rgba(212, 175, 55, 0);
   }
 }
 .ring-once {
@@ -247,7 +251,7 @@ svg.lucide {
 }
 /* Net toegevoegd: de regel in de winkelwagen licht kort goud op en dooft uit. */
 @keyframes just-added {
-  from { background-color: rgba(210, 177, 92, 0.22); }
+  from { background-color: rgba(212, 175, 55, 0.22); }
 }
 .just-added {
   animation: just-added 1400ms var(--ease-out) 300ms both;
@@ -293,11 +297,10 @@ svg.lucide {
 }
 .legal h2 {
   margin: 3rem 0 1rem;
-  font-family: var(--face-display), sans-serif;
-  font-size: 2rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  line-height: 1;
+  font-family: var(--face-display), serif;
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.05;
   color: var(--ink);
 }
 .legal h3 {

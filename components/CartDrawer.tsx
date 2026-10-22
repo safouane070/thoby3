@@ -86,7 +86,7 @@ export function CartDrawer() {
           </div>
           <Drawer.Description className="sr-only">Je geselecteerde producten, cadeau en verzendvoortgang.</Drawer.Description>
 
-          <div className={`border-b bg-sand px-6 py-5 transition-[border-color,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${freeShipping ? "border-gold/40 shadow-[inset_0_0_0_1px_rgba(210,177,92,0.4)]" : "border-line"}`}>
+          <div className={`border-b bg-sand px-6 py-5 transition-[border-color,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${freeShipping ? "border-gold/40 shadow-[inset_0_0_0_1px_rgba(212,175,55,0.4)]" : "border-line"}`}>
             <Reward progress={Math.min(1, subtotal / REWARD_FROM)} unlocked={freeShipping} burst={burst}>
               {freeShipping
                 ? <strong className="font-medium">Gratis verzending in Nederland en de EU</strong>

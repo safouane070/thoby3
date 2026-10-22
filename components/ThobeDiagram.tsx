@@ -12,7 +12,8 @@ const ANGLE = (25 * Math.PI) / 180; // mouw hangt 25° van het lichaam af
 const CUFF = 13;
 const FLARE = 4; // zoom iets wijder dan de borst
 const GAP = 58; // afstand van het midden tot het hart van elke thobe: ruimte voor de verste mouw (XL-2: 53 cm)
-const FILL = "#efeae0";
+// Papier als vulling: een lijntekening zoals een technische modetekening, alleen omtrek en stiksels.
+const FILL = "var(--paper)";
 
 export type Shape = { chest: number; shoulders: number; sleeve: number; length: number };
 const num = (v: string) => Number(v) || 0;
@@ -37,15 +38,15 @@ function geometry({ chest, shoulders, sleeve, length }: Shape) {
 }
 
 const SPRING = { type: "spring", stiffness: 260, damping: 32 } as const;
-const STITCH = { strokeWidth: 0.25, strokeDasharray: "0.8 0.6" } as const;
+const STITCH = { strokeWidth: 0.18, strokeDasharray: "0.6 0.6" } as const;
 
 /** Eén thobe rond x = 0: omtrek plus kraag, knoopsluiting, borstzak, manchetten en zoom als stiksels, zoals op een patroon. */
 function Figure({ shape }: { shape: Shape }) {
   const g = geometry(shape);
   return (
     <g>
-      <m.path initial={false} animate={{ d: g.d }} transition={SPRING} fill={FILL} stroke="var(--ink)" strokeWidth="0.55" strokeLinejoin="miter" />
-      <g stroke="var(--ink)" strokeWidth="0.4" fill="none">
+      <m.path initial={false} animate={{ d: g.d }} transition={SPRING} fill={FILL} stroke="var(--ink)" strokeWidth="0.32" strokeLinejoin="miter" />
+      <g stroke="var(--ink)" strokeWidth="0.24" fill="none">
         <path d={`M${-COLLAR} 0 V-3.6 Q0 -4.8 ${COLLAR} -3.6 V0`} fill={FILL} />
         <path d={`M${-COLLAR + 0.9} -0.9 Q0 -1.9 ${COLLAR - 0.9} -0.9`} {...STITCH} />
         <line x1="0" y1="-1" x2="0" y2="34" />
@@ -62,12 +63,15 @@ function Figure({ shape }: { shape: Shape }) {
         <m.line initial={false} transition={SPRING} {...STITCH} animate={{ x1: -g.hem + 0.6, y1: shape.length - 3, x2: g.hem - 0.6, y2: shape.length - 3 }} />
       </g>
       {/* Borstbreedte, het enige dat tussen slank en breed verschilt: getekend als maatlijn van oksel tot oksel. */}
-      <g stroke="var(--gold-ink)" strokeWidth="0.45">
+      <g stroke="var(--gold-ink)" strokeWidth="0.28">
         <m.line initial={false} transition={SPRING} animate={{ x1: -g.ch, x2: g.ch, y1: g.arm + 4, y2: g.arm + 4 }} />
         {[-1, 1].map((side) => (
-          <m.line key={side} initial={false} transition={SPRING} animate={{ x1: side * g.ch, x2: side * g.ch, y1: g.arm + 2.2, y2: g.arm + 5.8 }} />
+          <m.line key={side} initial={false} transition={SPRING} animate={{ x1: side * g.ch, x2: side * g.ch, y1: g.arm + 2.6, y2: g.arm + 5.4 }} />
         ))}
       </g>
+      <m.text initial={false} animate={{ y: g.arm + 9.2 }} transition={SPRING} x="0" textAnchor="middle" fontSize="3" fill="var(--gold-ink)" className="num">
+        {shape.chest} cm
+      </m.text>
     </g>
   );
 }
@@ -82,10 +86,10 @@ export function ThobePair({ slim, broad, className = "" }: { slim: Shape; broad:
   return (
     <svg viewBox="-118 -12 236 172" className={className} role="img"
       aria-label={`Twee thobes op schaal, allebei ${len} cm lang. Slank: borst ${slim.chest} cm, schouders ${slim.shoulders} cm. Breed: borst ${broad.chest} cm, schouders ${broad.shoulders} cm.`}>
-      {/* Raster van 10 cm, zoals op patroonpapier. */}
-      <g stroke="var(--line)" strokeWidth="0.2">
-        {Array.from({ length: 24 }, (_, i) => -115 + i * 10).map((x) => <line key={`x${x}`} x1={x} y1={-12} x2={x} y2={160} />)}
-        {Array.from({ length: 17 }, (_, i) => i * 10).map((y) => <line key={`y${y}`} x1={-118} y1={y} x2={118} y2={y} />)}
+      {/* Raster van 10 cm als stippen op de kruispunten, zoals op architectenpapier: schaal zonder ruis. */}
+      <g fill="var(--line-strong)">
+        {Array.from({ length: 24 }, (_, i) => -115 + i * 10).flatMap((x) =>
+          Array.from({ length: 17 }, (_, j) => j * 10).map((y) => <circle key={`${x}.${y}`} cx={x} cy={y} r="0.28" />))}
       </g>
 
       <g transform={`translate(${-GAP} 0)`}><Figure shape={slim} /></g>
@@ -93,12 +97,12 @@ export function ThobePair({ slim, broad, className = "" }: { slim: Shape; broad:
 
       {/* Zelfde lengte: verticale maatlijn in het midden, stippellijnen naar de kraag- en de zoomhoogte van allebei. */}
       <g stroke="var(--gold-ink)" fill="none">
-        <line x1={-GAP + COLLAR + 1} y1="-6" x2={GAP - COLLAR - 1} y2="-6" strokeWidth="0.3" strokeDasharray="1.2 1" />
-        <m.line initial={false} transition={SPRING} strokeWidth="0.3" strokeDasharray="1.2 1"
+        <line x1={-GAP + COLLAR + 1} y1="-6" x2={GAP - COLLAR - 1} y2="-6" strokeWidth="0.2" strokeDasharray="0.8 0.8" />
+        <m.line initial={false} transition={SPRING} strokeWidth="0.2" strokeDasharray="0.8 0.8"
           animate={{ x1: -GAP + sHem + 1, y1: len, x2: GAP - bHem - 1, y2: len }} />
-        <m.line initial={false} transition={SPRING} x1="0" x2="0" y1="-6" animate={{ y2: len }} strokeWidth="0.45" />
-        <line x1="-2" y1="-6" x2="2" y2="-6" strokeWidth="0.45" />
-        <m.line initial={false} transition={SPRING} x1="-2" x2="2" animate={{ y1: len, y2: len }} strokeWidth="0.45" />
+        <m.line initial={false} transition={SPRING} x1="0" x2="0" y1="-6" animate={{ y2: len }} strokeWidth="0.28" />
+        <line x1="-1.6" y1="-6" x2="1.6" y2="-6" strokeWidth="0.28" />
+        <m.line initial={false} transition={SPRING} x1="-1.6" x2="1.6" animate={{ y1: len, y2: len }} strokeWidth="0.28" />
       </g>
     </svg>
   );

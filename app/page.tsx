@@ -44,7 +44,7 @@ export default function Home() {
       {ld(faqJsonLd)}
       <Hero />
       <ProductGrid />
-      <Reviews items={reviews} className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-36" />
+      <Reviews items={reviews} className="mx-auto max-w-[1440px] px-5 py-20 lg:px-10 lg:py-28" />
       <BoxSection />
       <FitShowcase />
       <Faq />

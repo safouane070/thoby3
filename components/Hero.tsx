@@ -18,7 +18,7 @@ const MEASURED: Record<string, { top: number; bottom: number }> = {
 function MeasuredFigure() {
   const m = MEASURED[content.image];
   return (
-    <figure className="relative mx-auto aspect-[3/4] h-[min(45svh,26rem)] bg-studio lg:mr-0 lg:h-full">
+    <figure className="relative mx-auto aspect-[3/4] h-[min(45svh,26rem)] bg-studio shadow-[0_30px_60px_-30px_rgba(26,26,26,0.25)] lg:mr-0 lg:h-full">
       {/* Multiply op het studiopapier: de koele studiogrijs wordt warm grijs en valt in het zandpalet. */}
       <div className="absolute inset-0">
         <Image src={content.image} alt={content.imageAlt} fill preload sizes="(min-width:1024px) 34vw, 80vw" className="settle object-cover mix-blend-multiply" />
@@ -33,6 +33,10 @@ function MeasuredFigure() {
           </div>
         )}
       </div>
+      {/* Bijschrift zoals in een modeblad; alleen op desktop, op de telefoon ligt de banderol er direct onder. */}
+      <figcaption className="absolute -bottom-8 right-0 hidden items-baseline gap-3 text-xs text-muted lg:flex">
+        <span className="display text-base text-ink">{product.name}</span> {product.colors[0]?.name}, satijnkatoen
+      </figcaption>
     </figure>
   );
 }
@@ -41,18 +45,18 @@ function MeasuredFigure() {
 export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="relative isolate flex min-h-[100svh] flex-col bg-sand pt-[5.875rem]">
-      <div className="mx-auto grid w-full max-w-[1440px] flex-1 grid-rows-[auto_minmax(0,1fr)] items-center gap-5 px-5 pb-5 pt-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:grid-rows-1 lg:gap-16 lg:px-10 lg:py-10">
+      <div className="mx-auto grid w-full max-w-[1440px] flex-1 grid-rows-[auto_minmax(0,1fr)] items-center gap-6 px-5 pb-6 pt-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:grid-rows-1 lg:gap-24 lg:px-16 lg:pb-14 lg:pt-12 xl:px-24">
         <div>
           {/* Alleen beweging, geen fade: een onzichtbare kop telt niet als LCP. */}
-          <h1 id="hero-title" style={rise(0)} className="rise-y display text-[clamp(2.5rem,6.4vw,6rem)] text-ink">
-            {content.title}<br />{content.titleSecond}
+          <h1 id="hero-title" style={rise(0)} className="rise-y display text-[clamp(2.25rem,10.6vw,3.5rem)] !leading-[0.92] text-ink sm:text-[clamp(3rem,7.4vw,7.5rem)]">
+            {content.title}<br /><em>{content.titleSecond}</em>
           </h1>
           {/* Op de telefoon zegt de kop het al en kiest de banderol eronder; de toelichting krijgt pas ruimte vanaf sm. */}
-          <p style={rise(1)} className="rise mt-4 hidden max-w-[40ch] leading-relaxed text-muted sm:block lg:mt-7 lg:text-lg">
+          <p style={rise(1)} className="rise mt-6 hidden max-w-[38ch] leading-[1.75] text-muted sm:block lg:mt-10 lg:text-[1.0625rem]">
             {content.text}
           </p>
         </div>
-        <div className="lg:h-[min(64svh,42rem)]">
+        <div className="lg:h-[min(62svh,40rem)]">
           <MeasuredFigure />
         </div>
       </div>

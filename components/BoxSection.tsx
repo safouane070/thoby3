@@ -11,20 +11,21 @@ const box = home.box;
 export function BoxSection() {
   return (
     <section id="doos" aria-labelledby="doos-title" className="board on-dark">
-      <div className="mx-auto grid max-w-[1440px] gap-14 px-5 py-20 lg:grid-cols-[5fr_6fr] lg:items-center lg:gap-20 lg:px-10 lg:py-32 [&>*]:min-w-0">
+      <div className="mx-auto grid max-w-[1440px] gap-16 px-5 py-24 lg:grid-cols-[5fr_6fr] lg:items-center lg:gap-24 lg:px-16 lg:py-40 xl:px-24 [&>*]:min-w-0">
         <div>
           <p lang="ar" dir="rtl" className="text-left font-kufi text-[clamp(2.75rem,5vw,4.25rem)] leading-none text-paper">{box.greetingArabic}</p>
           <p className="caption mt-4 text-muted-dark">{box.greeting}</p>
 
-          <h2 id="doos-title" className="display mt-12 text-[clamp(2.75rem,5.6vw,5.25rem)] text-paper">{box.title}{box.titleSecond && <><br />{box.titleSecond}</>}</h2>
+          <h2 id="doos-title" className="display mt-12 text-[clamp(2.75rem,5.6vw,5.25rem)] text-paper">{box.title}{box.titleSecond && <><br /><em>{box.titleSecond}</em></>}</h2>
           <p className="mt-6 max-w-[46ch] leading-relaxed text-muted-dark">{box.text}</p>
 
           {/* De drie stappen uit het deksel, als genummerde regels: de volgorde is de boodschap. */}
-          <ol className="mt-10 border-t border-line-dark">
+          {/* Cursieve gouden cijfers zoals in het deksel; de regels krijgen lucht en een haarlijn in goud. */}
+          <ol className="mt-12 border-t border-gold/25">
             {box.steps.map((s, i) => (
-              <li key={s.title} className="flex items-baseline gap-5 border-b border-line-dark py-4">
-                <span className="display w-6 shrink-0 text-[2rem] text-muted-dark">{i + 1}</span>
-                <span className="display text-[1.75rem] text-paper">{s.title}</span>
+              <li key={s.title} className="grid grid-cols-[3.25rem_minmax(0,1fr)] items-baseline border-b border-gold/25 py-6 lg:grid-cols-[4.5rem_minmax(0,1fr)] lg:py-7">
+                <span aria-hidden className="display text-[1.75rem] italic text-gold lg:text-[2.25rem]">{String(i + 1).padStart(2, "0")}</span>
+                <span className="display text-[1.875rem] text-paper lg:text-[2.5rem]">{s.title}</span>
               </li>
             ))}
           </ol>
@@ -38,8 +39,8 @@ export function BoxSection() {
         </div>
 
         <figure>
-          <LidReveal src={box.image} alt={box.imageAlt} />
-          <figcaption className="caption mt-4 font-normal text-muted-dark">White Desert, gevouwen onder de banderol</figcaption>
+          <div className="shadow-[0_40px_80px_-30px_rgba(0,0,0,0.7)]"><LidReveal src={box.image} alt={box.imageAlt} /></div>
+          <figcaption className="caption mt-5 font-normal text-muted-dark">White Desert, gevouwen onder de banderol</figcaption>
         </figure>
       </div>
 
