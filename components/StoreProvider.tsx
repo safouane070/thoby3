@@ -18,6 +18,15 @@ const isLine = (v: unknown): v is Line => {
 };
 
 export type Line = { id: string; slug: string; size?: string; fit?: Fit; giftBox?: boolean; qty: number };
+/** Jouw maat en pasvorm, één keer gekozen (balk, maatkaart, maathulp, productpagina) en daarna overal voorgeselecteerd. */
+export type Pref = { size?: string; fit?: Fit };
+const cleanPref = (v: unknown): Pref => {
+  const p = (typeof v === "object" && v !== null ? v : {}) as Pref;
+  return {
+    ...(SIZES.some((s) => s.label === p.size) && { size: p.size }),
+    ...((p.fit === "slim" || p.fit === "broad") && { fit: p.fit }),
+  };
+};
 export type NewLine = Omit<Line, "id" | "qty">;
 
 type Store = {
@@ -43,6 +52,10 @@ type Store = {
   wishlist: string[];
   toggleWish: (slug: string) => void;
   money: (amount: number) => string;
+  pref: Pref;
+  setPref: (p: Pref) => void;
+  /** De regel die net is toegevoegd: de winkelwagen licht hem kort op, zodat je ziet wát er bij kwam. */
+  lastAdded: string;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -56,6 +69,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<Line[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [wishlist, setWishlist] = useState<string[]>([]);
+  const [pref, setPrefState] = useState<Pref>({});
+  const [lastAdded, setLastAdded] = useState("");
   const [announcement, setAnnouncement] = useState("");
   // State (geen ref): pas in de render ná het inlezen staat ready op true. Met een ref schreef het opslaan-effect bij een
   // dubbele mount (React Strict Mode) de lege beginstand weg vóór het inlezen, en was de winkelwagen na herladen leeg.
@@ -63,8 +78,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!ready) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ lines, wishlist })); } catch {}
-  }, [lines, wishlist, ready]);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ lines, wishlist, pref })); } catch {}
+  }, [lines, wishlist, pref, ready]);
 
   useEffect(() => {
     // Eenmalig inlezen uit een extern systeem na hydration; SSR kent localStorage niet.
@@ -74,6 +89,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (saved) {
         setLines(Array.isArray(saved.lines) ? saved.lines.filter(isLine) : []);
         setWishlist(Array.isArray(saved.wishlist) ? saved.wishlist.filter((s: unknown) => typeof s === "string" && getProduct(s)) : []);
+        setPrefState(cleanPref(saved.pref));
       }
     } catch {}
     setReady(true);
@@ -87,6 +103,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setLines((ls) =>
       ls.some((l) => l.id === id) ? ls.map((l) => (l.id === id ? { ...l, qty: Math.min(MAX_QTY, l.qty + 1) } : l)) : [...ls, { ...n, id, qty: 1 }],
     );
+    setLastAdded(id);
+    if (n.size || n.fit) setPrefState((x) => ({ ...x, ...(n.size && { size: n.size }), ...(n.fit && { fit: n.fit }) }));
     const p = getProduct(n.slug);
     const detail = n.size ? `, maat ${n.size}, ${FITS.find((f) => f.id === n.fit)?.label}` : "";
     const msg = `${p?.kind === "thobe" ? "Thobe " : ""}${p?.name}${detail} toegevoegd aan je winkelwagen.`;
@@ -101,6 +119,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
 
   const clear = useCallback(() => setLines([]), []);
+  const setPref = useCallback((p: Pref) => setPrefState((x) => ({ ...x, ...cleanPref(p) })), []);
   const toggleWish = useCallback((slug: string) => setWishlist((w) => (w.includes(slug) ? w.filter((s) => s !== slug) : [...w, slug])), []);
 
   const value = useMemo<Store>(() => {
@@ -117,8 +136,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       remainingForShipping: Math.max(0, REWARD_FROM - subtotal),
       add, setQty, clear, lineUnit, drawerOpen, setDrawerOpen, wishlist, toggleWish,
       money: eur,
+      pref, setPref, lastAdded,
     };
-  }, [lines, ready, drawerOpen, wishlist, add, setQty, clear, lineUnit, toggleWish]);
+  }, [lines, ready, drawerOpen, wishlist, add, setQty, clear, lineUnit, toggleWish, pref, setPref, lastAdded]);
 
   return (
     <Ctx.Provider value={value}>

@@ -7,7 +7,6 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { BoxSection } from "@/components/BoxSection";
 import { Reviews } from "@/components/Reviews";
 import { FitShowcase } from "@/components/FitShowcase";
-import { FabricSection } from "@/components/FabricSection";
 import { Faq, faqJsonLd } from "@/components/Faq";
 
 export const metadata: Metadata = {
@@ -45,10 +44,9 @@ export default function Home() {
       {ld(faqJsonLd)}
       <Hero />
       <ProductGrid />
-      <Reviews items={reviews} className="mx-auto max-w-[1440px] px-5 py-20 lg:px-10 lg:py-28" />
+      <Reviews items={reviews} className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-36" />
       <BoxSection />
       <FitShowcase />
-      <FabricSection />
       <Faq />
     </>
   );

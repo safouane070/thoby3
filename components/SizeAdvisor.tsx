@@ -15,37 +15,51 @@ type Props = {
   /** Getoond naast de maat ("M-1 · Slank"), zodat het advies over de gekozen pasvorm gaat. */
   fit?: Fit;
   tone?: "light" | "dark";
+  /** Productpagina: dicht als één regel tekst; pas open als je twijfelt (de meeste mensen kennen hun maat). */
+  collapsible?: boolean;
   className?: string;
 };
 
 // Lengte in → maat uit, op basis van dezelfde maattabel als de rest van de site (shop.json).
 // Eén invulveld met onderlijn en grote smalle cijfers; het advies ernaast in dezelfde schaal: leest als één zin.
-export function SizeAdvisor({ onPick, pickLabel, shopHref, fit, tone = "light", className = "" }: Props) {
+export function SizeAdvisor({ onPick, pickLabel, shopHref, fit, tone = "light", collapsible = false, className = "" }: Props) {
   const id = useId();
   const [value, setValue] = useState("");
+  const [open, setOpen] = useState(!collapsible);
   const height = Number(value);
   const advice = value.length >= 3 ? adviseSize(height) : {};
   const dark = tone === "dark";
   const muted = dark ? "text-muted-dark" : "text-muted";
   const fitLabel = fit && FITS.find((f) => f.id === fit)?.label;
 
+  if (!open) {
+    return (
+      <div className={className}>
+        <button type="button" onClick={() => { setOpen(true); requestAnimationFrame(() => document.getElementById(id)?.focus()); }}
+          className="press flex min-h-12 items-center gap-2 text-sm underline decoration-line-strong underline-offset-4 hover:decoration-ink">
+          Twijfel je over je maat? Vul je lengte in
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className={className}>
-      <p className="tag">Maathulp</p>
-      <label htmlFor={id} className={`mt-1 block text-sm ${muted}`}>Hoe lang ben je? Vul het in centimeters in, dan kiezen wij je maat.</label>
+    <div className={`sheet-enter ${className}`}>
+      <label htmlFor={id} className="caption block">Twijfel je? Vul je lengte in</label>
+      <p className={`mt-1 text-sm ${muted}`}>In centimeters. Dan kiezen wij je maat.</p>
 
       <div className="mt-4 flex flex-wrap items-end gap-x-10 gap-y-5">
         <div className={`flex items-baseline gap-2 border-b-2 pb-1 transition-colors duration-200 ${dark ? "border-paper/30 focus-within:border-gold" : "border-line-strong focus-within:border-ink"}`}>
-          <input id={id} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={value} autoComplete="off"
+          <input id={id} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={value} placeholder="178" autoComplete="off"
             onChange={(e) => setValue(e.target.value.replace(/\D/g, ""))}
-            className={`field-input num w-[3ch] bg-transparent text-5xl font-bold leading-none ${dark ? "placeholder:text-paper/30" : "placeholder:text-ink/25"}`} />
-          <span className={`tag ${muted}`}>cm</span>
+            className={`field-input num w-[3ch] bg-transparent text-5xl font-bold leading-none ${dark ? "placeholder:text-paper/55" : "placeholder:text-[#6e6860]"}`} />
+          <span className={`caption ${muted}`}>cm</span>
         </div>
 
         <div aria-live="polite" className="min-h-[3rem]">
           {advice.size && (
             <p className="flex items-baseline gap-3">
-              <span className={`tag ${muted}`}>Jouw maat</span>
+              <span className={`caption ${muted}`}>Jouw maat</span>
               <span className="display text-5xl">{fit ? sizeCode(advice.size, fit) : advice.size}</span>
               {fitLabel && <span className={`text-sm ${muted}`}>{fitLabel}</span>}
             </p>

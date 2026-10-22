@@ -1,7 +1,10 @@
-import { Star } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import home from "@/content/home.json";
 import { getProduct } from "@/lib/products";
 import { average, type Review } from "@/lib/reviews";
+
+const summary = home.reviews;
+const month = (d: string) => new Intl.DateTimeFormat("nl-NL", { month: "long", year: "numeric" }).format(new Date(d));
 
 export function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
@@ -11,27 +14,43 @@ export function Stars({ rating, size = 14 }: { rating: number; size?: number }) 
   );
 }
 
-/** Reviewblok; rendert niets zonder reviews (nooit lege of verzonnen social proof). */
+/**
+ * Reviewblok; rendert niets zonder reviews (nooit lege of verzonnen social proof). Staat er een Trustpilot-score in het
+ * CMS, dan tonen we die (met link) in plaats van een eigen gemiddelde: de selectie hier is niet het hele beeld.
+ */
 export function Reviews({ items, id = "reviews", className = "" }: { items: Review[]; id?: string; className?: string }) {
   if (!items.length) return null;
-  const avg = average(items);
   return (
     <section id={id} aria-labelledby={`${id}-title`} className={className}>
-      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
-        <h2 id={`${id}-title`} className="display text-[clamp(2.75rem,6vw,5.25rem)]">{home.reviews.title} {home.reviews.titleSecond}</h2>
-        <p className="flex items-center gap-3 text-sm"><Stars rating={avg} size={16} /> <span><strong className="font-medium">{avg.toLocaleString("nl-NL")}</strong> / 5 · {items.length} {items.length === 1 ? "review" : "reviews"}</span></p>
+      <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <h2 id={`${id}-title`} className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{summary.title}{summary.titleSecond && <><br />{summary.titleSecond}</>}</h2>
+        {summary.url ? (
+          <a href={summary.url} target="_blank" rel="noopener noreferrer" className="group flex items-end gap-4">
+            <span className="display text-[3.5rem] leading-[0.8]">{summary.score}</span>
+            <span className="text-sm leading-snug">
+              <Stars rating={Number(summary.score.replace(",", "."))} size={15} />
+              <span className="mt-1 flex items-center gap-1 underline decoration-line-strong underline-offset-4 group-hover:decoration-ink">
+                {summary.count} reviews op Trustpilot <ArrowUpRight size={14} aria-hidden />
+              </span>
+            </span>
+          </a>
+        ) : (
+          <p className="flex items-center gap-3 text-sm"><Stars rating={average(items)} size={16} /> {items.length} {items.length === 1 ? "review" : "reviews"}</p>
+        )}
       </div>
-      <ul className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Kolommen in plaats van een raster: reviews zijn ongelijk lang, dus geen rij gelijke kaarten met gaten. */}
+      <ul className="mt-10 gap-4 md:columns-2 lg:mt-14 lg:columns-3 max-md:[&>li:nth-child(n+4)]:hidden">
         {items.map((r, i) => {
           const p = r.product ? getProduct(r.product) : undefined;
           return (
-            <li key={i} className="flex flex-col border border-line bg-ivory p-6">
+            <li key={i} className="mb-4 break-inside-avoid bg-paper p-6 sm:p-7">
               <Stars rating={r.rating} />
-              <blockquote className="mt-4 flex-1 leading-relaxed">“{r.text}”</blockquote>
+              <blockquote className="mt-4 leading-relaxed">“{r.text}”</blockquote>
               <p className="mt-5 text-sm">
-                <span className="font-medium">{r.name}</span>
-                {r.place && <span className="text-taupe">, {r.place}</span>}
-                {p && <span className="block text-xs text-taupe">Kocht: {p.kind === "thobe" ? "Thobe " : ""}{p.name}</span>}
+                <span className="font-semibold">{r.name}</span>
+                {r.place && <span className="text-muted">, {r.place}</span>}
+                {r.date && <span className="text-muted"> · {month(r.date)}</span>}
+                {p && <span className="block text-xs text-muted">Kocht: {p.kind === "thobe" ? "Thobe " : ""}{p.name}</span>}
               </p>
             </li>
           );

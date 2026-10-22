@@ -13,16 +13,16 @@ const companyLine = [company.kvk && `KvK ${company.kvk}`, company.btw && `Btw ${
 
 // 48px tapdoel op touch, 32px op desktop; de hoogte vervangt de oude space-y-3.
 const LINK = "inline-flex min-h-12 items-center gap-2 transition-colors duration-200 hover:text-gold lg:min-h-9";
-const HEAD = "tag text-muted-dark";
+const HEAD = "caption text-muted-dark";
 
 export function Footer() {
   return (
     <footer id="contact" className="board on-dark">
       {/* Het deksel als slot: het kufi-embleem groot in goudfolie, zoals op de doos. */}
       <div className="border-b border-line-dark">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center px-5 py-20 text-center lg:py-28">
-          <Emblem className="h-auto w-[min(26rem,70vw)] text-gold" />
-          <p className="tag mt-8 text-muted-dark">Uit Nederland</p>
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center px-5 py-14 text-center lg:py-20">
+          <Emblem className="h-auto w-[min(17rem,56vw)] text-gold" />
+          <p className="caption mt-6 font-normal text-muted-dark">Uit Nederland</p>
         </div>
       </div>
       <div className="mx-auto max-w-[1440px] px-5 pb-10 pt-16 lg:px-10 lg:pt-20">

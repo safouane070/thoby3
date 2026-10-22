@@ -36,7 +36,7 @@ export function OrderStatus() {
   return (
     <>
       <h1 className="display text-5xl md:text-6xl">Dank je wel,<br />{state === "paid" ? "je bestelling is binnen" : "we wachten op je bank"}</h1>
-      {order && <p className="tag mt-6 text-taupe-strong">Bestelling {order}</p>}
+      {order && <p className="caption mt-6 text-taupe-strong">Bestelling <span className="num text-base font-bold text-ink">{order}</span></p>}
       <p className="mt-4 max-w-[46ch] text-taupe">
         {state === "paid"
           ? "Je krijgt zo een bevestiging per mail. Vóór 17:00 besteld (ma–za)? Dan gaat je pakket vandaag nog op weg."

@@ -12,8 +12,9 @@ import { useAfterPaint } from "@/lib/after-paint";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 function SizePicker({ product, onClose }: { product: Product; onClose: () => void }) {
-  const { add } = useStore();
-  const [fit, setFit] = useState<Fit>("slim");
+  const { add, pref } = useStore();
+  // Begint op jouw bewaarde pasvorm; jouw maat staat gemarkeerd.
+  const [fit, setFit] = useState<Fit>(pref.fit ?? "slim");
   return (
     <m.div
       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8, transition: { duration: 0.12 } }}
@@ -33,7 +34,7 @@ function SizePicker({ product, onClose }: { product: Product; onClose: () => voi
         {SIZES.map((s) => (
           <button key={s.label} title={s.bodyHeight} aria-label={`Maat ${sizeCode(s.label, fit)}, ${s.bodyHeight}, in winkelwagen`}
             onClick={() => { add({ slug: product.slug, size: s.label, fit }); onClose(); }}
-            className="press display min-h-12 border border-line-dark text-lg text-paper hover:border-gold hover:text-gold">
+            className={`press display min-h-12 border text-lg hover:border-gold hover:text-gold ${pref.size === s.label ? "border-gold text-gold" : "border-line-dark text-paper"}`}>
             {s.label}
           </button>
         ))}
@@ -45,7 +46,7 @@ function SizePicker({ product, onClose }: { product: Product; onClose: () => voi
 /** Eén labelstijl voor alles op een productfoto (korting, binnenkort terug). */
 export const BADGE = "tag bg-ink px-2.5 py-1.5 !text-[0.6875rem] text-paper";
 
-// Kaart als hangtag: foto op het studiogrijs, eronder het label met het ponsgaatje, de naam en de maatcodes van het nekmerk.
+// Kaart als hangtag: foto op het studiogrijs, eronder naam, prijs en kleur. De maten staan in de banderol en op de maatkaart.
 export function ProductCard({ product, feature = false }: { product: Product; feature?: boolean }) {
   const { wishlist, toggleWish, add } = useStore();
   const [picking, setPicking] = useState(false);
@@ -56,16 +57,18 @@ export function ProductCard({ product, feature = false }: { product: Product; fe
   const href = `/product/${product.slug}`;
   const pct = discountPct(product);
   const thobe = isThobe(product);
+  // De grote kaart op de homepage staat onder de hero met dezelfde staande foto: daar eerst het detail, bij hover het geheel.
+  const [base, swap] = feature ? [product.images.lifestyle, product.images.primary] : [product.images.primary, product.images.lifestyle];
 
   return (
     <article className="group flex h-full flex-col">
       <div className={`relative overflow-hidden bg-studio ${feature ? "aspect-[4/5] lg:aspect-auto lg:min-h-[32rem] lg:flex-1" : "aspect-[3/4]"}`}>
         {/* Hover: alleen een rustige crossfade naar de sfeerfoto, en alleen met een muis. */}
         <Link href={href} className="absolute inset-0 block" aria-label={product.name} tabIndex={-1}>
-          <Image src={product.images.primary} alt={product.name} fill sizes={feature ? "(min-width:1024px) 50vw, 100vw" : "(min-width:1024px) 25vw, 50vw"} placeholder="blur" blurDataURL={BLUR}
+          <Image src={base} alt={product.name} fill sizes={feature ? "(min-width:1024px) 50vw, 100vw" : "(min-width:1024px) 25vw, 50vw"} placeholder="blur" blurDataURL={BLUR}
             className={`${thobe ? "object-cover" : "object-contain p-[12%]"} mix-blend-multiply transition-opacity duration-[400ms] ease-[ease] ${hoverImg ? "group-hover:opacity-0" : ""}`} />
           {hoverImg && (
-            <Image src={product.images.lifestyle} alt="" fill sizes={feature ? "(min-width:1024px) 50vw, 100vw" : "(min-width:1024px) 25vw, 50vw"}
+            <Image src={swap} alt="" fill sizes={feature ? "(min-width:1024px) 50vw, 100vw" : "(min-width:1024px) 25vw, 50vw"}
               className="object-cover opacity-0 mix-blend-multiply transition-opacity duration-[400ms] ease-[ease] group-hover:opacity-100" />
           )}
         </Link>
@@ -91,7 +94,7 @@ export function ProductCard({ product, feature = false }: { product: Product; fe
         <AnimatePresence>{picking && <SizePicker product={product} onClose={() => setPicking(false)} />}</AnimatePresence>
       </div>
 
-      <div className={`flex flex-col border-x border-b border-line bg-paper px-4 pb-5 pt-5 sm:px-5 ${feature ? "" : "flex-1"}`}>
+      <div className={`flex flex-col bg-paper px-4 pb-5 pt-5 sm:px-5 ${feature ? "" : "flex-1"}`}>
         <div className="flex flex-col gap-1 min-[480px]:flex-row min-[480px]:items-baseline min-[480px]:justify-between min-[480px]:gap-3">
           <h3 className={`display ${feature ? "text-[clamp(2rem,3.4vw,3rem)]" : "text-2xl sm:text-[1.75rem]"}`}>
             <Link href={href} className="underline-offset-4 hover:underline">{thobe ? <><span className="sr-only">Thobe </span>{product.name}</> : product.name}</Link>
@@ -104,21 +107,6 @@ export function ProductCard({ product, feature = false }: { product: Product; fe
               <p className="mt-2 flex items-center gap-2 text-sm text-muted">
                 <span aria-hidden className="h-3 w-3 border border-line-strong" style={{ background: product.colors[0].hex }} /> {product.colors[0].name}
               </p>
-            )}
-            {product.soldOut ? null : feature ? (
-              // Elke maatcode opent het product met die maat en pasvorm al gekozen.
-              <ul aria-label="Kies een maat" className="mt-auto flex flex-wrap gap-1.5 pt-4">
-                {SIZES.flatMap((s) => (["slim", "broad"] as const).map((f) => ({ s, f }))).map(({ s, f }) => (
-                  <li key={sizeCode(s.label, f)}>
-                    <Link href={`${href}?${new URLSearchParams({ fit: f, size: s.label })}`} aria-label={`Maat ${sizeCode(s.label, f)}, ${s.bodyHeight}`}
-                      className="press num flex min-h-9 min-w-11 items-center justify-center border border-line-strong px-2 text-sm font-bold hover:border-ink hover:bg-ink hover:text-gold">
-                      {sizeCode(s.label, f)}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="tag mt-auto pt-3 !text-[0.75rem] text-muted">8 maten · <span className="whitespace-nowrap">S-1 t/m XL-2</span></p>
             )}
           </>
         ) : (

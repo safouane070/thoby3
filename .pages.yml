@@ -84,7 +84,7 @@ content:
           - { name: label, label: Naam, type: string }
           - { name: note, label: Uitleg, type: text }
       - name: fabric
-        label: Stof (venster "Alle stofeigenschappen")
+        label: Stof (venster "Over de stof" op de productpagina)
         type: object
         fields:
           - { name: material, label: Naam van de stof, type: string }
@@ -105,7 +105,7 @@ content:
           - { name: text, label: Introtekst, type: text }
           - { name: buttonPrimary, label: Tekst knop in de zwarte balk, type: string, description: "Bijv. In winkelwagen" }
           - { name: buttonSecondary, label: Tekst link naar de maatkaart, type: string }
-          - { name: image, label: Foto, type: image, description: "Vierkante foto met rustige ruimte links (daar staat de kop). Minstens 2000 pixels breed." }
+          - { name: image, label: Foto, type: image, description: "Staande foto (3:4) van de thobe van kraag tot zoom. De maatlijnen ernaast staan alleen bij de huidige foto (wd-1.jpg); bij een andere foto verdwijnen ze." }
           - { name: imageAlt, label: Beschrijving van de foto, type: string, description: "Voor blinde bezoekers en Google." }
           - { name: featuredProduct, label: Product in de zwarte balk (adres), type: string, description: "Bijv. white-desert." }
       - name: collection
@@ -129,7 +129,6 @@ content:
             type: object
             list: true
             fields:
-              - { name: icon, label: Icoon, type: select, options: { values: [wudu, thobe, masjid] } }
               - { name: title, label: Tekst, type: string }
           - { name: image, label: Foto open doos, type: image, description: "Bovenaanzicht, liggend." }
           - { name: imageAlt, label: Beschrijving van de foto, type: string }
@@ -153,15 +152,11 @@ content:
           - { name: text, label: Tekst, type: text }
           - { name: note, label: Kleine tekst onder de maattabel, type: string }
       - name: fabric
-        label: Blok "Satijngeweven katoen"
+        label: Stofvenster "Over de stof" (eigenschappen en detailfoto's)
         type: object
         fields:
-          - { name: title, label: Kop, type: string }
-          - { name: titleSecond, label: Kop tweede regel, type: string }
-          - { name: text, label: Tekst, type: text }
-          - { name: button, label: Tekst knop, type: string }
           - name: properties
-            label: Stofeigenschappen (in het venster)
+            label: Stofeigenschappen
             type: object
             list: true
             fields:
@@ -176,11 +171,14 @@ content:
               - { name: image, label: Foto, type: image, description: "Staande foto (3:4)." }
               - { name: alt, label: Beschrijving van de foto, type: string }
       - name: reviews
-        label: Kop boven de reviews
+        label: Kop boven de reviews en Trustpilot-score
         type: object
         fields:
           - { name: title, label: Kop, type: string }
           - { name: titleSecond, label: Kop tweede regel, type: string }
+          - { name: score, label: TrustScore, type: string, description: "Zoals op Trustpilot, bijv. 4,6. Leeg = geen score tonen." }
+          - { name: count, label: Aantal reviews op Trustpilot, type: number }
+          - { name: url, label: Link naar Trustpilot, type: string, description: "https://nl.trustpilot.com/review/thoby3.com" }
       - name: faq
         label: Veelgestelde vragen
         type: object
@@ -257,7 +255,7 @@ content:
       - { name: place, label: Woonplaats (mag leeg), type: string }
       - { name: rating, label: Sterren (1–5), type: number, required: true }
       - { name: text, label: Review, type: text, required: true }
-      - { name: product, label: Product (adres, mag leeg), type: string, description: "Bijv. white-desert. Alleen reviews met een product tellen mee voor de sterren in Google." }
+      - { name: product, label: Product (adres, mag leeg), type: string, description: "Alleen voor reviews die op deze site zelf zijn geschreven: die tellen mee voor de sterren in Google. Reviews van Trustpilot laat je leeg (Google staat overgenomen reviews niet toe)." }
       - { name: date, label: Datum, type: date, options: { format: yyyy-MM-dd } }
 
   - name: legal
