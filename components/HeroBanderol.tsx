@@ -13,19 +13,23 @@ const optionState = (on: boolean) => (on ? "border-gold text-gold shadow-[inset_
 
 /** De zwarte banderol uit de doos, als werkende maatkiezer: pasvorm, maat, doos en in de winkelwagen. */
 export function HeroBanderol({ product, cta, help }: { product: Product; cta: string; help: string }) {
-  const { add, money } = useStore();
+  const { add, money, pref, setPref } = useStore();
   const id = useId();
-  const [fit, setFit] = useState<Fit>("slim");
-  const [size, setSize] = useState("");
+  // Jouw maat uit de winkel: wat je hier kiest, staat ook op de maatkaart en de productpagina klaar (en andersom).
+  const fit: Fit = pref.fit ?? "slim";
+  const size = pref.size ?? "";
+  const setFit = (f: Fit) => setPref({ fit: f });
+  const setSize = (s: string) => setPref({ size: s });
   const [box, setBox] = useState(false);
-  const [missing, setMissing] = useState(false);
+  // Teller in plaats van boolean: elke klik zonder maat speelt het duwtje opnieuw af (nieuwe key).
+  const [missing, setMissing] = useState(0);
   const sizes = useRef<HTMLDivElement>(null);
   const total = product.price + (box ? GIFT_BOX_PRICE : 0);
   const chosen = SIZES.find((s) => s.label === size);
 
   const submit = () => {
     if (!size) {
-      setMissing(true);
+      setMissing((n) => n + 1);
       sizes.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
       return;
     }
@@ -45,32 +49,35 @@ export function HeroBanderol({ product, cta, help }: { product: Product; cta: st
           <Link href={`/product/${product.slug}`} className="display text-[1.75rem] text-paper underline-offset-4 hover:underline xl:text-[2rem]">
             <span className="sr-only">Thobe </span>{product.name}
           </Link>
-          <Link href="/#pasvorm" className="tag inline-flex min-h-10 items-center gap-1.5 text-paper/80 underline decoration-paper/30 underline-offset-4 hover:text-paper xl:mt-2 xl:min-h-8">
+          <Link href="/#pasvorm" className="caption inline-flex min-h-10 items-center gap-1.5 text-paper/80 underline decoration-paper/30 underline-offset-4 hover:text-paper xl:mt-1 xl:min-h-8">
             {help} <ArrowRight size={14} aria-hidden />
           </Link>
         </div>
 
         {/* Mobiel: pasvorm en maat op één regel, elk met een klein label erboven. Desktop: elk een eigen kolom in de balk. */}
-        <div className="grid grid-cols-[2fr_4fr] gap-3 xl:flex xl:gap-8">
+        <div className="grid grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-3 xl:flex xl:gap-8">
           <fieldset>
-            <legend className="tag mb-2 !text-[0.6875rem] text-muted-dark xl:!text-[0.8125rem]">Pasvorm</legend>
+            <legend className="caption mb-2 text-muted-dark">Pasvorm</legend>
             <div className="grid grid-cols-2 gap-1.5">
               {FITS.map((f) => (
                 <button key={f.id} type="button" aria-pressed={fit === f.id} aria-label={`${f.label}, maat -${f.id === "slim" ? 1 : 2}`} onClick={() => setFit(f.id)}
-                  className={`${OPTION} tag px-1 !text-[0.75rem] sm:px-3 sm:!text-[0.8125rem] ${optionState(fit === f.id)} xl:min-w-28`}>
-                  {f.label}<span className="ml-1.5 hidden opacity-70 sm:inline">-{f.id === "slim" ? 1 : 2}</span>
+                  className={`${OPTION} tag px-1 !tracking-[0.06em] sm:px-3 sm:!tracking-[0.14em] ${optionState(fit === f.id)} xl:min-w-28`}>
+                  {f.label}<span className="ml-1 opacity-70 sm:ml-1.5">-{f.id === "slim" ? 1 : 2}</span>
                 </button>
               ))}
             </div>
           </fieldset>
           <fieldset>
-            <legend className="tag mb-2 flex gap-2 !text-[0.6875rem] text-muted-dark xl:!text-[0.8125rem]">
-              Maat {chosen && <span className="text-paper">{sizeCode(chosen.label, fit)} · {chosen.bodyHeight}</span>}
+            {/* De melding vervangt het label op dezelfde plek: geen extra regel die de balk laat verspringen. */}
+            <legend className="caption mb-2 flex gap-2 text-muted-dark">
+              {missing && !size
+                ? <span id={`${id}-err`} role="alert" className="text-gold">Kies eerst je maat</span>
+                : <>Maat {chosen && <span className="num font-bold text-paper">{sizeCode(chosen.label, fit)} · {chosen.bodyHeight}</span>}</>}
             </legend>
-            <div ref={sizes} className="grid grid-cols-4 gap-1.5" aria-describedby={missing && !size ? `${id}-err` : undefined}>
+            <div key={missing} ref={sizes} className={`grid grid-cols-4 gap-1.5 ${missing && !size ? "nudge" : ""}`} aria-describedby={missing && !size ? `${id}-err` : undefined}>
               {SIZES.map((s) => (
                 <button key={s.label} type="button" aria-pressed={size === s.label} aria-label={`Maat ${s.label}, ${s.bodyHeight}`}
-                  onClick={() => { setSize(s.label); setMissing(false); }} className={`${OPTION} display text-xl ${optionState(size === s.label)} xl:w-14`}>
+                  onClick={() => { setSize(s.label); setMissing(0); }} className={`${OPTION} display text-xl ${optionState(size === s.label)} xl:w-14`}>
                   {s.label}
                 </button>
               ))}
@@ -93,7 +100,6 @@ export function HeroBanderol({ product, cta, help }: { product: Product; cta: st
             </button>
           </div>
         </div>
-        {missing && !size && <p id={`${id}-err`} role="alert" className="text-sm text-paper xl:col-span-full xl:text-right">Kies eerst je maat.</p>}
       </div>
     </div>
   );

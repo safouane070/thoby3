@@ -4,36 +4,42 @@ import home from "@/content/home.json";
 import { whatsapp } from "@/lib/products";
 
 const faq = home.faq;
+const half = Math.ceil(faq.items.length / 2);
+const columns = [faq.items.slice(0, half), faq.items.slice(half)];
 
 // Radix Accordion: toetsenbord, aria-expanded en focusbeheer kloppen vanzelf. Hoogte animeert via
 // --radix-accordion-content-height (globals.css): open 260ms, dicht sneller (180ms), allebei met een sterke ease-out.
+// Kop en WhatsApp op één regel, de vragen over de volle breedte in twee kolommen: geen zijbalk met een inleiding.
 export function Faq() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="mx-auto grid max-w-[1440px] gap-12 px-5 py-20 lg:grid-cols-[5fr_7fr] lg:gap-24 lg:px-10 lg:py-28">
-      <div className="lg:sticky lg:top-28 lg:self-start">
-        <h2 id="faq-title" className="display text-[clamp(2.25rem,3.6vw,3.25rem)]">{faq.title}{faq.titleSecond && <><br />{faq.titleSecond}</>}</h2>
-        <p className="mt-6 max-w-sm leading-relaxed text-muted">Staat je vraag er niet bij? We helpen je graag persoonlijk.</p>
+    <section id="faq" aria-labelledby="faq-title" className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-36">
+      <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+        <h2 id="faq-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{faq.title}{faq.titleSecond && <><br />{faq.titleSecond}</>}</h2>
         <a href={whatsapp("Hoi THOBY3, ik heb een vraag.")} target="_blank" rel="noopener noreferrer"
-          className="press tag mt-8 inline-flex min-h-12 items-center gap-2.5 border border-ink px-6 hover:bg-ink hover:text-paper">
-          <MessageCircle size={16} aria-hidden /> Stel je vraag via WhatsApp
+          className="press tag inline-flex min-h-12 items-center gap-2.5 border border-ink px-6 hover:bg-ink hover:text-paper">
+          <MessageCircle size={16} aria-hidden /> Andere vraag? WhatsApp ons
         </a>
       </div>
 
-      <Accordion.Root type="single" collapsible className="border-t border-line-strong">
-        {faq.items.map((item, i) => (
-          <Accordion.Item key={item.q} value={`q${i}`} className="group border-b border-line-strong">
-            <Accordion.Header>
-              <Accordion.Trigger className="flex min-h-12 w-full cursor-pointer items-center justify-between gap-6 py-6 text-left text-[1.0625rem] font-semibold text-ink md:text-lg">
-                {item.q}
-                <span aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center border border-line-strong transition-[transform,background-color,border-color,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-data-[state=open]:rotate-45 group-data-[state=open]:border-ink group-data-[state=open]:bg-ink group-data-[state=open]:text-gold">
-                  <Plus size={14} />
-                </span>
-              </Accordion.Trigger>
-            </Accordion.Header>
-            <Accordion.Content className="faq-content overflow-hidden">
-              <p className="max-w-[62ch] pb-7 pr-14 leading-relaxed text-muted">{item.a}</p>
-            </Accordion.Content>
-          </Accordion.Item>
+      <Accordion.Root type="single" collapsible className="mt-10 grid gap-x-16 lg:mt-14 lg:grid-cols-2">
+        {columns.map((items, c) => (
+          <div key={c} className={`border-t border-line-strong ${c ? "max-lg:border-t-0" : ""}`}>
+            {items.map((item, i) => (
+              <Accordion.Item key={item.q} value={`q${c * half + i}`} className="group border-b border-line-strong">
+                <Accordion.Header>
+                  <Accordion.Trigger className="flex min-h-12 w-full cursor-pointer items-center justify-between gap-6 py-6 text-left text-[1.0625rem] font-semibold text-ink md:text-lg">
+                    {item.q}
+                    <span aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center border border-line-strong transition-[transform,background-color,border-color,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-data-[state=open]:rotate-45 group-data-[state=open]:border-ink group-data-[state=open]:bg-ink group-data-[state=open]:text-gold">
+                      <Plus size={14} />
+                    </span>
+                  </Accordion.Trigger>
+                </Accordion.Header>
+                <Accordion.Content className="faq-content overflow-hidden">
+                  <p className="max-w-[62ch] pb-7 pr-14 leading-relaxed text-muted">{item.a}</p>
+                </Accordion.Content>
+              </Accordion.Item>
+            ))}
+          </div>
         ))}
       </Accordion.Root>
     </section>

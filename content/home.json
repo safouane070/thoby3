@@ -5,14 +5,14 @@
     "text": "Elke maat van S tot XL bestaat in slank en breed, allebei even lang. Satijnkatoen. Ma t/m za vóór 17:00 besteld, dezelfde dag verstuurd.",
     "buttonPrimary": "In winkelwagen",
     "buttonSecondary": "Hulp bij je maat",
-    "image": "/img/box-held-wd.jpg",
-    "imageAlt": "Iemand in de White Desert-thobe houdt de matzwarte THOBY3-geschenkdoos met het gouden kufi-logo vast",
+    "image": "/img/wd-1.jpg",
+    "imageAlt": "De White Desert-thobe in gebroken wit, van kraag tot zoom, gedragen met witte sneakers",
     "featuredProduct": "white-desert"
   },
   "collection": {
     "title": "De collectie",
     "titleSecond": "",
-    "text": "Twee kleuren, elk in acht maten: S tot XL, slank en breed. Bij elke thobe krijg je musk en een siwak cadeau."
+    "text": "Twee kleuren in satijnkatoen: gebroken wit en karamel."
   },
   "box": {
     "greetingArabic": "السلام عليكم",
@@ -22,15 +22,12 @@
     "text": "Dat staat in het deksel van de THOBY3-geschenkdoos, met drie stappen eronder. Je thobe ligt gevouwen onder een zwarte banderol met het logo in goudfolie. Om te geven, of om zelf te houden.",
     "steps": [
       {
-        "icon": "wudu",
         "title": "Neem thuis wudu"
       },
       {
-        "icon": "thobe",
         "title": "Trek je thobe aan"
       },
       {
-        "icon": "masjid",
         "title": "Loop naar de masjid"
       }
     ],
@@ -65,13 +62,10 @@
   "fit": {
     "title": "Maatkaart",
     "titleSecond": "",
-    "text": "Slank (-1) en breed (-2) zijn in elke maat even lang; ze verschillen in borst en schouders. Kies een maat en pasvorm: de tekening rechts staat op schaal.",
+    "text": "Kies je maat. Slank (-1) en breed (-2) staan hieronder naast elkaar op schaal: even lang, alleen ruimer in borst en schouders.",
     "note": "Kort en vol postuur? Kies breed in de maat die bij je lengte past. Te lang? Laat hem inkorten."
   },
   "fabric": {
-    "title": "Satijnkatoen",
-    "text": "Katoen in satijnbinding: de draden liggen lang aan de oppervlakte. Daardoor valt de stof soepel, voelt hij glad aan en heeft hij een lichte glans. En omdat het katoen is, ademt hij.",
-    "button": "Alle stofeigenschappen",
     "properties": [
       {
         "label": "Glans",
@@ -106,12 +100,14 @@
         "image": "/img/wd-2.jpg",
         "alt": "Manchet met THOBY3-merkteken"
       }
-    ],
-    "titleSecond": ""
+    ]
   },
   "reviews": {
     "title": "Wat klanten",
-    "titleSecond": "zeggen"
+    "titleSecond": "zeggen",
+    "score": "4,6",
+    "count": 19,
+    "url": "https://nl.trustpilot.com/review/thoby3.com"
   },
   "faq": {
     "title": "Vragen",

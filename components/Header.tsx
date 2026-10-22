@@ -16,7 +16,6 @@ const nav = [
   { id: "collectie", href: "/#collectie", label: "Collectie" },
   { id: "doos", href: "/#doos", label: "De doos" },
   { id: "pasvorm", href: "/#pasvorm", label: "Maatkaart" },
-  { id: "stof", href: "/#stof", label: "Stof" },
   { id: "faq", href: "/#faq", label: "Vragen" },
   { id: "contact", href: "/#contact", label: "Contact" },
 ];

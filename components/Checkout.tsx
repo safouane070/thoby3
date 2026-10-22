@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { ChevronDown, Lock } from "lucide-react";
 import { COUNTRIES, buildOrder } from "@/lib/order";
-import { eur, getProduct } from "@/lib/products";
+import { eur, getProduct, products } from "@/lib/products";
+import { ProductCard } from "./ProductCard";
 import { useStore } from "./StoreProvider";
 
 type Method = { id: string; description: string; image: string };
@@ -16,10 +17,10 @@ declare global { interface Window { Mollie?: (profileId: string, opts: { locale:
 const euro = (cents: number) => eur(cents / 100);
 const DANGER = "#a3341f";
 // Velden in de huisstijl: vierkant, papier op zand, 1px lijn, focus als tweede inktlijn (geen omlijning eromheen).
-const FIELD = "field-input block w-full border border-line-strong bg-paper px-3 py-[14px] text-[15px] leading-[18px] placeholder:text-[#8a847b] focus:border-ink focus:shadow-[inset_0_0_0_1px_var(--ink)]";
-const LABEL = "tag mb-2 block text-taupe-strong";
+const FIELD = "field-input block w-full border border-line-strong bg-paper px-3 py-[14px] text-[15px] leading-[18px] placeholder:text-[#6e6860] focus:border-ink focus:shadow-[inset_0_0_0_1px_var(--ink)]";
+const LABEL = "caption mb-2 block text-taupe-strong";
 // Mollie's kaartvelden zijn iframes: tekst via styles, rand en achtergrond via onze eigen container (.mollie-component).
-const CARD_STYLES = { styles: { base: { color: "#151516", fontSize: "15px", lineHeight: "18px", "::placeholder": { color: "#8a847b" } }, invalid: { color: DANGER } } };
+const CARD_STYLES = { styles: { base: { color: "#151516", fontSize: "15px", lineHeight: "18px", "::placeholder": { color: "#6e6860" } }, invalid: { color: DANGER } } };
 const CARD_FIELDS = [
   { type: "cardNumber", label: "Kaartnummer", span: "col-span-2" },
   { type: "cardHolder", label: "Naam op de kaart", span: "col-span-2" },
@@ -55,7 +56,7 @@ function Field({ id, label, className = "", ...input }: { id: string; label: str
 }
 
 function Alert({ children }: { children: ReactNode }) {
-  return <p role="alert" className="mb-4 border-l-2 bg-paper px-4 py-3 text-sm" style={{ borderColor: DANGER }}>{children}</p>;
+  return <p role="alert" className="mb-4 border bg-paper px-4 py-3 text-sm" style={{ borderColor: DANGER, color: DANGER }}>{children}</p>;
 }
 
 /** Kaartvelden van Mollie Components, ingebed in de pagina. */
@@ -88,6 +89,7 @@ export function Checkout() {
   const { lines, ready } = useStore();
   const [country, setCountry] = useState("NL");
   const [methods, setMethods] = useState<Method[] | null>(null);
+  const [methodsError, setMethodsError] = useState("");
   const [method, setMethod] = useState("");
   const [mollie, setMollie] = useState<MollieJs | null>(null);
   const [error, setError] = useState("");
@@ -102,14 +104,15 @@ export function Checkout() {
     let alive = true;
     fetch(`/api/methods?amount=${total}&country=${country}`).then((r) => r.json()).then(async (d) => {
       if (!alive) return;
-      if (d.error) return setError(d.error);
+      if (d.error) return setMethodsError(d.error);
+      setMethodsError("");
       setMethods(d.methods);
       setMethod((m) => (d.methods.some((x: Method) => x.id === m) ? m : d.methods[0]?.id ?? ""));
       if (!mollie && d.methods.some((x: Method) => x.id === "creditcard")) {
         await loadMollie();
         if (alive && window.Mollie) setMollie(window.Mollie(d.profileId, { locale: "nl_NL", testmode: d.testmode }));
       }
-    }, () => alive && setError("Betaalmethodes laden lukt nu even niet. Ververs de pagina."));
+    }, () => alive && setMethodsError("Betaalmethodes laden lukt nu even niet. Ververs de pagina."));
     return () => { alive = false; };
   }, [total, country, mollie]);
 
@@ -132,8 +135,9 @@ export function Checkout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...Object.fromEntries(new FormData(form)), lines, method, cardToken }),
       });
-      const data = await res.json().catch(() => ({ error: "Betalen lukt nu even niet. Probeer het zo opnieuw." }));
-      if (!res.ok) return setError(data.error);
+      const data: { error?: string; redirect?: string } = await res.json().catch(() => ({}));
+      // Zonder doel-URL (of met een fout zonder tekst) nooit "ergens heen": dan een melding die zegt wat je kunt doen.
+      if (!res.ok || !data.redirect) return setError(data.error || "Betalen lukt nu even niet. Probeer het zo opnieuw of stuur ons een bericht.");
       // Naar de bank, PayPal, Klarna of 3-D Secure; daarna stuurt Mollie de klant terug naar /afrekenen/bedankt.
       location.assign(data.redirect);
     } finally {
@@ -143,10 +147,18 @@ export function Checkout() {
 
   if (!ready) return <div className="min-h-[60vh]" />;
   if (!lines.length) {
+    const pick = products.find((p) => p.kind === "thobe" && !p.soldOut);
     return (
-      <div className="flex min-h-[40vh] flex-col items-start gap-6">
-        <p className="text-taupe">Je winkelwagen is leeg.</p>
-        <Link href="/#collectie" className="press btn-primary tag flex min-h-12 items-center px-7">Naar de collectie</Link>
+      <div className="grid gap-10 lg:grid-cols-[7fr_5fr] lg:gap-20">
+        <div>
+          <p className="display text-3xl">Je winkelwagen is leeg</p>
+          <p className="mt-4 max-w-[46ch] leading-relaxed text-taupe">Kies eerst je thobe en je maat. Twijfel je over de maat? Op de maatkaart zie je slank en breed naast elkaar, in centimeters.</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/#collectie" className="press btn-primary tag flex min-h-12 items-center px-7">Naar de collectie</Link>
+            <Link href="/#pasvorm" className="press tag flex min-h-12 items-center border border-ink px-7 hover:bg-ink hover:text-paper">Naar de maatkaart</Link>
+          </div>
+        </div>
+        {pick && <div className="max-w-sm"><ProductCard product={pick} /></div>}
       </div>
     );
   }
@@ -180,8 +192,10 @@ export function Checkout() {
         </Step>
 
         <Step n={3} title="Betalen">
-          {!methods ? (
-            <div className="h-[220px] animate-pulse border border-line bg-paper/60" aria-label="Betaalmethodes laden" />
+          {methodsError ? (
+            <Alert>{methodsError}</Alert>
+          ) : !methods ? (
+            <div className="h-[220px] animate-pulse border border-line bg-paper/60" role="status" aria-label="Betaalmethodes laden" />
           ) : (
             <div role="radiogroup" aria-label="Betaalmethode" className="space-y-1.5">
               {methods.map((m) => {

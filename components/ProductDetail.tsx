@@ -69,7 +69,7 @@ function Gallery({ product }: { product: Product }) {
 function Colorways({ product, query }: { product: Product; query: string }) {
   return (
     <div>
-      <p className="tag">Kleur <span className="ml-2 normal-case tracking-normal text-muted">{product.colors[0].name}</span></p>
+      <p className="caption">Kleur <span className="ml-2 font-normal text-muted">{product.colors[0].name}</span></p>
       <ul className="mt-3 flex gap-3">
         {products.filter(isThobe).map((p) => (
           <li key={p.slug}>
@@ -97,7 +97,7 @@ function subscribeUrl(onChange: () => void) {
 }
 
 export function ProductDetail({ product }: { product: Product }) {
-  const { add, wishlist, toggleWish, money } = useStore();
+  const { add, wishlist, toggleWish, money, pref, setPref } = useStore();
   const thobe = isThobe(product);
   const [missing, setMissing] = useState(false);
   // Mobiel: de vaste CTA klapt zelf een maatkiezer uit (scrollen naar de maten bleek onbetrouwbaar en kost een extra stap).
@@ -105,12 +105,13 @@ export function ProductDetail({ product }: { product: Product }) {
   const wished = wishlist.includes(product.slug);
 
   // Maat en pasvorm leven in de URL (?size=M&fit=broad): delen of herladen toont exact dezelfde keuze.
-  // URL-waarden zijn onbetrouwbaar, dus alleen bekende maten/pasvormen tellen; de rest valt terug op de default.
+  // URL-waarden zijn onbetrouwbaar, dus alleen bekende maten/pasvormen tellen. Zonder URL-keuze: jouw bewaarde maat.
   const search = useSyncExternalStore(subscribeUrl, () => window.location.search, () => "");
   const params = new URLSearchParams(search);
-  const fit: Fit = params.get("fit") === "broad" ? "broad" : "slim";
+  const urlFit = params.get("fit");
+  const fit: Fit = urlFit === "broad" || urlFit === "slim" ? urlFit : pref.fit ?? "slim";
   const urlSize = params.get("size");
-  const size = urlSize && SIZES.some((x) => x.label === urlSize) ? urlSize : "";
+  const size = urlSize && SIZES.some((x) => x.label === urlSize) ? urlSize : thobe ? pref.size ?? "" : "";
   const giftBox = thobe && params.get("box") === "1";
 
   // history.replaceState synct met useSearchParams zonder navigatie of extra history-entry (Next docs: Native History API).
@@ -120,8 +121,8 @@ export function ProductDetail({ product }: { product: Product }) {
     window.history.replaceState(window.history.state, "", `?${q}`);
     window.dispatchEvent(new Event(URL_EVENT));
   };
-  const chooseSize = (v: string) => { setMissing(false); syncUrl({ size: v }); };
-  const chooseFit = (f: Fit) => syncUrl({ fit: f });
+  const chooseSize = (v: string) => { setMissing(false); setPref({ size: v }); syncUrl({ size: v }); };
+  const chooseFit = (f: Fit) => { setPref({ fit: f }); syncUrl({ fit: f }); };
   const setGiftBox = (on: boolean) => syncUrl({ box: on ? "1" : "" });
   const query = `?${new URLSearchParams({ fit, ...(size && { size }), ...(giftBox && { box: "1" }) })}`;
 
@@ -153,14 +154,15 @@ export function ProductDetail({ product }: { product: Product }) {
 
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-32 pt-32 lg:px-10 lg:pb-24 lg:pt-36">
-      <nav aria-label="Kruimelpad" className="tag mb-8 flex items-center gap-2 !text-[0.75rem] text-muted">
+      <nav aria-label="Kruimelpad" className="mb-8 flex items-center gap-2 text-sm text-muted">
         <Link href="/" className="-m-4 inline-block p-4 hover:text-ink">Home</Link><ChevronRight size={12} aria-hidden />
         <Link href="/#collectie" className="-my-4 inline-block py-4 hover:text-ink">Collectie</Link><ChevronRight size={12} aria-hidden />
         <span className="text-ink" aria-current="page">{product.name}</span>
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-20">
-        <Gallery product={product} />
+        {/* De foto blijft in beeld terwijl je rechts je keuzes maakt (geen leeg vlak onder de galerij). */}
+        <div className="lg:sticky lg:top-28 lg:self-start"><Gallery product={product} /></div>
 
         <div>
           <h1 className="display text-[clamp(3rem,5vw,4.75rem)]">{thobe && <span className="sr-only">Thobe </span>}{product.name}</h1>
@@ -171,7 +173,7 @@ export function ProductDetail({ product }: { product: Product }) {
             <div className="mt-8 space-y-7">
               <Colorways product={product} query={query} />
               <div>
-                <p className="tag">Pasvorm <span className="ml-2 normal-case tracking-normal text-muted">zelfde lengte, twee posturen</span></p>
+                <p className="caption">Pasvorm <span className="ml-2 font-normal text-muted">zelfde lengte, twee posturen</span></p>
                 <div className="mt-3">
                   <FitToggle value={fit} onChange={chooseFit} id="fit-detail" />
                   <p className="mt-2 text-sm leading-snug text-muted" aria-live="polite">{FITS.find((f) => f.id === fit)!.note}</p>
@@ -179,7 +181,7 @@ export function ProductDetail({ product }: { product: Product }) {
               </div>
 
               <div>
-                <p className="tag" id="size-label">Maat</p>
+                <p className="caption" id="size-label">Maat</p>
                 <ToggleGroup.Root id="size-group" type="single" value={size} onValueChange={(v) => v && chooseSize(v)} disabled={product.soldOut} aria-labelledby="size-label" className="mt-3 grid grid-cols-4 gap-2">
                   {SIZES.map((s) => (
                     <ToggleGroup.Item key={s.label} value={s.label}
@@ -189,16 +191,16 @@ export function ProductDetail({ product }: { product: Product }) {
                     </ToggleGroup.Item>
                   ))}
                 </ToggleGroup.Root>
-                {missing && !size && <p role="alert" className="mt-2 text-sm font-semibold text-[#9b2c1f]">Kies eerst een maat.</p>}
+                {missing && !size && <p role="alert" className="mt-2 text-sm font-semibold text-[#a3341f]">Kies eerst een maat.</p>}
                 {HAS_MEASUREMENTS && sizeInfo && (
                   <dl className="num mt-3 grid grid-cols-4 border-y border-line text-center">
                     {([["Borst", sizeInfo.chest[fit]], ["Schouders", sizeInfo.shoulders[fit]], ["Mouw", sizeInfo.sleeve[fit]], ["Lengte", sizeInfo.length]] as const).map(([k, v]) => (
-                      <div key={k} className="py-2.5 [&:not(:first-child)]:border-l [&:not(:first-child)]:border-line"><dt className="tag !text-[0.6875rem] text-muted">{k}</dt><dd className="text-lg font-bold">{v} cm</dd></div>
+                      <div key={k} className="py-2.5 [&:not(:first-child)]:border-l [&:not(:first-child)]:border-line"><dt className="text-xs text-muted">{k}</dt><dd className="text-lg font-bold">{v} cm</dd></div>
                     ))}
                   </dl>
                 )}
                 <p className="mt-2 text-xs text-muted">{sizeInfo ? `${sizeCode(sizeInfo.label, fit)}, plat gemeten. ` : ""}Kort en vol postuur? Kies breed in de maat bij je lengte en laat hem zo nodig inkorten.</p>
-                {!product.soldOut && <SizeAdvisor onPick={chooseSize} fit={fit} className="mt-6 border-t border-line pt-6" />}
+                {!product.soldOut && <SizeAdvisor onPick={chooseSize} fit={fit} pickLabel={(sz) => `Kies ${sizeCode(sz, fit)}`} collapsible className="mt-3" />}
               </div>
 
               {/* De geschenkdoos als keuze met foto. Staat in de URL (?box=1), zodat de link vanaf de homepage hem aanzet. */}
@@ -249,7 +251,7 @@ export function ProductDetail({ product }: { product: Product }) {
         {picker && (
           <div id="sticky-sizes" className="sheet-enter mb-3 space-y-3">
             <div className="flex items-center justify-between">
-              <p className="tag">Kies je maat</p>
+              <p className="caption">Kies je maat</p>
               <button onClick={() => setPicker(false)} aria-label="Maatkeuze sluiten" className="press -m-2 flex h-12 w-12 items-center justify-center"><X size={18} /></button>
             </div>
             <FitToggle value={fit} onChange={chooseFit} id="fit-sticky" tone="dark" />

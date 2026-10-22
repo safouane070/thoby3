@@ -57,7 +57,7 @@ function Qty({ qty, name, onChange }: { qty: number; name: string; onChange: (n:
 }
 
 export function CartDrawer() {
-  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, giftSets, freeShipping, remainingForShipping, money, count } = useStore();
+  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, giftSets, freeShipping, remainingForShipping, money, count, lastAdded } = useStore();
   // Mobiel: bottom sheet die je omlaag wegveegt; vanaf tablet: zijlade rechts.
   const desktop = useMediaQuery("(min-width: 768px)");
 
@@ -113,7 +113,7 @@ export function CartDrawer() {
                   {lines.map((l) => {
                     const p = getProduct(l.slug)!;
                     return (
-                      <m.li key={l.id} layout="position" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.12 } }} transition={{ duration: 0.2 }} className="flex gap-4 py-5">
+                      <m.li key={l.id} layout="position" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.12 } }} transition={{ duration: 0.2 }} className={`flex gap-4 py-5 ${l.id === lastAdded && drawerOpen ? "just-added" : ""}`}>
                         <div className="relative h-28 w-20 shrink-0 border border-line bg-sand"><Image src={p.images.primary} alt="" fill sizes="80px" className="object-cover mix-blend-multiply" /></div>
                         <div className="flex flex-1 flex-col">
                           <div className="flex justify-between gap-3">

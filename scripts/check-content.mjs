@@ -70,7 +70,6 @@ for (const [where, slug] of [["Homepagina, uitgelicht product", home.hero.featur
   if (!slugs.has(slug)) fail(`${where}: product "${slug}" bestaat niet`);
 image("Homepagina, grote foto", home.hero.image);
 image("Homepagina, blok Geschenkdoos", home.box.image);
-for (const st of home.box.steps) if (!["wudu", "thobe", "masjid"].includes(st.icon)) fail(`Homepagina, stap "${st.title}": onbekend icoon ${st.icon}`);
 for (const d of home.fabric.details) image(`Homepagina, detailfoto ${d.label}`, d.image);
 for (const u of home.promises) if (!["truck", "exchange", "whatsapp", "shield"].includes(u.icon)) fail(`Homepagina, belofte "${u.title}": onbekend icoon ${u.icon}`);
 for (const a of site.announcements) if (!["gift", "truck", "clock", "exchange"].includes(a.icon)) fail(`Aankondiging "${a.text}": onbekend icoon ${a.icon}`);
@@ -88,6 +87,8 @@ for (const [i, r] of reviews.entries()) {
   if (r.product && !slugs.has(r.product)) fail(`${at}: product "${r.product}" bestaat niet`);
   if (r.date && !/^\d{4}-\d{2}-\d{2}$/.test(r.date)) fail(`${at}: datum moet zo: 2026-10-20`);
 }
+if (home.reviews.url && !/^https:\/\//.test(home.reviews.url)) fail("Reviews: de Trustpilot-link moet met https:// beginnen (of leeg)");
+if (home.reviews.url && !/^\d,\d$/.test(home.reviews.score ?? "")) fail("Reviews: TrustScore zo invullen: 4,6");
 if (!/^\d{8,15}$/.test(site.contact.whatsapp)) fail("Contact: WhatsApp-nummer moet alleen cijfers met landcode zijn (bijv. 31641344799)");
 
 // Juridische pagina's: de HTML uit het CMS wordt letterlijk getoond, dus alleen een vaste set tags en veilige links mag erin.
