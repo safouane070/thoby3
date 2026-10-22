@@ -22,16 +22,16 @@ function FitColumn({ fit, size, align }: { fit: Fit; size: string; align: "left"
       <p className="display text-[clamp(2rem,3.6vw,3.25rem)]">{sizeCode(s.label, fit)} <span className="text-muted">{f.label}</span></p>
       <p className="mt-2 max-w-[30ch] text-sm leading-relaxed text-muted">{f.note}</p>
       {HAS_MEASUREMENTS && (
-        <dl className="mt-5 w-full max-w-[18rem] border-y border-line-strong text-left sm:grid sm:grid-cols-3">
+        <dl className="mt-5 w-full max-w-[18rem] border-y border-line text-left sm:grid sm:grid-cols-3">
           {rows.map(([k, v]) => (
             <div key={k} className="flex items-baseline justify-between border-line py-2 [&:not(:first-child)]:border-t sm:block sm:py-3 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-t-0 sm:[&:not(:first-child)]:pl-3">
               <dt className="text-sm text-muted">{k}</dt>
-              <dd className={`num text-xl font-bold sm:text-2xl ${k === "Borst" ? "text-gold-ink" : ""}`}>{v}<span className="ml-0.5 text-sm font-semibold text-muted">cm</span></dd>
+              <dd className={`num text-xl font-medium sm:text-2xl ${k === "Borst" ? "text-gold-ink" : ""}`}>{v}<span className="ml-0.5 text-sm font-normal text-muted">cm</span></dd>
             </div>
           ))}
         </dl>
       )}
-      <Link href={href} className="press btn-primary tag group mt-5 flex min-h-12 w-full max-w-[18rem] items-center justify-center gap-2.5 px-5">
+      <Link href={href} className="press btn-primary tag group mt-5 flex min-h-12 w-full max-w-[18rem] items-center justify-center gap-2 whitespace-nowrap px-3 !tracking-[0.08em] sm:gap-2.5 sm:px-5 sm:!tracking-[0.16em]">
         Shop {sizeCode(s.label, fit)} <ArrowRight size={15} aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5" />
       </Link>
     </div>
@@ -54,7 +54,7 @@ export function FitShowcase() {
       <div className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-36">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
           <div>
-            <h2 id="pasvorm-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{home.fit.title}{home.fit.titleSecond && <><br />{home.fit.titleSecond}</>}</h2>
+            <h2 id="pasvorm-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{home.fit.title}{home.fit.titleSecond && <><br /><em>{home.fit.titleSecond}</em></>}</h2>
             <p className="mt-5 max-w-[52ch] leading-relaxed text-muted">{home.fit.text}</p>
           </div>
           <fieldset>
@@ -72,9 +72,9 @@ export function FitShowcase() {
         </div>
 
         {/* Het werkblad: tekening in het midden, de maten van elke pasvorm aan zijn eigen kant. */}
-        <div className="mt-10 grid items-start gap-8 bg-paper p-5 sm:p-8 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)_minmax(0,1fr)] lg:gap-6 lg:p-10">
+        <div className="mt-10 grid items-start gap-8 border border-line bg-paper p-5 shadow-[0_1px_2px_rgba(26,26,26,0.04)] sm:p-8 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)_minmax(0,1fr)] lg:gap-6 lg:p-12">
           <div className="relative lg:order-2">
-            <p className="num text-center text-lg font-bold text-gold-ink" aria-live="polite">{s.length} cm <span className="font-semibold">· zelfde lengte</span></p>
+            <p className="tag text-center text-gold-ink" aria-live="polite"><span className="num">{s.length} cm</span> · zelfde lengte</p>
             <ThobePair slim={shapeOf(s, "slim")} broad={shapeOf(s, "broad")} className="mx-auto mt-2 block w-full max-w-[44rem]" />
           </div>
           <div className="grid grid-cols-2 gap-6 lg:contents">

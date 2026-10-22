@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Big_Shoulders, Hanken_Grotesk, Reem_Kufi } from "next/font/google";
+import { Hanken_Grotesk, Instrument_Serif, Reem_Kufi } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/components/StoreProvider";
 import { Motion } from "@/components/Motion";
@@ -9,10 +9,9 @@ import { Footer } from "@/components/Footer";
 import { SITE_LIVE, baseOpenGraph } from "@/lib/seo";
 import site from "@/content/site.json";
 
-// Big Shoulders: smalle kapitalen zoals de print in het deksel van de doos. Hanken Grotesk voor lopende tekst.
+// Instrument Serif voor koppen (redactioneel, met cursief voor de tweede regel); Hanken Grotesk voor tekst, labels en cijfers.
 // Reem Kufi alleen voor de Arabische groet (kufi, net als het logo); niet voorgeladen, want hij staat niet bovenaan.
-// Next kent geen metriek voor Big Shoulders; een smalle systeemletter als terugval houdt de regelbreedte ongeveer gelijk.
-const display = Big_Shoulders({ variable: "--face-display", subsets: ["latin"], weight: ["600", "700", "800"], adjustFontFallback: false, fallback: ["Arial Narrow", "sans-serif"] });
+const display = Instrument_Serif({ variable: "--face-display", subsets: ["latin"], weight: "400", style: ["normal", "italic"], fallback: ["Georgia", "serif"] });
 const text = Hanken_Grotesk({ variable: "--face-text", subsets: ["latin"] });
 const kufi = Reem_Kufi({ variable: "--face-kufi", subsets: ["arabic"], weight: "500", preload: false });
 

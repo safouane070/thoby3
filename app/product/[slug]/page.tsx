@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import { ProductDetail } from "@/components/ProductDetail";
 import { getProduct, products } from "@/lib/products";
 import { SITE_URL, baseOpenGraph } from "@/lib/seo";
-import { average, reviews, reviewsFor } from "@/lib/reviews";
-import { Reviews } from "@/components/Reviews";
+import { average, reviewsFor } from "@/lib/reviews";
 import { ProductCard } from "@/components/ProductCard";
 import { GiftStrip } from "@/components/GiftStrip";
 
@@ -77,8 +76,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <ProductDetail key={product.slug} product={product} />
-      {/* Zonder reviews over dit product: de algemene (zichtbaar, maar niet als sterren in Google, zie jsonLd). */}
-      <Reviews items={own.length ? own : reviews.slice(0, 3)} className="mx-auto max-w-[1440px] px-5 pb-24 lg:px-10" />
       <section aria-labelledby="meer-title" className="mx-auto max-w-[1440px] border-t border-line px-5 pb-24 pt-16 lg:px-10 lg:pb-28">
         <h2 id="meer-title" className="display text-[clamp(2rem,3.2vw,2.75rem)]">Meer van THOBY3</h2>
         {/* Andere thobes als kaart, musk en siwak in hun eigen strook: geen kleine voorwerpen in grote lege vlakken. */}

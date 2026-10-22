@@ -61,8 +61,8 @@ export function HeroBanderol({ product, cta, help }: { product: Product; cta: st
             <div className="grid grid-cols-2 gap-1.5">
               {FITS.map((f) => (
                 <button key={f.id} type="button" aria-pressed={fit === f.id} aria-label={`${f.label}, maat -${f.id === "slim" ? 1 : 2}`} onClick={() => setFit(f.id)}
-                  className={`${OPTION} tag px-1 !tracking-[0.06em] sm:px-3 sm:!tracking-[0.14em] ${optionState(fit === f.id)} xl:min-w-28`}>
-                  {f.label}<span className="ml-1 opacity-70 sm:ml-1.5">-{f.id === "slim" ? 1 : 2}</span>
+                  className={`${OPTION} tag px-1 !tracking-[0.03em] sm:px-3 sm:!tracking-[0.14em] ${optionState(fit === f.id)} xl:min-w-28`}>
+                  {f.label}<span className="ml-0.5 opacity-70 sm:ml-1.5">-{f.id === "slim" ? 1 : 2}</span>
                 </button>
               ))}
             </div>
@@ -85,7 +85,8 @@ export function HeroBanderol({ product, cta, help }: { product: Product; cta: st
           </fieldset>
         </div>
 
-        <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 xl:flex xl:items-end xl:gap-8">
+        {/* Onder 360px staat de doos boven de knop: naast elkaar past "In winkelwagen" + prijs niet. */}
+        <div className="grid items-center gap-x-4 gap-y-2 min-[360px]:grid-cols-[auto_minmax(0,1fr)] xl:flex xl:items-end xl:gap-8">
           <label className="flex min-h-12 cursor-pointer items-center gap-3">
             <input type="checkbox" checked={box} onChange={(e) => setBox(e.target.checked)} className="peer sr-only" />
             <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center border border-paper/50 text-gold transition-colors duration-200 peer-checked:border-gold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold">
@@ -95,7 +96,7 @@ export function HeroBanderol({ product, cta, help }: { product: Product; cta: st
           </label>
 
           <div>
-            <button type="button" onClick={submit} className="press btn-gold tag flex min-h-14 w-full items-center justify-center gap-2.5 whitespace-nowrap px-4 !text-[0.875rem] !tracking-[0.08em] sm:gap-3 sm:px-6 sm:!text-[0.9375rem] sm:!tracking-[0.14em] xl:w-auto xl:px-7">
+            <button type="button" onClick={submit} className="press btn-gold tag flex min-h-14 w-full items-center justify-center gap-2 whitespace-nowrap px-3 !text-[0.8125rem] !tracking-[0.08em] sm:gap-3 sm:px-6 sm:!text-[0.9375rem] sm:!tracking-[0.14em] xl:w-auto xl:px-7">
               {cta} <span className="num font-bold tracking-normal">{money(total)}</span>
             </button>
           </div>

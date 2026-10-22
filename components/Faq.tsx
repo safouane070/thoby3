@@ -14,7 +14,7 @@ export function Faq() {
   return (
     <section id="faq" aria-labelledby="faq-title" className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-36">
       <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
-        <h2 id="faq-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{faq.title}{faq.titleSecond && <><br />{faq.titleSecond}</>}</h2>
+        <h2 id="faq-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{faq.title}{faq.titleSecond && <><br /><em>{faq.titleSecond}</em></>}</h2>
         <a href={whatsapp("Hoi THOBY3, ik heb een vraag.")} target="_blank" rel="noopener noreferrer"
           className="press tag inline-flex min-h-12 items-center gap-2.5 border border-ink px-6 hover:bg-ink hover:text-paper">
           <MessageCircle size={16} aria-hidden /> Andere vraag? WhatsApp ons

@@ -16,7 +16,7 @@ export function ProductGrid() {
     <section id="collectie" aria-labelledby="collectie-title" className="bg-sand">
       <div className="mx-auto max-w-[1440px] px-5 py-24 lg:px-10 lg:py-36">
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
-          <h2 id="collectie-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{home.collection.title}{home.collection.titleSecond && <><br />{home.collection.titleSecond}</>}</h2>
+          <h2 id="collectie-title" className="display text-[clamp(2.5rem,4.6vw,4.25rem)]">{home.collection.title}{home.collection.titleSecond && <><br /><em>{home.collection.titleSecond}</em></>}</h2>
           <p className="max-w-[44ch] leading-relaxed text-muted lg:pb-2">{home.collection.text}</p>
         </div>
 

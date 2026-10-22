@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ArrowLeftRight, Bell, Check, ChevronRight, Gift, Heart, Layers, MessageCircle, Truck, X } from "lucide-react";
 import { ToggleGroup } from "radix-ui";
 import { BLUR, EXCHANGE_COPY, FITS, GIFT_BOX_PRICE, GIFT_TEXT, HAS_MEASUREMENTS, SHIPPING_COPY, SIZES, discountPct, isThobe, products, sizeCode, whatsapp, type Fit, type Product } from "@/lib/products";
@@ -17,24 +17,15 @@ import { useStore } from "./StoreProvider";
 // Vaul hoort niet in de eerste bundel: de viewer laadt bij hover/focus op de foto, of bij de klik zelf.
 const ImageViewer = dynamic(() => import("./ImageViewer").then((m) => m.ImageViewer), { ssr: false });
 
-// Hover-zoom alleen voor muis (touch krijgt gewoon de foto); origin volgt de pointer zonder re-render.
+// Geen hover-zoom (springt in beeld zodra de muis erover gaat); vergroten doe je bewust met een klik op de foto.
 function Gallery({ product }: { product: Product }) {
   const [img, setImg] = useState(0);
   // Alleen foto 1 laadt direct; de rest pas bij hover/focus/klik op de thumbnail (scheelt ~4 grote downloads).
   const [seen, setSeen] = useState<number[]>([0]);
   const warm = (i: number) => setSeen((s) => (s.includes(i) ? s : [...s, i]));
-  const [zoom, setZoom] = useState(false);
   const [viewer, setViewer] = useState(false);
   const [viewerReady, setViewerReady] = useState(false);
-  const inner = useRef<HTMLDivElement>(null);
   const pct = discountPct(product);
-
-  const move = (e: PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== "mouse" || !inner.current) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    inner.current.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
-    setZoom(true);
-  };
 
   // Desktop: de galerij blijft staan terwijl je door de keuzes scrolt; de foto past altijd in beeld.
   return (
@@ -48,8 +39,8 @@ function Gallery({ product }: { product: Product }) {
           </button>
         ))}
       </div>
-      <div onPointerMove={move} onPointerLeave={() => setZoom(false)} className="relative order-1 aspect-[3/4] cursor-zoom-in overflow-hidden bg-studio lg:order-2 lg:w-[min(100%,calc((100vh-9rem)*0.75))]">
-        <div ref={inner} className={`absolute inset-0 transition-transform duration-200 ease-out ${zoom ? "scale-[1.6]" : "scale-100"}`}>
+      <div className="relative order-1 aspect-[3/4] cursor-zoom-in overflow-hidden bg-studio lg:order-2 lg:w-[min(100%,calc((100vh-9rem)*0.75))]">
+        <div className="absolute inset-0">
           {product.gallery.map((src, i) => seen.includes(i) && (
             <Image key={src} src={src} alt={i === img ? `${product.name}, foto ${i + 1}` : ""} fill loading={i === 0 ? "eager" : undefined} fetchPriority={i === 0 ? "high" : undefined} sizes="(min-width:1024px) 55vw, 100vw"
               placeholder="blur" blurDataURL={BLUR}
