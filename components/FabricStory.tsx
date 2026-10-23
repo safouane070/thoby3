@@ -30,7 +30,7 @@ export function FabricStory() {
 
   return (
     <section id="stof" aria-labelledby="stof-title" className="px-3 lg:px-5">
-      <div className="board on-dark mx-auto max-w-[1480px] rounded-[2rem] px-5 py-14 lg:px-14 lg:py-28 xl:px-20">
+      <div className="board on-dark mx-auto max-w-[1480px] rounded-[2rem] px-5 py-12 lg:px-14 lg:py-28 xl:px-20">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end lg:gap-20">
           <h2 id="stof-title" className="display text-[clamp(2.25rem,4.4vw,3.75rem)]"><SplitTitle first={shop.fabric.material + "."} second="Zacht, met een lichte glans." /></h2>
           <Reveal className="lg:pb-2">
@@ -58,8 +58,7 @@ export function FabricStory() {
                 <div className="relative mb-5 aspect-[4/5] overflow-hidden rounded-2xl lg:hidden">
                   <Image src={s.image} alt={s.alt} fill sizes="80vw" className="object-cover" />
                 </div>
-                <p className="num text-sm text-muted-dark">{pad(i + 1)}</p>
-                <h3 className="display mt-1 text-2xl lg:mt-2 lg:text-[clamp(1.75rem,3vw,2.75rem)]">{s.label}</h3>
+                <h3 className="display text-2xl lg:text-[clamp(1.75rem,3vw,2.75rem)]">{s.label}</h3>
                 <p className="mt-3 max-w-[38ch] leading-relaxed text-muted-dark lg:mt-4 lg:text-lg">{s.text}</p>
               </li>
             ))}

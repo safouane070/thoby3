@@ -14,7 +14,7 @@ const giftSpan = thobes.length % 3 === 2 ? "lg:col-span-1" : "lg:col-span-3";
 export function ProductGrid() {
   return (
     <section id="collectie" aria-labelledby="collectie-title" className="bg-sand">
-      <div className="mx-auto max-w-[1440px] px-5 py-16 lg:px-10 lg:py-28">
+      <div className="mx-auto max-w-[1440px] px-5 py-12 lg:px-10 lg:py-28">
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
           <h2 id="collectie-title" className="display text-[clamp(2.25rem,4.4vw,3.75rem)]"><SplitTitle first={home.collection.title} second={home.collection.titleSecond} /></h2>
           <Reveal className="lg:pb-1.5"><p className="max-w-[44ch] leading-relaxed text-muted">{home.collection.text}</p></Reveal>
