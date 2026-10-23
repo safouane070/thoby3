@@ -46,7 +46,7 @@ export default function Home() {
       <Hero />
       <ProductGrid />
       <FabricStory />
-      <Reviews items={reviews} className="overflow-hidden py-20 lg:py-32" />
+      <Reviews items={reviews} className="overflow-hidden py-12 lg:py-32" />
       <BoxSection />
       <FitShowcase />
       <Faq />

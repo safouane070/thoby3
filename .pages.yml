@@ -119,7 +119,6 @@ content:
         label: Blok "De geschenkdoos"
         type: object
         fields:
-          - { name: eyebrow, label: Klein label boven de kop, type: string }
           - { name: title, label: Kop, type: string }
           - { name: titleSecond, label: Kop tweede regel, type: string }
           - { name: text, label: Tekst, type: text }

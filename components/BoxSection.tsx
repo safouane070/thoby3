@@ -13,11 +13,10 @@ const box = home.box;
 // in de hand als tweede foto die sneller meeschuift (diepte zonder schaduwtrucs).
 export function BoxSection() {
   return (
-    <section id="doos" aria-labelledby="doos-title" className="mx-auto max-w-[1440px] px-5 py-20 lg:px-10 lg:py-32">
-      <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-20">
+    <section id="doos" aria-labelledby="doos-title" className="mx-auto max-w-[1440px] px-5 py-14 lg:px-10 lg:py-32">
+      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-20">
         <div>
-          <Reveal><p className="caption text-muted">{box.eyebrow}</p></Reveal>
-          <h2 id="doos-title" className="display mt-4 text-[clamp(2.25rem,4.4vw,3.75rem)]"><SplitTitle first={box.title} second={box.titleSecond} /></h2>
+          <h2 id="doos-title" className="display text-[clamp(2.25rem,4.4vw,3.75rem)]"><SplitTitle first={box.title} second={box.titleSecond} /></h2>
           <Reveal delay={0.1}><p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-muted">{box.text}</p></Reveal>
           <ul className="mt-8 space-y-3">
             {box.features.map((f, i) => (
@@ -37,7 +36,7 @@ export function BoxSection() {
           </Reveal>
         </div>
 
-        <div className="relative pb-16 lg:pb-24">
+        <div className="relative pb-10 lg:pb-24">
           <div className="overflow-hidden rounded-[1.75rem]"><LidReveal src={box.image} alt={box.imageAlt} /></div>
           <Parallax distance={-120} className="absolute -bottom-2 left-4 w-[40%] max-w-[16rem] lg:-left-10">
             <div className="relative aspect-square overflow-hidden rounded-2xl bg-studio shadow-[0_30px_60px_-24px_rgba(11,11,11,0.45)] ring-[6px] ring-paper">

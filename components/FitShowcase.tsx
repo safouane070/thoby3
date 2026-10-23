@@ -23,7 +23,7 @@ function FitColumn({ fit, size, align }: { fit: Fit; size: string; align: "left"
   return (
     <div className={`flex flex-col ${align === "right" ? "lg:items-end lg:text-right" : ""}`}>
       <p className="display text-[clamp(1.75rem,3vw,2.5rem)]">{sizeCode(s.label, fit)} <span className="text-muted">{f.label}</span></p>
-      <p className="mt-2 max-w-[30ch] text-sm leading-relaxed text-muted">{f.note}</p>
+      <p className="mt-2 hidden max-w-[30ch] text-sm leading-relaxed text-muted sm:block">{f.note}</p>
       {HAS_MEASUREMENTS && (
         <dl className="mt-5 w-full max-w-[18rem] border-y border-line-strong text-left sm:grid sm:grid-cols-3">
           {rows.map(([k, v]) => (
@@ -56,7 +56,7 @@ export function FitShowcase() {
 
   return (
     <section id="pasvorm" aria-labelledby="pasvorm-title" className="bg-sand">
-      <div className="mx-auto max-w-[1440px] px-5 py-16 lg:px-10 lg:py-28">
+      <div className="mx-auto max-w-[1440px] px-5 py-12 lg:px-10 lg:py-28">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
           <div>
             <h2 id="pasvorm-title" className="display text-[clamp(2.25rem,4.4vw,3.75rem)]"><SplitTitle first={home.fit.title} second={home.fit.titleSecond} /></h2>
@@ -88,7 +88,7 @@ export function FitShowcase() {
           </div>
         </div>
 
-        <div className="mt-12 grid items-start gap-10 lg:mt-20 lg:grid-cols-2 lg:gap-20">
+        <div className="mt-10 grid items-start gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-20">
           <SizeAdvisor onPick={setSize} pickLabel={(sz) => `Toon maat ${sz}`} className="border-t border-line-strong pt-5" />
           {HAS_MEASUREMENTS && (
             // De volledige maattabel, ingeklapt: de maten van je gekozen maat staan hierboven al. Per maat een groep met de
