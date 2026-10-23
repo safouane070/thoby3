@@ -55,6 +55,27 @@ function Field({ id, label, className = "", ...input }: { id: string; label: str
   );
 }
 
+// Nederland: postcode + huisnummer vult straat en plaats in via PDOK (gratis adresdienst van de overheid).
+// Lukt dat niet, dan typ je ze zelf; wat je zelf typt overschrijven we niet.
+async function fillAddress(form: HTMLFormElement | null) {
+  const el = (n: string) => form?.elements.namedItem(n) as HTMLInputElement | null;
+  const street = el("streetAndNumber"), city = el("city");
+  const pc = el("postalCode")?.value.replace(/\s/g, "").toUpperCase() ?? "";
+  const nr = el("houseNumber")?.value.trim() ?? "";
+  const num = nr.match(/^\d+/)?.[0];
+  if (!street || !city || !/^\d{4}[A-Z]{2}$/.test(pc) || !num) return;
+  try {
+    const q = new URLSearchParams({ q: `postcode:${pc} and huisnummer:${num}`, fq: "type:adres", rows: "1", fl: "straatnaam,woonplaatsnaam" });
+    const res = await fetch(`https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?${q}`);
+    const doc: { straatnaam?: string; woonplaatsnaam?: string } | undefined = (await res.json())?.response?.docs?.[0];
+    if (!doc?.straatnaam) return;
+    for (const [input, value] of [[street, `${doc.straatnaam} ${nr}`], [city, doc.woonplaatsnaam ?? ""]] as const) {
+      if (value && (!input.value || input.dataset.auto)) { input.value = value; input.dataset.auto = "1"; }
+    }
+  } catch {}
+}
+const manual = (e: React.FormEvent<HTMLInputElement>) => { delete e.currentTarget.dataset.auto; };
+
 function Alert({ children }: { children: ReactNode }) {
   return <p role="alert" className="mb-4 rounded-xl border bg-paper px-4 py-3 text-sm" style={{ borderColor: DANGER, color: DANGER }}>{children}</p>;
 }
@@ -189,9 +210,20 @@ export function Checkout() {
           <div className="grid grid-cols-2 gap-4">
             <Field id="givenName" label="Voornaam" required autoComplete="given-name" />
             <Field id="familyName" label="Achternaam" required autoComplete="family-name" />
-            <Field id="streetAndNumber" label="Straat en huisnummer" required autoComplete="street-address" className="col-span-2" />
-            <Field id="postalCode" label="Postcode" required autoComplete="postal-code" />
-            <Field id="city" label="Plaats" required autoComplete="address-level2" />
+            {/* In Nederland eerst postcode en huisnummer: dan vullen straat en plaats zichzelf. */}
+            {country === "NL" ? (
+              <>
+                <Field key="postalCode" id="postalCode" label="Postcode" required autoComplete="postal-code" autoCapitalize="characters" placeholder="1234 AB" onChange={(e) => fillAddress(e.currentTarget.form)} />
+                <Field key="houseNumber" id="houseNumber" label="Huisnummer" required inputMode="text" placeholder="12" onChange={(e) => fillAddress(e.currentTarget.form)} />
+                <Field key="streetAndNumber" id="streetAndNumber" label="Straat en huisnummer" required autoComplete="street-address" className="col-span-2" onInput={manual} />
+              </>
+            ) : (
+              <>
+                <Field key="streetAndNumber" id="streetAndNumber" label="Straat en huisnummer" required autoComplete="street-address" className="col-span-2" />
+                <Field key="postalCode" id="postalCode" label="Postcode" required autoComplete="postal-code" />
+              </>
+            )}
+            <Field id="city" label="Plaats" required autoComplete="address-level2" onInput={manual} />
             <div>
               <label htmlFor="country" className={LABEL}>Land</label>
               <div className="relative">

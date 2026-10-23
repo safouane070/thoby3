@@ -43,7 +43,7 @@ export function FabricStory() {
           <div className="sticky top-24 hidden h-[calc(100svh-8rem)] self-start max-h-[44rem] overflow-hidden rounded-2xl bg-board-raised lg:block">
             <div className="absolute inset-0">{steps.map((s, i) => (
               <Image key={s.image} src={s.image} alt={i === active ? s.alt : ""} fill sizes="45vw"
-                className={`object-cover transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${i === active ? "scale-100 opacity-100 blur-0" : "scale-[1.04] opacity-0 blur-[4px]"}`} />
+                className={`object-cover transition-[opacity,transform,filter] duration-[450ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${i === active ? "scale-100 opacity-100 blur-0" : "scale-[1.04] opacity-0 blur-[4px]"}`} />
             ))}</div>
             <p className="num absolute bottom-5 left-5 rounded-full bg-board/70 px-3.5 py-1.5 text-sm text-paper backdrop-blur-md" aria-hidden>
               {pad(active + 1)} <span className="text-muted-dark">/ {pad(steps.length)}</span>

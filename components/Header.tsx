@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { Heart, Menu, ShoppingBag, X } from "lucide-react";
+import { Heart, Lock, Menu, ShoppingBag, X } from "lucide-react";
 import { AnnouncementBar } from "./AnnouncementBar";
 import { Logo } from "./Brand";
 import { useStore } from "./StoreProvider";
@@ -191,6 +191,16 @@ export function Header() {
   // Alleen bij een bestaand product: de 404-pagina (ook op /product/onbekend) is zonder markering gebouwd, anders hydration-mismatch.
   const onProduct = pathname.startsWith("/product/") && !!getProduct(pathname.split("/")[2] ?? "");
   const active = hover ?? (onProduct ? "collectie" : pathname === "/" ? spy : null);
+
+  // Afrekenen zonder afleiding: geen aankondiging, menu of winkelwagen; alleen het logo en de geruststelling.
+  if (pathname.replace(/\/$/, "") === "/afrekenen") return (
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-paper">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-5 lg:px-10">
+        <Link href="/" aria-label="THOBY3, naar de homepage" className="inline-flex h-12 items-center"><Logo className="h-[clamp(1rem,5vw,1.125rem)] text-ink" /></Link>
+        <p className="flex items-center gap-1.5 text-[0.8125rem] text-muted"><Lock size={14} aria-hidden /> Veilig afrekenen</p>
+      </div>
+    </header>
+  );
 
   return (
     <header className={`fixed inset-x-0 top-0 z-40 transition-transform duration-[250ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${scroll === "top" ? "" : scroll === "down" && !menu ? "-translate-y-full" : "-translate-y-9"}`}>
