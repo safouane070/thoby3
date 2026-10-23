@@ -20,13 +20,13 @@ export function AnnouncementBar() {
   }, [paused]);
 
   return (
-    <div role="region" aria-label="Aanbiedingen" className="bg-sand text-ink"
+    <div role="region" aria-label="Aanbiedingen" className="bg-ink text-paper"
       onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
       <div className="relative mx-auto h-9 max-w-[1440px] overflow-hidden">
         {items.map(({ icon: Icon, text }, n) => (
           <p key={text} aria-hidden={n !== i}
-            className={`absolute inset-0 flex items-center justify-center gap-2.5 whitespace-nowrap px-3 text-center text-[0.8125rem] font-medium sm:px-5 transition-[opacity,transform] ease-[cubic-bezier(0.16,1,0.3,1)] ${n === i ? "translate-y-0 opacity-100 delay-200 duration-500" : "-translate-y-1.5 opacity-0 duration-200"}`}>
-            <Icon size={13} className="hidden shrink-0 text-gold-ink min-[400px]:block" aria-hidden /> {text}
+            className={`absolute inset-0 flex items-center justify-center gap-2.5 whitespace-nowrap px-3 text-center text-[0.8125rem] font-medium sm:px-5 transition-[opacity,transform] ease-[cubic-bezier(0.23,1,0.32,1)] ${n === i ? "translate-y-0 opacity-100 delay-200 duration-500" : "-translate-y-1.5 opacity-0 duration-200"}`}>
+            <Icon size={13} className="hidden shrink-0 text-paper/60 min-[400px]:block" aria-hidden /> {text}
           </p>
         ))}
       </div>

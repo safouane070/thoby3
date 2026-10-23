@@ -15,17 +15,17 @@ export function TextureViewer({ id, sizes, tone = "light" }: { id: string; sizes
   const dark = tone === "dark";
   return (
     <div>
-      <div className="relative aspect-[3/4] bg-studio">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-studio">
         <m.div key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="absolute inset-0">
           <Magnifier src={active.src} alt={active.alt} sizes={sizes} eager={id === "modal"} className="h-full w-full" />
         </m.div>
       </div>
-      <ToggleGroup.Root type="single" value={tex} onValueChange={(v) => v && setTex(v)} aria-label="Detail kiezen" className={`mt-3 grid grid-cols-3 gap-1.5`}>
+      <ToggleGroup.Root type="single" value={tex} onValueChange={(v) => v && setTex(v)} aria-label="Detail kiezen" className={`mt-3 grid grid-cols-3 gap-1 rounded-full p-1 ${dark ? "bg-paper/10" : "bg-studio"}`}>
         {TEXTURES.map((t) => (
           <ToggleGroup.Item key={t.id} value={t.id}
-            className={`press tag min-h-12 border transition-colors duration-200 ${dark
-              ? "border-line-dark text-paper data-[state=on]:border-gold data-[state=on]:text-gold data-[state=on]:shadow-[inset_0_0_0_1px_var(--gold)]"
-              : "border-line-strong text-ink data-[state=on]:border-ink data-[state=on]:bg-ink data-[state=on]:text-gold"}`}>
+            className={`press tag min-h-10 rounded-full ${dark
+              ? "text-paper/70 data-[state=on]:bg-paper data-[state=on]:text-ink"
+              : "text-muted data-[state=on]:bg-paper data-[state=on]:text-ink data-[state=on]:shadow-[0_1px_3px_rgba(11,11,11,0.12)]"}`}>
             {t.label}
           </ToggleGroup.Item>
         ))}

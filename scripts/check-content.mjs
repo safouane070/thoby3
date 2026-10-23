@@ -70,6 +70,8 @@ for (const [where, slug] of [["Homepagina, uitgelicht product", home.hero.featur
   if (!slugs.has(slug)) fail(`${where}: product "${slug}" bestaat niet`);
 image("Homepagina, grote foto", home.hero.image);
 image("Homepagina, blok Geschenkdoos", home.box.image);
+image("Homepagina, blok Geschenkdoos (doos in de hand)", home.box.imageHeld);
+for (const p of home.fabric.properties) if (p.image) image(`Homepagina, stoffoto ${p.label}`, p.image);
 for (const d of home.fabric.details) image(`Homepagina, detailfoto ${d.label}`, d.image);
 for (const u of home.promises) if (!["truck", "exchange", "whatsapp", "shield"].includes(u.icon)) fail(`Homepagina, belofte "${u.title}": onbekend icoon ${u.icon}`);
 for (const a of site.announcements) if (!["gift", "truck", "clock", "exchange"].includes(a.icon)) fail(`Aankondiging "${a.text}": onbekend icoon ${a.icon}`);

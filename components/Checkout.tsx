@@ -16,11 +16,11 @@ declare global { interface Window { Mollie?: (profileId: string, opts: { locale:
 
 const euro = (cents: number) => eur(cents / 100);
 const DANGER = "#a3341f";
-// Velden in de huisstijl: vierkant, papier op zand, 1px lijn, focus als tweede inktlijn (geen omlijning eromheen).
-const FIELD = "field-input block w-full border border-line-strong bg-paper px-3 py-[14px] text-[15px] leading-[18px] placeholder:text-[#6e6860] focus:border-ink focus:shadow-[inset_0_0_0_1px_var(--ink)]";
+// Velden in de huisstijl: afgerond, 1px lijn, focus als tweede inktlijn (geen omlijning eromheen). 16px tekst, zodat iOS niet inzoomt.
+const FIELD = "field-input block w-full rounded-xl border border-line-strong bg-paper px-3.5 py-[14px] text-base leading-[18px] placeholder:text-[#767676] focus:border-ink focus:shadow-[inset_0_0_0_1px_var(--ink)]";
 const LABEL = "caption mb-2 block text-taupe-strong";
 // Mollie's kaartvelden zijn iframes: tekst via styles, rand en achtergrond via onze eigen container (.mollie-component).
-const CARD_STYLES = { styles: { base: { color: "#151516", fontSize: "15px", lineHeight: "18px", "::placeholder": { color: "#6e6860" } }, invalid: { color: DANGER } } };
+const CARD_STYLES = { styles: { base: { color: "#0b0b0b", fontSize: "16px", lineHeight: "18px", "::placeholder": { color: "#767676" } }, invalid: { color: DANGER } } };
 const CARD_FIELDS = [
   { type: "cardNumber", label: "Kaartnummer", span: "col-span-2" },
   { type: "cardHolder", label: "Naam op de kaart", span: "col-span-2" },
@@ -39,7 +39,7 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
     <section aria-labelledby={`stap-${n}`} className="border-t border-line pt-6">
       <h2 id={`stap-${n}`} className="mb-6 flex items-baseline gap-3">
         <span className="num text-sm text-taupe">{n}</span>
-        <span className="display text-3xl">{title}</span>
+        <span className="display text-2xl">{title}</span>
       </h2>
       {children}
     </section>
@@ -56,7 +56,7 @@ function Field({ id, label, className = "", ...input }: { id: string; label: str
 }
 
 function Alert({ children }: { children: ReactNode }) {
-  return <p role="alert" className="mb-4 border bg-paper px-4 py-3 text-sm" style={{ borderColor: DANGER, color: DANGER }}>{children}</p>;
+  return <p role="alert" className="mb-4 rounded-xl border bg-paper px-4 py-3 text-sm" style={{ borderColor: DANGER, color: DANGER }}>{children}</p>;
 }
 
 /** Kaartvelden van Mollie Components, ingebed in de pagina. */
@@ -73,11 +73,11 @@ function CardFields({ mollie }: { mollie: MollieJs }) {
     return () => parts.forEach((c) => c.unmount());
   }, [mollie]);
   return (
-    <div className="grid grid-cols-2 gap-4 border border-t-0 border-line bg-paper/60 p-4">
+    <div className="mt-1.5 grid grid-cols-2 gap-4 rounded-xl bg-studio p-4">
       {CARD_FIELDS.map(({ type, label, span }) => (
         <div key={type} className={span}>
           <p className={LABEL}>{label}</p>
-          <div ref={(el) => { boxes.current[type] = el; }} className="mollie-field h-12 border border-line-strong bg-paper px-3 py-[14px]" />
+          <div ref={(el) => { boxes.current[type] = el; }} className="mollie-field h-12 rounded-xl border border-line-strong bg-paper px-3.5 py-[14px]" />
           {errors[type] && <p className="mt-1 text-xs" style={{ color: DANGER }}>{errors[type]}</p>}
         </div>
       ))}
@@ -96,6 +96,8 @@ export function Checkout() {
   const [cardError, setCardError] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  // Telefoon: het overzicht staat boven het formulier, dus standaard ingeklapt (totaal blijft zichtbaar).
+  const [summary, setSummary] = useState(false);
   const order = useMemo(() => buildOrder(lines, country), [lines, country]);
   const total = "error" in order ? 0 : order.total;
   const where = COUNTRIES.find((c) => c.country === country);
@@ -163,11 +165,11 @@ export function Checkout() {
     return (
       <div className="grid gap-10 lg:grid-cols-[7fr_5fr] lg:gap-20">
         <div>
-          <p className="display text-3xl">Je winkelwagen is leeg</p>
+          <p className="display text-2xl">Je winkelwagen is leeg</p>
           <p className="mt-4 max-w-[46ch] leading-relaxed text-taupe">Kies eerst je thobe en je maat. Twijfel je over de maat? Op de maatkaart zie je slank en breed naast elkaar, in centimeters.</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/#collectie" className="press btn-primary tag flex min-h-12 items-center px-7">Naar de collectie</Link>
-            <Link href="/#pasvorm" className="press tag flex min-h-12 items-center border border-ink px-7 hover:bg-ink hover:text-paper">Naar de maatkaart</Link>
+            <Link href="/#pasvorm" className="press btn-ghost tag flex min-h-12 items-center px-7">Naar de maatkaart</Link>
           </div>
         </div>
         {pick && <div className="max-w-sm"><ProductCard product={pick} /></div>}
@@ -207,24 +209,24 @@ export function Checkout() {
           {methodsError ? (
             <Alert>{methodsError}</Alert>
           ) : !methods ? (
-            <div className="h-[220px] animate-pulse border border-line bg-paper/60" role="status" aria-label="Betaalmethodes laden" />
+            <div className="h-[220px] animate-pulse rounded-xl bg-studio" role="status" aria-label="Betaalmethodes laden" />
           ) : (
             <div role="radiogroup" aria-label="Betaalmethode" className="space-y-1.5">
               {methods.map((m) => {
                 const on = m.id === method;
                 return (
                   <div key={m.id}>
-                    <label className={`press flex min-h-14 cursor-pointer items-center gap-4 border px-4 ${on ? "border-ink bg-ink text-gold" : "border-line-strong bg-paper hover:border-ink"}`}>
+                    <label className={`press flex min-h-14 cursor-pointer items-center gap-4 rounded-xl border px-4 ${on ? "border-ink shadow-[inset_0_0_0_1px_var(--ink)]" : "border-line-strong bg-paper hover:border-ink"}`}>
                       <input type="radio" name="method-choice" value={m.id} checked={on} onChange={() => setMethod(m.id)} className="sr-only" />
-                      <span aria-hidden className={`flex h-4 w-4 shrink-0 items-center justify-center border ${on ? "border-gold" : "border-line-strong"}`}>{on && <span className="h-2 w-2 bg-gold" />}</span>
+                      <span aria-hidden className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border ${on ? "border-ink" : "border-line-strong"}`}>{on && <span className="h-2 w-2 rounded-full bg-ink" />}</span>
                       <span className="tag flex-1">{m.description}</span>
                       {/* Merklogo's van Mollie (externe svg, geen next/image nodig) op een papieren tegel: leesbaar op inkt én op papier. */}
-                      <span className="flex h-8 w-12 items-center justify-center bg-paper">
+                      <span className="flex h-8 w-12 items-center justify-center rounded-md bg-paper">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={m.image} alt="" width={32} height={24} className="h-6 w-8 object-contain" />
                       </span>
                     </label>
-                    {on && m.id === "creditcard" && (mollie ? <CardFields mollie={mollie} /> : cardError && <p role="alert" className="border border-t-0 border-line px-4 py-3 text-sm" style={{ color: DANGER }}>{cardError}</p>)}
+                    {on && m.id === "creditcard" && (mollie ? <CardFields mollie={mollie} /> : cardError && <p role="alert" className="mt-1.5 rounded-xl bg-studio px-4 py-3 text-sm" style={{ color: DANGER }}>{cardError}</p>)}
                   </div>
                 );
               })}
@@ -236,7 +238,7 @@ export function Checkout() {
           {error && <Alert>{error}</Alert>}
           {"error" in order && <Alert>{order.error}</Alert>}
           <button type="submit" disabled={busy || !method || "error" in order}
-            className="press btn-gold tag flex min-h-14 w-full items-center justify-center gap-2.5 px-7 !text-[0.9375rem] disabled:cursor-not-allowed disabled:opacity-50">
+            className="press btn-primary tag flex min-h-14 w-full items-center justify-center gap-2.5 px-7 !text-[0.9375rem] disabled:cursor-not-allowed disabled:opacity-50">
             <Lock size={15} aria-hidden />{busy ? "Bezig…" : `Bestellen en betalen · ${euro(total)}`}
           </button>
           <p className="mt-3 text-center text-xs text-taupe">
@@ -246,24 +248,29 @@ export function Checkout() {
       </form>
 
       <aside className="order-first lg:order-none">
-        <div className="border border-line bg-paper p-5 lg:sticky lg:top-28 lg:p-7">
-          <div className="flex items-baseline justify-between gap-4">
-            <h2 className="display text-3xl">Je bestelling</h2>
-            <button type="button" onClick={() => setDrawerOpen(true)} className="press min-h-10 text-sm underline decoration-line-strong underline-offset-4 hover:decoration-ink">Wijzigen</button>
+        <div className="rounded-2xl bg-studio p-5 lg:sticky lg:top-28 lg:p-7">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="display text-xl lg:text-2xl">Je bestelling</h2>
+            <button type="button" onClick={() => setSummary((v) => !v)} aria-expanded={summary} aria-controls="besteloverzicht"
+              className="press flex min-h-11 items-center gap-1.5 text-sm lg:hidden">
+              {summary ? "Verberg" : "Toon"} {!("error" in order) && <span className="num font-semibold">{euro(order.total)}</span>}
+              <ChevronDown size={16} aria-hidden className={`transition-transform duration-200 ${summary ? "rotate-180" : ""}`} />
+            </button>
+            <button type="button" onClick={() => setDrawerOpen(true)} className="press hidden min-h-10 text-sm underline decoration-line-strong underline-offset-4 hover:decoration-ink lg:block">Wijzigen</button>
           </div>
           {!("error" in order) && (
-            <>
+            <div id="besteloverzicht" className={summary ? "" : "max-lg:hidden"}>
               <ul className="mt-5 divide-y divide-line border-y border-line">
                 {order.lines.map((l) => {
                   const p = getProduct(l.slug);
                   return (
                     <li key={`${l.name}${l.detail}`} className="flex items-center gap-4 py-4">
-                      <div className="relative h-16 w-12 shrink-0 border border-line bg-studio">
-                        {p && <Image src={p.images.primary} alt="" fill sizes="48px" className="object-cover mix-blend-multiply" />}
-                        <span className="num absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center bg-ink px-1 text-[11px] text-paper">{l.qty}</span>
+                      <div className="relative h-16 w-12 shrink-0">
+                        <span className="absolute inset-0 overflow-hidden rounded-lg bg-paper">{p && <Image src={p.images.primary} alt="" fill sizes="48px" className="object-cover mix-blend-multiply" />}</span>
+                        <span className="num absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-ink px-1 text-[11px] text-paper ring-2 ring-studio">{l.qty}</span>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="display text-lg leading-tight">{l.name}</p>
+                        <p className="font-medium leading-tight">{l.name}</p>
                         {l.detail && <p className="mt-0.5 text-xs text-taupe">{l.detail}</p>}
                       </div>
                       <p className="num text-sm">{l.cents ? euro(l.cents * l.qty) : "Gratis"}</p>
@@ -279,11 +286,12 @@ export function Checkout() {
                 </div>
                 <div className="flex items-baseline justify-between border-t border-line pt-3">
                   <dt className="font-medium">Totaal <span className="text-xs font-normal text-taupe">incl. btw</span></dt>
-                  <dd className="display text-3xl">{euro(order.total)}</dd>
+                  <dd className="display text-2xl">{euro(order.total)}</dd>
                 </div>
               </dl>
               {where && <p className="mt-3 text-xs text-taupe">Levertijd {where.days}. Vóór 17:00 besteld (ma–za), dezelfde dag verzonden.</p>}
-            </>
+              <button type="button" onClick={() => setDrawerOpen(true)} className="press mt-2 min-h-11 text-sm underline decoration-line-strong underline-offset-4 lg:hidden">Bestelling wijzigen</button>
+            </div>
           )}
         </div>
       </aside>

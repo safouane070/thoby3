@@ -28,15 +28,15 @@ export function OrderStatus() {
   if (state === "failed") {
     return (
       <>
-        <h1 className="display text-5xl md:text-6xl">Betaling<br />niet gelukt</h1>
+        <h1 className="display text-4xl md:text-5xl">Betaling<br />niet gelukt</h1>
         <p className="mt-6 max-w-[46ch] text-taupe">Er is niets afgeschreven. Je winkelwagen staat nog klaar, dus je kunt het meteen opnieuw proberen.</p>
-        <Link href="/afrekenen" className="press btn-gold tag mt-8 inline-flex min-h-14 items-center px-8">Opnieuw afrekenen</Link>
+        <Link href="/afrekenen" className="press btn-primary tag mt-8 inline-flex min-h-12 items-center px-7">Opnieuw afrekenen</Link>
       </>
     );
   }
   return (
     <>
-      <h1 className="display text-5xl md:text-6xl">Dank je wel,<br />{state === "paid" ? "je bestelling is binnen" : "we wachten op je bank"}</h1>
+      <h1 className="display text-4xl md:text-5xl">Dank je wel,<br />{state === "paid" ? "je bestelling is binnen" : "we wachten op je bank"}</h1>
       {order && <p className="caption mt-6 text-taupe-strong">Bestelling <span className="num text-base font-bold text-ink">{order}</span></p>}
       <p className="mt-4 max-w-[46ch] text-taupe">
         {state === "paid"

@@ -5,6 +5,7 @@ import site from "@/content/site.json";
 import { reviews } from "@/lib/reviews";
 import { ProductGrid } from "@/components/ProductGrid";
 import { BoxSection } from "@/components/BoxSection";
+import { FabricStory } from "@/components/FabricStory";
 import { Reviews } from "@/components/Reviews";
 import { FitShowcase } from "@/components/FitShowcase";
 import { Faq, faqJsonLd } from "@/components/Faq";
@@ -44,7 +45,8 @@ export default function Home() {
       {ld(faqJsonLd)}
       <Hero />
       <ProductGrid />
-      <Reviews items={reviews} className="mx-auto max-w-[1440px] px-5 py-20 lg:px-10 lg:py-28" />
+      <FabricStory />
+      <Reviews items={reviews} className="overflow-hidden py-20 lg:py-32" />
       <BoxSection />
       <FitShowcase />
       <Faq />

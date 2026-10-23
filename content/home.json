@@ -3,7 +3,7 @@
     "title": "Eén lengte.",
     "titleSecond": "Twee pasvormen.",
     "text": "Elke maat van S tot XL bestaat in slank en breed, allebei even lang. Satijnkatoen. Ma t/m za vóór 17:00 besteld, dezelfde dag verstuurd.",
-    "buttonPrimary": "In winkelwagen",
+    "buttonPrimary": "Shop de thobe",
     "buttonSecondary": "Hulp bij je maat",
     "image": "/img/wd-1.jpg",
     "imageAlt": "De White Desert-thobe in gebroken wit, van kraag tot zoom, gedragen met witte sneakers",
@@ -15,25 +15,26 @@
     "text": "Twee kleuren in satijnkatoen: gebroken wit en karamel."
   },
   "box": {
-    "greetingArabic": "السلام عليكم",
-    "greeting": "Assalamu'alaikum",
-    "title": "Klaar voor",
-    "titleSecond": "de masjid",
-    "text": "Dat staat in het deksel van de THOBY3-geschenkdoos, met drie stappen eronder. Je thobe ligt gevouwen onder een zwarte banderol met het logo in goudfolie. Om te geven, of om zelf te houden.",
-    "steps": [
+    "eyebrow": "Bij elke thobe te kiezen",
+    "title": "De geschenkdoos",
+    "titleSecond": "om te bewaren",
+    "text": "Matzwart karton met het THOBY3-logo in goudfolie. Je thobe ligt gevouwen onder een zwarte banderol, met musk en siwak erbij. Voor jezelf, of om te geven.",
+    "features": [
       {
-        "title": "Neem thuis wudu"
+        "title": "Matzwart karton met goudfolie"
       },
       {
-        "title": "Trek je thobe aan"
+        "title": "Gevouwen onder een banderol"
       },
       {
-        "title": "Loop naar de masjid"
+        "title": "Musk en siwak erbij"
       }
     ],
     "image": "/img/box-open-wd.jpg",
     "imageAlt": "Bovenaanzicht van de open geschenkdoos: de White Desert gevouwen onder een zwarte banderol met het gouden THOBY3-logo",
-    "button": "Kies je maat en de doos",
+    "imageHeld": "/img/box-held-wd.jpg",
+    "imageHeldAlt": "De dichte THOBY3-geschenkdoos in de handen, voor een witte thobe",
+    "button": "Kies je thobe in de doos",
     "product": "white-desert"
   },
   "promises": [
@@ -69,19 +70,27 @@
     "properties": [
       {
         "label": "Glans",
-        "text": "Licht, door de satijnbinding. Geen glimmende kunstvezel."
+        "text": "Licht, door de satijnbinding. Geen glimmende kunstvezel.",
+        "image": "/img/wd-4.jpg",
+        "alt": "Kraag en parelmoerachtige knopen in satijnkatoen"
       },
       {
         "label": "Draagcomfort",
-        "text": "Katoen ademt, dus ook prettig op een warme vrijdag in een volle masjid."
+        "text": "Katoen ademt, dus ook prettig op een warme vrijdag in een volle masjid.",
+        "image": "/img/wd-3.jpg",
+        "alt": "Hand in de zijzak van de White Desert"
       },
       {
         "label": "Afwerking",
-        "text": "Opstaande kraag, knoopsluiting, borstzak, zijzakken en het THOBY3-merkje op de manchet."
+        "text": "Opstaande kraag, knoopsluiting, borstzak, zijzakken en het THOBY3-merkje op de manchet.",
+        "image": "/img/wd-2.jpg",
+        "alt": "Manchet met het THOBY3-merkteken"
       },
       {
         "label": "Onderhoud",
-        "text": "Volg het waslabel. Binnenstebuiten wassen en lauw strijken houdt de glans het langst mooi."
+        "text": "Volg het waslabel. Binnenstebuiten wassen en lauw strijken houdt de glans het langst mooi.",
+        "image": "/img/tag-wd.jpg",
+        "alt": "Nekmerk M-2 en het hangkaartje van THOBY3"
       }
     ],
     "details": [

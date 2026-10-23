@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  /* De doos: matzwart karton, goudfolie, het antraciet van het deksel. Buiten de doos: zand. */
-  --board: #151516;
-  --board-raised: #1e1e20;
-  --lid: #3a3b3d;
-  --sand: #f5f2ec;
-  --paper: #fbfaf8;
-  /* Achter productfoto's: warm, zodat het koele studiogrijs via mix-blend-multiply bij het zand gaat horen. */
-  --studio: #efebe4;
-  --ink: #1a1a1a;
-  --muted: #5e5850;
-  --muted-strong: #47423c;
-  --muted-dark: #a09b93;
-  --gold: #d4af37;
-  --gold-ink: #7a5c1e;
-  /* Haarlijnen: zacht genoeg om te scheiden zonder te kaderen; -strong voor keuzeknoppen en tabelkoppen. */
-  --line: rgba(26, 26, 26, 0.08);
-  --line-strong: rgba(26, 26, 26, 0.22);
-  --line-dark: rgba(243, 240, 234, 0.16);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Wit en inkt; de doos (matzwart) alleen nog als één donker vlak. Goud is voor het embleem, niet voor de UI. */
+  --board: #0b0b0b;
+  --board-raised: #18181a;
+  --lid: #2a2a2c;
+  --sand: #ffffff;
+  --paper: #ffffff;
+  /* Fotogrond en zachte vlakken: koel lichtgrijs, productfoto's vallen er via mix-blend-multiply in weg. */
+  --studio: #f3f3f1;
+  --ink: #0b0b0b;
+  --muted: #6b6b6b;
+  --muted-strong: #474747;
+  --muted-dark: #a3a3a3;
+  --gold: #c9a54b;
+  --gold-ink: #8a6a1f;
+  --line: rgba(11, 11, 11, 0.08);
+  --line-strong: rgba(11, 11, 11, 0.16);
+  --line-dark: rgba(255, 255, 255, 0.14);
+  /* Emil Kowalski: sterke ease-out voor UI, ease-in-out voor beweging op het scherm. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @theme inline {
@@ -43,22 +44,21 @@
   --color-taupe: var(--muted);
   --color-taupe-strong: var(--muted-strong);
   --font-sans: var(--face-text);
-  --font-serif: var(--face-display);
-  --font-display: var(--face-display);
+  --font-serif: var(--face-text);
+  --font-display: var(--face-text);
   --font-kufi: var(--face-kufi);
 }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
-  scrollbar-color: rgba(26, 26, 26, 0.3) var(--sand);
+  scrollbar-color: rgba(11, 11, 11, 0.25) var(--sand);
 }
 
 body {
   background: var(--sand);
   color: var(--ink);
   font-family: var(--face-text), system-ui, sans-serif;
-  font-feature-settings: "ss01";
 }
 
 h1,
@@ -68,8 +68,8 @@ h3 {
 }
 
 ::selection {
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 :focus-visible {
@@ -81,12 +81,9 @@ h3 {
 .field-input:focus-visible {
   outline: none;
 }
-.field-input {
-  caret-color: var(--gold);
-}
 .on-dark :focus-visible,
 [data-vaul-drawer] .on-dark :focus-visible {
-  outline-color: var(--gold);
+  outline-color: var(--paper);
 }
 
 /* Lucide-iconen overal op 1.5px. */
@@ -97,10 +94,11 @@ svg.lucide {
 /* Tactiele pressable: alleen transform/kleur, met een vaste lijst properties. */
 .press {
   transition:
-    transform 100ms var(--ease-out),
+    transform 160ms var(--ease-out),
     background-color 200ms ease,
     color 200ms ease,
     border-color 200ms ease,
+    box-shadow 200ms ease,
     opacity 200ms ease;
 }
 .press:not(:disabled):active {
@@ -109,66 +107,67 @@ svg.lucide {
 
 /* Eigen componentklassen in de components-laag: Tailwind-utilities mogen ze per plek overschrijven. */
 @layer components {
-  /* Koppen: redactionele serif, gewone kast, strak gespatieerd. Instrument Serif heeft alleen 400: nooit vet zetten. */
+  /* Koppen: één strakke sans, krap gespatieerd. De tweede regel van een kop is grijs, niet cursief. */
   .display {
-    font-family: var(--face-display), serif;
-    font-weight: 400;
-    line-height: 0.98;
-    letter-spacing: -0.015em;
+    font-family: var(--face-text), sans-serif;
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
   }
-  /* De tweede regel van een kop: cursief, zoals in een modeblad. */
   .display em {
-    font-style: italic;
+    font-style: normal;
+    color: var(--muted);
   }
-  /* Kapitalen zijn voor knoppen, menu en fotolabels; gewone labels (velden, tabellen, kleine print) zijn .caption. */
   .caption {
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.35;
   }
-  /* Labels zoals op het hangtag: klein, kapitalen, ruim gespatieerd. */
+  /* Knop- en keuzelabel: gewone kast, medium. */
   .tag {
     font-family: var(--face-text), sans-serif;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     line-height: 1.2;
+    letter-spacing: -0.005em;
   }
   .num {
     font-family: var(--face-text), sans-serif;
     font-variant-numeric: tabular-nums;
   }
 
-  /* Matzwart karton: korrel uit een foto van de echte doos (public/tex/board.webp), naadloos gespiegeld. */
+  /* Het donkere vlak: vlak zwart, geen korrel. */
   .board {
     background-color: var(--board);
-    background-image: url("/tex/board.webp");
-    background-size: 1400px 280px;
     color: var(--paper);
   }
 
-  /* Primaire actie: goudfolie op zwart (de banderol). Secundair: zwart karton. */
-  .btn-gold {
-    background: var(--gold);
-    color: var(--ink);
-  }
-  .btn-gold:hover:not(:disabled) {
-    background: #ddbd52;
-  }
+  /* Knoppen zijn pillen. btn-gold heet nog zo voor de bestaande plekken, maar is de primaire inktknop. */
+  .btn-gold,
   .btn-primary {
+    border-radius: 9999px;
     background: var(--ink);
     color: var(--paper);
   }
+  .btn-gold:hover:not(:disabled),
   .btn-primary:hover:not(:disabled) {
-    background: #2e2e2e;
+    background: #2a2a2a;
   }
   .btn-light {
+    border-radius: 9999px;
     background: var(--paper);
     color: var(--ink);
   }
   .btn-light:hover:not(:disabled) {
-    background: #fff;
+    background: #e9e9e7;
+  }
+  .btn-ghost {
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+    color: var(--ink);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    box-shadow: inset 0 0 0 1px var(--ink);
   }
 }
 
@@ -201,13 +200,13 @@ svg.lucide {
   animation: bump 300ms var(--ease-out);
 }
 
-/* Cadeau ontgrendeld: eenmalige gouden ring. */
+/* Gratis verzending gehaald: eenmalige ring. */
 @keyframes ring {
   from {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+    box-shadow: 0 0 0 0 rgba(11, 11, 11, 0.35);
   }
   to {
-    box-shadow: 0 0 0 14px rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 14px rgba(11, 11, 11, 0);
   }
 }
 .ring-once {
@@ -227,31 +226,124 @@ svg.lucide {
   }
 }
 .rise {
-  animation: rise 500ms var(--ease-out) both;
+  animation: rise 600ms var(--ease-out) both;
 }
 .rise-y {
-  animation: rise-y 500ms var(--ease-out) both;
+  animation: rise-y 600ms var(--ease-out) both;
 }
-/* Hero: de maatlijn tekent zich één keer, van het label naar schouder en zoom (het ene geregisseerde moment bovenaan).
-   Pas na de foto (settle); transform en opacity alleen, dus geen layout. Bij "minder beweging" staat hij er meteen. */
-@keyframes draw-y {
-  from { transform: scaleY(0); }
+/* Hero-kop: elk woord schuift uit een masker omhoog. Pure CSS, dus geen wachten op JavaScript. */
+@keyframes word-up {
+  from {
+    transform: translateY(105%);
+  }
 }
-@keyframes draw-fade {
-  from { opacity: 0; }
+.mask-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
 }
-.draw-y {
-  animation: draw-y 900ms cubic-bezier(0.77, 0, 0.175, 1) 450ms both;
+.split-word {
+  display: inline-block;
 }
-.draw-label {
-  animation: draw-fade 500ms var(--ease-out) 300ms both;
+.hero-word {
+  display: inline-block;
+  animation: word-up 900ms var(--ease-out) both;
 }
-.draw-fade {
-  animation: draw-fade 300ms var(--ease-out) 1300ms both;
+/* Hero-foto opent vanuit een kleiner venster (clip-path, geen layout). */
+@keyframes open-frame {
+  from {
+    clip-path: inset(10% 10% 10% 10% round 1.75rem);
+  }
 }
-/* Net toegevoegd: de regel in de winkelwagen licht kort goud op en dooft uit. */
+.open-frame {
+  clip-path: inset(0 0 0 0 round 1.75rem);
+  animation: open-frame 1200ms var(--ease-in-out) 150ms both;
+}
+
+/* Scroll-reveals zonder JavaScript: de animatie hangt aan de scrollpositie (view timeline) en draait op de compositor.
+   Zonder ondersteuning of met "minder beweging" geldt geen van deze regels: dan staat alles er meteen.
+   Blokken: klaar zodra ze helemaal in beeld zijn (ook onderaan de pagina haalbaar). Koppen: woorden op de tijdlijn
+   van de hele kop, met per woord een iets later startpunt. Alleen opacity en transform, geen blur (duur op telefoons). */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timing-function: var(--ease-out);
+      animation-timeline: view();
+      animation-range: entry calc(var(--d, 0) * 1%) entry 100%;
+    }
+    .split {
+      view-timeline: --split block;
+    }
+    .split-word {
+      animation: word-up linear both;
+      animation-timing-function: var(--ease-out);
+      animation-timeline: --split;
+      animation-range: entry calc(var(--i, 0) * 6%) cover 30%;
+    }
+  }
+}
+
+/* Constante beweging is lineair. Twee identieke kopieën, de baan schuift precies één kopie op: naadloos. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee[data-reverse] .marquee-track {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+/* Op touch: reviews zijn om te lezen, dus geen beweging maar een swipe-rij met snap. */
+@media (hover: none) {
+  .marquee[data-touch="scroll"] {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    mask-image: none;
+  }
+  .marquee[data-touch="scroll"]::-webkit-scrollbar {
+    display: none;
+  }
+  .marquee[data-touch="scroll"] .marquee-track {
+    animation: none;
+    padding-inline: 1.25rem;
+  }
+  .marquee[data-touch="scroll"] .marquee-track > [aria-hidden] {
+    display: none;
+  }
+  .marquee[data-touch="scroll"] li {
+    scroll-snap-align: start;
+    scroll-margin-left: 1.25rem;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin 24s linear infinite;
+}
+
+/* Net toegevoegd: de regel in de winkelwagen licht kort op en dooft uit. */
 @keyframes just-added {
-  from { background-color: rgba(212, 175, 55, 0.22); }
+  from { background-color: rgba(11, 11, 11, 0.06); }
 }
 .just-added {
   animation: just-added 1400ms var(--ease-out) 300ms both;
@@ -273,14 +365,14 @@ svg.lucide {
   }
 }
 
-/* De doos komt tot rust in het zand: alleen schaal, de foto is meteen zichtbaar (LCP). */
+/* Hero-foto komt tot rust: alleen schaal, de foto is meteen zichtbaar (LCP). Eenmalig, dus mag iets langer. */
 @keyframes settle {
   from {
-    transform: scale(1.06);
+    transform: scale(1.04);
   }
 }
 .settle {
-  animation: settle 1600ms var(--ease-out) both;
+  animation: settle 1200ms var(--ease-out) both;
 }
 
 /* De vaste mobiele CTA op productpagina's mag het einde van de footer niet afdekken. */
@@ -297,15 +389,15 @@ svg.lucide {
 }
 .legal h2 {
   margin: 3rem 0 1rem;
-  font-family: var(--face-display), serif;
-  font-size: 2.25rem;
-  font-weight: 400;
-  line-height: 1.05;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
   color: var(--ink);
 }
 .legal h3 {
   margin: 2rem 0 0.5rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
 }
 .legal p,
@@ -335,15 +427,15 @@ svg.lucide {
   text-align: left;
 }
 .legal th {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
 }
 
 /* Maatkiezer in de vaste mobiele balk: korte entree, zodat de tik en het resultaat verbonden voelen. */
 .sheet-enter {
   transition:
-    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    opacity 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
   @starting-style {
     opacity: 0;
     transform: translateY(8px);
@@ -372,14 +464,14 @@ svg.lucide {
   }
 }
 .faq-content[data-state="open"] {
-  animation: faq-open 260ms cubic-bezier(0.23, 1, 0.32, 1);
+  animation: faq-open 260ms var(--ease-out);
 }
 .faq-content[data-state="closed"] {
-  animation: faq-close 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  animation: faq-close 180ms var(--ease-out);
 }
 
 [data-vaul-overlay] {
-  background: rgba(18, 18, 18, 0.4);
+  background: rgba(11, 11, 11, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -394,6 +486,14 @@ svg.lucide {
     transition-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
+  }
+  /* Lopende banden en de draaiende badge staan stil; de band wordt een gewone horizontale scroll. */
+  .marquee-track,
+  .spin-slow {
+    animation: none !important;
+  }
+  .marquee {
+    overflow-x: auto;
   }
 }
 
