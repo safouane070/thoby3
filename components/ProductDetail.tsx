@@ -12,6 +12,7 @@ import { FitToggle } from "./FitToggle";
 import { Price } from "./Price";
 import { BADGE } from "./ProductCard";
 import { SizeAdvisor } from "./SizeAdvisor";
+import { ThobePair, shapeOf } from "./ThobeDiagram";
 import { useStore } from "./StoreProvider";
 
 // Vaul hoort niet in de eerste bundel: de viewer laadt bij hover/focus op de foto, of bij de klik zelf.
@@ -168,6 +169,20 @@ export function ProductDetail({ product }: { product: Product }) {
                 <div className="mt-3">
                   <FitToggle value={fit} onChange={chooseFit} id="fit-detail" />
                   <p className="mt-2 text-sm leading-snug text-muted" aria-live="polite">{FITS.find((f) => f.id === fit)!.note}</p>
+                  {/* Het verschil zien in plaats van lezen: dezelfde schaaltekening als de maatkaart, voor de gekozen maat (anders M). */}
+                  {HAS_MEASUREMENTS && (() => {
+                    const s = sizeInfo ?? SIZES[1];
+                    return (
+                      <figure className="mt-4 border border-line bg-paper px-3 pb-3 pt-2">
+                        <ThobePair slim={shapeOf(s, "slim")} broad={shapeOf(s, "broad")} className="mx-auto block w-full max-w-[18rem]" />
+                        <figcaption className="mt-1 flex justify-between text-xs text-muted">
+                          <span className={fit === "slim" ? "font-semibold text-ink" : ""}>{sizeCode(s.label, "slim")} slank</span>
+                          <span>op schaal, even lang</span>
+                          <span className={fit === "broad" ? "font-semibold text-ink" : ""}>{sizeCode(s.label, "broad")} breed</span>
+                        </figcaption>
+                      </figure>
+                    );
+                  })()}
                 </div>
               </div>
 
@@ -212,12 +227,20 @@ export function ProductDetail({ product }: { product: Product }) {
 
           {product.soldOut && (
             <div className="mt-8 border border-line-strong p-5">
-              <p className="font-medium">Binnenkort weer op voorraad</p>
-              <p className="mt-1 text-sm text-muted">Stuur ons een berichtje, dan laten we het je als eerste weten.</p>
+              <p className="font-medium">Uitverkocht</p>
+              <p className="mt-1 text-sm text-muted">Deze kleur is nu niet te bestellen. Stuur ons een berichtje, dan laten we het je weten zodra hij terug is.</p>
             </div>
           )}
 
-          <div className="mt-8 hidden gap-3 lg:flex">
+          {/* Altijd zichtbaar wélke variant je bestelt, ook als de maat uit een eerder bezoek voorgeselecteerd is. */}
+          {thobe && !product.soldOut && (
+            <p className="mt-8 hidden text-sm lg:block">
+              {size
+                ? <>Je bestelt: <strong className="font-semibold">{sizeCode(size, fit)} · {fitLabel}</strong>{giftBox ? " · in de geschenkdoos" : ""}</>
+                : <span className="text-muted">Kies hierboven je maat.</span>}
+            </p>
+          )}
+          <div className={`hidden gap-3 lg:flex ${thobe && !product.soldOut ? "mt-3" : "mt-8"}`}>
             {product.soldOut
               ? <a href={notify} target="_blank" rel="noopener noreferrer" className={`${cta} flex items-center justify-center gap-2`}><Bell size={16} aria-hidden /> Laat het me weten</a>
               : <button onClick={submit} className={cta}>{label} · {money(total)}</button>}
@@ -255,6 +278,9 @@ export function ProductDetail({ product }: { product: Product }) {
               ))}
             </div>
           </div>
+        )}
+        {thobe && size && !picker && !product.soldOut && (
+          <p className="mb-2 px-1 text-xs text-muted-dark">Je bestelt: <span className="font-semibold text-paper">{sizeCode(size, fit)} · {fitLabel}</span>{giftBox ? " · in de geschenkdoos" : ""}</p>
         )}
         <div className="flex gap-2">
           <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label="Verlanglijst" className="press flex w-14 items-center justify-center border border-line-dark"><Heart size={18} className={wished ? "fill-gold text-gold" : ""} /></button>

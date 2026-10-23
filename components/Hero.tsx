@@ -18,7 +18,7 @@ const MEASURED: Record<string, { top: number; bottom: number }> = {
 function MeasuredFigure() {
   const m = MEASURED[content.image];
   return (
-    <figure className="relative mx-auto aspect-[3/4] h-[min(45svh,26rem)] bg-studio shadow-[0_30px_60px_-30px_rgba(26,26,26,0.25)] lg:mr-0 lg:h-full">
+    <figure className="relative mx-auto aspect-[3/4] h-[min(40svh,26rem)] bg-studio shadow-[0_30px_60px_-30px_rgba(26,26,26,0.25)] lg:mr-0 lg:h-full">
       {/* Multiply op het studiopapier: de koele studiogrijs wordt warm grijs en valt in het zandpalet. */}
       <div className="absolute inset-0">
         <Image src={content.image} alt={content.imageAlt} fill preload sizes="(min-width:1024px) 34vw, 80vw" className="settle object-cover mix-blend-multiply" />

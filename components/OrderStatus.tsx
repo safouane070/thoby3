@@ -16,7 +16,8 @@ export function OrderStatus() {
     const id = new URLSearchParams(location.search).get("id");
     fetch(`/api/payment?id=${encodeURIComponent(id ?? "")}`).then((r) => r.json()).then((d: { status?: string; order?: string }) => {
       const paid = d.status === "paid" || d.status === "authorized";
-      const pending = d.status === "pending" || d.status === "open";
+      // "open" = nog niets betaald (bijv. teruggekomen zonder af te ronden): winkelwagen blijven bewaren, geen bedankpagina.
+      const pending = d.status === "pending";
       if (paid || pending) clear();
       setOrder(d.order ?? "");
       setState(paid ? "paid" : pending ? "pending" : "failed");
