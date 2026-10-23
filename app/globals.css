@@ -200,19 +200,6 @@ svg.lucide {
   animation: bump 300ms var(--ease-out);
 }
 
-/* Gratis verzending gehaald: eenmalige ring. */
-@keyframes ring {
-  from {
-    box-shadow: 0 0 0 0 rgba(11, 11, 11, 0.35);
-  }
-  to {
-    box-shadow: 0 0 0 14px rgba(11, 11, 11, 0);
-  }
-}
-.ring-once {
-  animation: ring 900ms var(--ease-out);
-}
-
 /* Hero-entree in pure CSS (draait zonder JS). rise-y animeert alleen positie, zodat de LCP-kop meteen zichtbaar is. */
 @keyframes rise {
   from {

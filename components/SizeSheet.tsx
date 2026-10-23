@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Drawer } from "vaul";
-import { SIZES, sizeCode, type Fit, type Product } from "@/lib/products";
+import { FITS, SIZES, sizeCode, type Fit, type Product } from "@/lib/products";
 import { FitToggle } from "./FitToggle";
 import { Price } from "./Price";
 import { useStore } from "./StoreProvider";
@@ -19,7 +19,9 @@ export function SizeSheet({ product, open, onOpenChange }: { product: Product; o
   // Vaul schuift alleen in als hij eerst dicht gemount is; deze component laadt pas bij de tik, dus één frame later open.
   const [mounted, setMounted] = useState(false);
   useEffect(() => { const id = setTimeout(() => setMounted(true), 0); return () => clearTimeout(id); }, []);
-  const pick = (size: string) => {
+  // Eerst kiezen, dan bevestigen: een mistik mag geen verkeerde maat in de winkelwagen leggen.
+  const [size, setSize] = useState(pref.size ?? "");
+  const confirm = () => {
     onOpenChange(false);
     add({ slug: product.slug, size, fit });
   };
@@ -37,21 +39,23 @@ export function SizeSheet({ product, open, onOpenChange }: { product: Product; o
             </div>
             <Drawer.Close aria-label="Sluiten" className="press -mr-2 flex h-11 w-11 items-center justify-center rounded-full bg-studio"><X size={18} /></Drawer.Close>
           </div>
-          <Drawer.Description className="sr-only">Kies je pasvorm en maat; je thobe gaat meteen in de winkelwagen.</Drawer.Description>
+          <Drawer.Description className="sr-only">Kies je pasvorm en maat; daarna leg je hem in de winkelwagen.</Drawer.Description>
 
           <p className="caption mt-6">Pasvorm</p>
           <FitToggle value={fit} onChange={setFit} id={`fit-sheet-${product.slug}`} className="mt-2" />
           <p className="caption mt-5">Maat <span className="font-normal text-muted">op lichaamslengte</span></p>
           <div className="mt-2 grid grid-cols-4 gap-2">
             {SIZES.map((s) => (
-              <button key={s.label} type="button" onClick={() => pick(s.label)} aria-label={`Maat ${sizeCode(s.label, fit)}, ${s.bodyHeight}, in winkelwagen`}
-                className={`press min-h-16 rounded-xl border py-2 ${pref.size === s.label ? "border-ink" : "border-line-strong"}`}>
+              <button key={s.label} type="button" onClick={() => setSize(s.label)} aria-pressed={size === s.label} aria-label={`Maat ${sizeCode(s.label, fit)}, ${s.bodyHeight}`}
+                className="press min-h-16 rounded-xl border border-line-strong py-2 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper">
                 <span className="block text-lg font-semibold">{sizeCode(s.label, fit)}</span>
-                <span className="num block text-xs text-muted">{s.bodyHeight.replace(" cm", "")}</span>
+                <span className="num block text-xs opacity-70">{s.bodyHeight.replace(" cm", "")}</span>
               </button>
             ))}
           </div>
-          <p className="mt-4 text-center text-xs text-muted">Tik op je maat: hij gaat direct in je winkelwagen.</p>
+          <button type="button" onClick={confirm} disabled={!size} className="press btn-primary tag mt-5 min-h-14 w-full py-4 !text-[0.9375rem] disabled:cursor-not-allowed disabled:opacity-50">
+            {size ? `In winkelwagen · ${sizeCode(size, fit)} ${FITS.find((f) => f.id === fit)!.label}` : "Kies je maat"}
+          </button>
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>

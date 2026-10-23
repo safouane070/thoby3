@@ -52,7 +52,7 @@ export function SizeAdvisor({ onPick, pickLabel, shopHref, fit, tone = "light", 
         <div className={`flex items-baseline gap-2 border-b-2 pb-1 transition-colors duration-200 ${dark ? "border-paper/30 focus-within:border-paper" : "border-line-strong focus-within:border-ink"}`}>
           <input id={id} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={value} placeholder="178" autoComplete="off"
             onChange={(e) => setValue(e.target.value.replace(/\D/g, ""))}
-            className={`field-input num w-[3ch] bg-transparent text-5xl font-semibold leading-none tracking-tight ${dark ? "placeholder:text-paper/55" : "placeholder:text-[#767676]"}`} />
+            className={`field-input num w-[3ch] bg-transparent text-5xl font-semibold leading-none tracking-tight ${dark ? "placeholder:text-paper/30" : "placeholder:text-ink/20"}`} />
           <span className={`caption ${muted}`}>cm</span>
         </div>
 
