@@ -103,7 +103,7 @@ content:
           - { name: title, label: Kop, type: string }
           - { name: titleSecond, label: Kop tweede regel, type: string }
           - { name: text, label: Introtekst, type: text }
-          - { name: buttonPrimary, label: Tekst knop in de zwarte balk, type: string, description: "Bijv. In winkelwagen" }
+          - { name: buttonPrimary, label: Tekst hoofdknop, type: string, description: "Bijv. Shop de thobe" }
           - { name: buttonSecondary, label: Tekst link naar de maatkaart, type: string }
           - { name: image, label: Foto, type: image, description: "Staande foto (3:4) van de thobe van kraag tot zoom. De maatlijnen ernaast staan alleen bij de huidige foto (wd-1.jpg); bij een andere foto verdwijnen ze." }
           - { name: imageAlt, label: Beschrijving van de foto, type: string, description: "Voor blinde bezoekers en Google." }
@@ -119,19 +119,20 @@ content:
         label: Blok "De geschenkdoos"
         type: object
         fields:
-          - { name: greetingArabic, label: Groet in het Arabisch, type: string }
-          - { name: greeting, label: Groet uitgeschreven, type: string }
+          - { name: eyebrow, label: Klein label boven de kop, type: string }
           - { name: title, label: Kop, type: string }
           - { name: titleSecond, label: Kop tweede regel, type: string }
           - { name: text, label: Tekst, type: text }
-          - name: steps
-            label: Stappen (zoals in het deksel)
+          - name: features
+            label: Kenmerken van de doos
             type: object
             list: true
             fields:
               - { name: title, label: Tekst, type: string }
           - { name: image, label: Foto open doos, type: image, description: "Bovenaanzicht, liggend." }
           - { name: imageAlt, label: Beschrijving van de foto, type: string }
+          - { name: imageHeld, label: Foto dichte doos in de hand, type: image }
+          - { name: imageHeldAlt, label: Beschrijving van die foto, type: string }
           - { name: button, label: Tekst knop, type: string }
           - { name: product, label: Knop gaat naar product (adres), type: string }
       - name: promises
@@ -162,6 +163,8 @@ content:
             fields:
               - { name: label, label: Eigenschap, type: string }
               - { name: text, label: Uitleg, type: text }
+              - { name: image, label: Foto bij deze eigenschap (homepage), type: image }
+              - { name: alt, label: Beschrijving van de foto, type: string }
           - name: details
             label: Detailfoto's (knoppen onder de foto)
             type: object

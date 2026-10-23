@@ -13,7 +13,7 @@ export function Newsletter() {
 
   if (!action) {
     return (
-      <a href={site.contact.instagram} target="_blank" rel="noopener noreferrer" className="press tag inline-flex min-h-12 items-center gap-2 border-b border-paper/40 py-3 text-paper hover:border-gold hover:text-gold">
+      <a href={site.contact.instagram} target="_blank" rel="noopener noreferrer" className="press btn-ghost tag inline-flex min-h-11 items-center gap-2 px-5">
         Volg ons op Instagram <ArrowRight size={14} aria-hidden />
       </a>
     );
@@ -29,12 +29,12 @@ export function Newsletter() {
   return (
     <form action={action} method="post" target="_blank" onSubmit={submit} noValidate className="max-w-md">
       <label htmlFor="nl-email" className="sr-only">E-mailadres</label>
-      <div className={`flex border-b ${error ? "border-red-400" : "border-ivory/40 focus-within:border-gold"} transition-colors`}>
+      <div className={`flex border-b ${error ? "border-red-400" : "border-line-strong focus-within:border-ink"} transition-colors`}>
         <input id="nl-email" name={field} type="email" autoComplete="email" placeholder="Je e-mailadres" aria-invalid={error} aria-describedby={error ? "nl-err" : undefined}
-          className="field-input min-w-0 flex-1 bg-transparent py-4 text-sm placeholder:text-ivory/60" />
-        <button type="submit" className="press flex items-center gap-2 pl-4 text-sm font-medium text-ivory hover:text-ivory/70">Aanmelden <ArrowRight size={14} aria-hidden /></button>
+          className="field-input min-w-0 flex-1 bg-transparent py-4 text-base placeholder:text-muted" />
+        <button type="submit" className="press flex items-center gap-2 pl-4 text-sm font-medium text-ink hover:text-muted">Aanmelden <ArrowRight size={14} aria-hidden /></button>
       </div>
-      {error && <p id="nl-err" role="alert" className="mt-2 text-xs text-red-300">Vul een geldig e-mailadres in.</p>}
+      {error && <p id="nl-err" role="alert" className="mt-2 text-xs text-[#a3341f]">Vul een geldig e-mailadres in.</p>}
     </form>
   );
 }

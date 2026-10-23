@@ -23,7 +23,7 @@ export default async function LegalPage({ params }: Props) {
   if (!p) notFound();
   return (
     <article className="mx-auto max-w-3xl px-5 pb-24 pt-40 lg:pb-32">
-      <h1 className="display text-5xl leading-none md:text-6xl">{p.title}</h1>
+      <h1 className="display text-4xl md:text-5xl">{p.title}</h1>
       {/* Inhoud uit het CMS; scripts, event-handlers en javascript:-links worden bij de build geweigerd (scripts/check-content.mjs). */}
       <div className="legal mt-12" dangerouslySetInnerHTML={{ __html: p.body }} />
       {/* Wettelijk verplichte identiteit van de verkoper (art. 3:15d BW), altijd gelijk aan de footer (CMS: Bedrijfsgegevens). */}

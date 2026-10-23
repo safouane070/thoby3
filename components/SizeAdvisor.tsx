@@ -49,10 +49,10 @@ export function SizeAdvisor({ onPick, pickLabel, shopHref, fit, tone = "light", 
       <p className={`mt-1 text-sm ${muted}`}>In centimeters. Dan kiezen wij je maat.</p>
 
       <div className="mt-4 flex flex-wrap items-end gap-x-10 gap-y-5">
-        <div className={`flex items-baseline gap-2 border-b-2 pb-1 transition-colors duration-200 ${dark ? "border-paper/30 focus-within:border-gold" : "border-line-strong focus-within:border-ink"}`}>
+        <div className={`flex items-baseline gap-2 border-b-2 pb-1 transition-colors duration-200 ${dark ? "border-paper/30 focus-within:border-paper" : "border-line-strong focus-within:border-ink"}`}>
           <input id={id} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={value} placeholder="178" autoComplete="off"
             onChange={(e) => setValue(e.target.value.replace(/\D/g, ""))}
-            className={`field-input num w-[3ch] bg-transparent text-5xl font-bold leading-none ${dark ? "placeholder:text-paper/55" : "placeholder:text-[#6e6860]"}`} />
+            className={`field-input num w-[3ch] bg-transparent text-5xl font-semibold leading-none tracking-tight ${dark ? "placeholder:text-paper/55" : "placeholder:text-[#767676]"}`} />
           <span className={`caption ${muted}`}>cm</span>
         </div>
 
@@ -60,7 +60,7 @@ export function SizeAdvisor({ onPick, pickLabel, shopHref, fit, tone = "light", 
           {advice.size && (
             <p className="flex items-baseline gap-3">
               <span className={`caption ${muted}`}>Jouw maat</span>
-              <span className="display text-5xl">{fit ? sizeCode(advice.size, fit) : advice.size}</span>
+              <span className="display text-5xl tracking-tight">{fit ? sizeCode(advice.size, fit) : advice.size}</span>
               {fitLabel && <span className={`text-sm ${muted}`}>{fitLabel}</span>}
             </p>
           )}
@@ -78,11 +78,11 @@ export function SizeAdvisor({ onPick, pickLabel, shopHref, fit, tone = "light", 
       {advice.size && (onPick || shopHref) && (
         <div className="mt-5">
           {onPick ? (
-            <button type="button" onClick={() => onPick(advice.size!)} className={`press tag inline-flex min-h-12 items-center gap-2 border px-5 ${dark ? "border-gold text-gold hover:bg-gold hover:text-ink" : "border-ink hover:bg-ink hover:text-paper"}`}>
+            <button type="button" onClick={() => onPick(advice.size!)} className={`press tag inline-flex min-h-11 items-center gap-2 px-5 ${dark ? "btn-light" : "btn-primary"}`}>
               {pickLabel ? pickLabel(advice.size) : `Kies maat ${advice.size}`} <ArrowRight size={15} aria-hidden />
             </button>
           ) : (
-            <Link href={shopHref!(advice.size)} className={`press tag group inline-flex min-h-12 items-center gap-2 px-6 ${dark ? "btn-gold" : "btn-primary"}`}>
+            <Link href={shopHref!(advice.size)} className={`press tag group inline-flex min-h-12 items-center gap-2 px-6 ${dark ? "btn-light" : "btn-primary"}`}>
               Shop in maat {advice.size} <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
             </Link>
           )}

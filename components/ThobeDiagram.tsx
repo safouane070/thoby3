@@ -63,13 +63,13 @@ function Figure({ shape }: { shape: Shape }) {
         <m.line initial={false} transition={SPRING} {...STITCH} animate={{ x1: -g.hem + 0.6, y1: shape.length - 3, x2: g.hem - 0.6, y2: shape.length - 3 }} />
       </g>
       {/* Borstbreedte, het enige dat tussen slank en breed verschilt: getekend als maatlijn van oksel tot oksel. */}
-      <g stroke="var(--gold-ink)" strokeWidth="0.28">
+      <g stroke="var(--ink)" strokeWidth="0.28">
         <m.line initial={false} transition={SPRING} animate={{ x1: -g.ch, x2: g.ch, y1: g.arm + 4, y2: g.arm + 4 }} />
         {[-1, 1].map((side) => (
           <m.line key={side} initial={false} transition={SPRING} animate={{ x1: side * g.ch, x2: side * g.ch, y1: g.arm + 2.6, y2: g.arm + 5.4 }} />
         ))}
       </g>
-      <m.text initial={false} animate={{ y: g.arm + 9.2 }} transition={SPRING} x="0" textAnchor="middle" fontSize="3" fill="var(--gold-ink)" className="num">
+      <m.text initial={false} animate={{ y: g.arm + 9.2 }} transition={SPRING} x="0" textAnchor="middle" fontSize="3" fill="var(--ink)" className="num">
         {shape.chest} cm
       </m.text>
     </g>
@@ -96,7 +96,7 @@ export function ThobePair({ slim, broad, className = "" }: { slim: Shape; broad:
       <g transform={`translate(${GAP} 0)`}><Figure shape={broad} /></g>
 
       {/* Zelfde lengte: verticale maatlijn in het midden, stippellijnen naar de kraag- en de zoomhoogte van allebei. */}
-      <g stroke="var(--gold-ink)" fill="none">
+      <g stroke="var(--muted)" fill="none">
         <line x1={-GAP + COLLAR + 1} y1="-6" x2={GAP - COLLAR - 1} y2="-6" strokeWidth="0.2" strokeDasharray="0.8 0.8" />
         <m.line initial={false} transition={SPRING} strokeWidth="0.2" strokeDasharray="0.8 0.8"
           animate={{ x1: -GAP + sHem + 1, y1: len, x2: GAP - bHem - 1, y2: len }} />

@@ -20,9 +20,19 @@ const nav = [
   { id: "contact", href: "/#contact", label: "Contact" },
 ];
 
-// Gescrold = de aankondigingsbalk mag weg. Externe bron (scrollpositie) zonder effect of extra render bij laden.
+// Bovenaan: alles zichtbaar. Omlaag scrollen: de hele balk schuift weg. Omhoog: de balk komt terug, zonder aankondiging.
+// Externe bron (scrollpositie) zonder effect of extra render bij laden; 6px drempel tegen trillen.
 const subscribeScroll = (cb: () => void) => { window.addEventListener("scroll", cb, { passive: true }); return () => window.removeEventListener("scroll", cb); };
-const isScrolled = () => window.scrollY > 8;
+let lastY = 0;
+let scrollState: "top" | "up" | "down" = "top";
+const readScroll = () => {
+  const y = window.scrollY;
+  if (y <= 8) scrollState = "top";
+  else if (Math.abs(y - lastY) > 6) scrollState = y > lastY && y > 400 ? "down" : "up";
+  else return scrollState;
+  lastY = y;
+  return scrollState;
+};
 
 const artikelen = (n: number) => `${n} ${n === 1 ? "artikel" : "artikelen"}`;
 const SPRING = { type: "spring", stiffness: 400, damping: 35 } as const;
@@ -77,7 +87,7 @@ function HeaderPanel({ label, triggerClass, trigger, width, onOpen, children }: 
       </button>
       {state !== "closed" && (
         <div ref={box} id={id} role="region" aria-label={label}
-          className={`absolute right-0 top-full z-[60] origin-top-right border border-line bg-paper p-4 text-ink ${width} ${state === "open" ? "animate-[pop_160ms_var(--ease-out)]" : "animate-[pop_120ms_cubic-bezier(0.23,1,0.32,1)_reverse]"}`}>
+          className={`absolute right-0 top-full z-[60] mt-1 origin-top-right rounded-2xl border border-line bg-paper p-4 text-ink shadow-[0_16px_40px_-16px_rgba(11,11,11,0.25)] ${width} ${state === "open" ? "animate-[pop_160ms_var(--ease-out)]" : "animate-[pop_120ms_cubic-bezier(0.23,1,0.32,1)_reverse]"}`}>
           {children(close)}
         </div>
       )}
@@ -89,10 +99,10 @@ function Wishlist({ onOpen }: { onOpen: () => void }) {
   const { wishlist, toggleWish, money } = useStore();
   return (
     <HeaderPanel label={`Verlanglijst, ${artikelen(wishlist.length)}`} width={fit(20)} triggerClass={ICON_BTN} onOpen={onOpen}
-      trigger={<Heart size={18} className={wishlist.length ? "fill-gold text-gold" : ""} />}>
+      trigger={<Heart size={18} className={wishlist.length ? "fill-ink" : ""} />}>
       {(close) => (
         <>
-          <p className="display mb-3 text-2xl">Verlanglijst</p>
+          <p className="display mb-3 text-lg">Verlanglijst</p>
           {wishlist.length === 0 ? (
             <p className="text-sm text-taupe">Tik op het hartje bij een product om het hier te bewaren.</p>
           ) : (
@@ -102,8 +112,8 @@ function Wishlist({ onOpen }: { onOpen: () => void }) {
                 return (
                   <li key={slug} className="flex items-center gap-3 py-3">
                     <Link href={`/product/${slug}`} onClick={close} className="flex flex-1 items-center gap-3">
-                        <span className="relative h-14 w-11 shrink-0 bg-studio"><Image src={p.images.primary} alt="" fill sizes="44px" className="object-cover mix-blend-multiply" /></span>
-                        <span><span className="display block text-lg">{p.name}</span><span className="text-xs text-taupe">{money(p.price)}</span></span>
+                        <span className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg bg-studio"><Image src={p.images.primary} alt="" fill sizes="44px" className="object-cover mix-blend-multiply" /></span>
+                        <span><span className="block text-sm font-medium">{p.name}</span><span className="text-xs text-taupe">{money(p.price)}</span></span>
                     </Link>
                     <button onClick={() => toggleWish(slug)} aria-label={`Verwijder ${p.name}`} className="press p-2"><X size={14} /></button>
                   </li>
@@ -120,7 +130,7 @@ function Wishlist({ onOpen }: { onOpen: () => void }) {
 export function Header() {
   const pathname = usePathname();
   const { count, setDrawerOpen } = useStore();
-  const scrolled = useSyncExternalStore(subscribeScroll, isScrolled, () => false);
+  const scroll = useSyncExternalStore(subscribeScroll, readScroll, () => "top" as const);
   const [spy, setSpy] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
   const [menu, setMenu] = useState(false);
@@ -183,15 +193,15 @@ export function Header() {
   const active = hover ?? (onProduct ? "collectie" : pathname === "/" ? spy : null);
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-40 transition-transform duration-[250ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${scrolled ? "-translate-y-9" : ""}`}>
+    <header className={`fixed inset-x-0 top-0 z-40 transition-transform duration-[250ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${scroll === "top" ? "" : scroll === "down" && !menu ? "-translate-y-full" : "-translate-y-9"}`}>
       <AnnouncementBar />
-      {/* De balk is de banderol van de doos: zwart karton met een gouden lijn langs de rand. */}
-      <div className="board on-dark border-b border-gold/40">
+      {/* Witte balk, licht doorschijnend: de pagina schuift er zacht onderdoor. */}
+      <div className="border-b border-line bg-paper/85 text-ink backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto max-w-[1440px]">
           <div className="relative flex h-14 items-center justify-between pl-5 pr-2 lg:pl-10 lg:pr-7">
             <Link href="/" aria-label="THOBY3, naar de homepage" className="inline-flex h-12 items-center">
               {/* Woordmerk 16-20px hoog (~76-95px breed): past op 320px naast drie 48px-knoppen. Het volledige embleem staat in de footer. */}
-              <Logo className="h-[clamp(1rem,5vw,1.125rem)] text-paper" />
+              <Logo className="h-[clamp(1rem,5vw,1.125rem)] text-ink" />
             </Link>
 
             <nav className="absolute left-1/2 hidden -translate-x-1/2 lg:block" aria-label="Hoofdmenu" onMouseLeave={() => setHover(null)}>
@@ -200,8 +210,9 @@ export function Header() {
                   <li key={n.id}>
                     <Link href={n.href} onMouseEnter={() => setHover(n.id)} onFocus={() => setHover(n.id)} onBlur={() => setHover(null)}
                       aria-current={active === n.id && !hover ? "location" : undefined}
-                      className={`tag relative block whitespace-nowrap px-3 py-2 transition-colors xl:px-4 duration-200 ${active === n.id ? "text-gold" : "text-paper/80 hover:text-paper"}`}>
-                      {active === n.id && <m.span layoutId="activeNavRule" className="absolute inset-x-3 xl:inset-x-4 -bottom-px h-px bg-gold" transition={SPRING} />}
+                      className={`tag relative block whitespace-nowrap px-3.5 py-2 transition-colors duration-200 ${active === n.id ? "text-ink" : "text-muted hover:text-ink"}`}>
+                      {/* Eén pil die meeschuift naar het actieve item, in plaats van vlakken die aan en uit springen. */}
+                      {active === n.id && <m.span layoutId="activeNavPill" className="absolute inset-0 rounded-full bg-studio" transition={SPRING} />}
                       <span className="relative">{n.label}</span>
                     </Link>
                   </li>
@@ -214,7 +225,7 @@ export function Header() {
               <button className={ICON_BTN} onClick={() => { setMenu(false); setDrawerOpen(true); }} aria-label={`Winkelwagen, ${artikelen(count)}`}>
                 <ShoppingBag size={18} />
                 {count > 0 && (
-                  <span key={bumped} className="bump num absolute right-1.5 top-2 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-gold px-1 text-[0.6875rem] font-bold leading-none text-ink ring-2 ring-board lg:right-0.5 lg:top-0.5">{count}</span>
+                  <span key={bumped} className="bump num absolute right-1.5 top-2 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-ink px-1 text-[0.6875rem] font-semibold leading-none text-paper ring-2 ring-paper lg:right-0.5 lg:top-0.5">{count}</span>
                 )}
               </button>
               <button ref={menuBtn} className={`${ICON_BTN} lg:hidden`} onClick={() => setMenu(!menu)} aria-label={menu ? "Sluit menu" : "Open menu"} aria-expanded={menu} aria-controls="mobiel-menu">
@@ -227,10 +238,10 @@ export function Header() {
             {menu && (
               <m.nav
                 initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, transition: { duration: 0.1 } }}
-                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }} id="mobiel-menu" className="max-h-[calc(100dvh-5.875rem)] overflow-y-auto overscroll-contain border-t border-line-dark px-5 pb-4 pt-2 lg:hidden" aria-label="Mobiel menu"
+                transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }} id="mobiel-menu" className="max-h-[calc(100dvh-5.875rem)] overflow-y-auto overscroll-contain border-t border-line px-5 pb-6 pt-2 lg:hidden" aria-label="Mobiel menu"
               >
                 {nav.map((n) => (
-                  <Link key={n.id} href={n.href} onClick={() => setMenu(false)} className="display block border-b border-line-dark py-3.5 text-3xl last:border-0">{n.label}</Link>
+                  <Link key={n.id} href={n.href} onClick={() => setMenu(false)} className="display block border-b border-line py-3.5 text-2xl last:border-0">{n.label}</Link>
                 ))}
               </m.nav>
             )}
@@ -241,7 +252,7 @@ export function Header() {
       <AnimatePresence>
         {menu && (
           <m.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.1 } }} transition={{ duration: 0.2 }}
-            onClick={() => setMenu(false)} className="absolute inset-x-0 top-full h-[100dvh] bg-board/60 lg:hidden" />
+            onClick={() => setMenu(false)} className="absolute inset-x-0 top-full h-[100dvh] bg-board/30 lg:hidden" />
         )}
       </AnimatePresence>
     </header>
