@@ -86,12 +86,14 @@ function CardFields({ mollie }: { mollie: MollieJs }) {
 }
 
 export function Checkout() {
-  const { lines, ready } = useStore();
+  const { lines, ready, setDrawerOpen } = useStore();
   const [country, setCountry] = useState("NL");
   const [methods, setMethods] = useState<Method[] | null>(null);
   const [methodsError, setMethodsError] = useState("");
   const [method, setMethod] = useState("");
   const [mollie, setMollie] = useState<MollieJs | null>(null);
+  const [card, setCard] = useState<{ profileId: string; testmode: boolean } | null>(null);
+  const [cardError, setCardError] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const order = useMemo(() => buildOrder(lines, country), [lines, country]);
@@ -102,19 +104,27 @@ export function Checkout() {
   useEffect(() => {
     if (!total) return;
     let alive = true;
-    fetch(`/api/methods?amount=${total}&country=${country}`).then((r) => r.json()).then(async (d) => {
+    fetch(`/api/methods?amount=${total}&country=${country}`).then((r) => r.json()).then((d) => {
       if (!alive) return;
-      if (d.error) return setMethodsError(d.error);
+      if (d.error || !Array.isArray(d.methods)) return setMethodsError(d.error || "Betaalmethodes laden lukt nu even niet. Ververs de pagina.");
       setMethodsError("");
       setMethods(d.methods);
       setMethod((m) => (d.methods.some((x: Method) => x.id === m) ? m : d.methods[0]?.id ?? ""));
-      if (!mollie && d.methods.some((x: Method) => x.id === "creditcard")) {
-        await loadMollie();
-        if (alive && window.Mollie) setMollie(window.Mollie(d.profileId, { locale: "nl_NL", testmode: d.testmode }));
-      }
+      if (d.methods.some((x: Method) => x.id === "creditcard")) setCard((c) => c ?? { profileId: d.profileId, testmode: d.testmode });
     }, () => alive && setMethodsError("Betaalmethodes laden lukt nu even niet. Ververs de pagina."));
     return () => { alive = false; };
-  }, [total, country, mollie]);
+  }, [total, country]);
+
+  // Mollie's kaartscript één keer laden, los van het ophalen van de methodes (dat gebeurt bij elk ander bedrag of land).
+  useEffect(() => {
+    if (!card) return;
+    let alive = true;
+    loadMollie().then(
+      () => { if (alive && window.Mollie) setMollie(window.Mollie(card.profileId, { locale: "nl_NL", testmode: card.testmode })); },
+      () => { mollieScript = undefined; if (alive) setCardError("De kaartvelden laden nu even niet. Kies een andere betaalmethode of ververs de pagina."); },
+    );
+    return () => { alive = false; };
+  }, [card]);
 
   async function pay(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -123,11 +133,13 @@ export function Checkout() {
     if (!form.reportValidity()) return;
     setError("");
     setBusy(true);
+    // busy blijft aan na een geslaagde aanvraag: tijdens het doorsturen naar de bank mag een tweede klik geen tweede betaling maken.
+    const fail = (msg: string) => { setError(msg); setBusy(false); };
     try {
       let cardToken: string | undefined;
       if (method === "creditcard") {
         const t = await mollie?.createToken();
-        if (!t?.token) return setError(t?.error?.message ?? "Controleer je kaartgegevens.");
+        if (!t?.token) return fail(t?.error?.message ?? "Controleer je kaartgegevens.");
         cardToken = t.token;
       }
       const res = await fetch("/api/checkout", {
@@ -137,11 +149,11 @@ export function Checkout() {
       });
       const data: { error?: string; redirect?: string } = await res.json().catch(() => ({}));
       // Zonder doel-URL (of met een fout zonder tekst) nooit "ergens heen": dan een melding die zegt wat je kunt doen.
-      if (!res.ok || !data.redirect) return setError(data.error || "Betalen lukt nu even niet. Probeer het zo opnieuw of stuur ons een bericht.");
+      if (!res.ok || !data.redirect) return fail(data.error || "Betalen lukt nu even niet. Probeer het zo opnieuw of stuur ons een bericht.");
       // Naar de bank, PayPal, Klarna of 3-D Secure; daarna stuurt Mollie de klant terug naar /afrekenen/bedankt.
       location.assign(data.redirect);
-    } finally {
-      setBusy(false);
+    } catch {
+      fail("Geen verbinding. Controleer je internet en probeer het opnieuw.");
     }
   }
 
@@ -212,7 +224,7 @@ export function Checkout() {
                         <img src={m.image} alt="" width={32} height={24} className="h-6 w-8 object-contain" />
                       </span>
                     </label>
-                    {on && m.id === "creditcard" && mollie && <CardFields mollie={mollie} />}
+                    {on && m.id === "creditcard" && (mollie ? <CardFields mollie={mollie} /> : cardError && <p role="alert" className="border border-t-0 border-line px-4 py-3 text-sm" style={{ color: DANGER }}>{cardError}</p>)}
                   </div>
                 );
               })}
@@ -235,7 +247,10 @@ export function Checkout() {
 
       <aside className="order-first lg:order-none">
         <div className="border border-line bg-paper p-5 lg:sticky lg:top-28 lg:p-7">
-          <h2 className="display text-3xl">Je bestelling</h2>
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 className="display text-3xl">Je bestelling</h2>
+            <button type="button" onClick={() => setDrawerOpen(true)} className="press min-h-10 text-sm underline decoration-line-strong underline-offset-4 hover:decoration-ink">Wijzigen</button>
+          </div>
           {!("error" in order) && (
             <>
               <ul className="mt-5 divide-y divide-line border-y border-line">

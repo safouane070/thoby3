@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { FITS, REWARD_FROM, GIFT_BOX_PRICE, SIZES, eur, getProduct, type Fit } from "@/lib/products";
 import { MAX_QTY } from "@/lib/order";
 
@@ -98,8 +98,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const lineUnit = useCallback((l: Line) => (getProduct(l.slug)?.price ?? 0) + (l.giftBox ? GIFT_BOX_PRICE : 0), []);
 
+  const lastAdd = useRef({ id: "", at: 0 });
   const add = useCallback((n: NewLine) => {
     const id = [n.slug, n.size, n.fit, n.giftBox ? "box" : ""].join("|");
+    // Dubbelklik (of een tik terwijl de lade nog laadt) telt niet als tweede stuk.
+    const now = Date.now();
+    if (lastAdd.current.id === id && now - lastAdd.current.at < 600) return;
+    lastAdd.current = { id, at: now };
     setLines((ls) =>
       ls.some((l) => l.id === id) ? ls.map((l) => (l.id === id ? { ...l, qty: Math.min(MAX_QTY, l.qty + 1) } : l)) : [...ls, { ...n, id, qty: 1 }],
     );

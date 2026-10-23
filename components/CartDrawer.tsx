@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { Gift, Lock, Minus, Plus, ShoppingBag, Truck, X } from "lucide-react";
+import { Gift, Lock, Minus, Plus, ShoppingBag, Trash2, Truck, X } from "lucide-react";
 import { Drawer } from "vaul";
 import { FITS, REWARD_FROM, getProduct, sizeCode } from "@/lib/products";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -45,7 +45,7 @@ function Reward({ progress, unlocked, burst, children }: { progress: number; unl
 function Qty({ qty, name, onChange }: { qty: number; name: string; onChange: (n: number) => void }) {
   return (
     <div className="flex w-fit items-center border border-line">
-      <m.button whileTap={{ scale: 0.95 }} transition={TAP} onClick={() => onChange(qty - 1)} aria-label={`Minder ${name}`} className="flex h-12 w-12 items-center justify-center hover:bg-black/[0.04] md:h-9 md:w-9"><Minus size={14} /></m.button>
+      <m.button whileTap={{ scale: 0.95 }} transition={TAP} onClick={() => onChange(qty - 1)} aria-label={qty === 1 ? `Verwijder ${name}` : `Minder ${name}`} className="flex h-12 w-12 items-center justify-center hover:bg-black/[0.04] md:h-9 md:w-9">{qty === 1 ? <Trash2 size={14} /> : <Minus size={14} />}</m.button>
       <span className="relative h-12 w-8 overflow-hidden text-center text-sm leading-[3rem] tabular-nums md:h-9 md:leading-9" aria-live="polite">
         <AnimatePresence initial={false} mode="popLayout">
           <m.span key={qty} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0">{qty}</m.span>

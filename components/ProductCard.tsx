@@ -21,14 +21,16 @@ function SizePicker({ product, onClose }: { product: Product; onClose: () => voi
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       className="board on-dark absolute inset-x-2 bottom-2 z-20 p-3"
     >
-      <div className="mb-2.5 flex items-center justify-between">
-        <div role="group" aria-label="Pasvorm" className="flex gap-1">
-          {FITS.map((f) => (
-            <button key={f.id} type="button" aria-pressed={fit === f.id} onClick={() => setFit(f.id)}
-              className={`press tag min-h-10 border px-3 ${fit === f.id ? "border-gold text-gold shadow-[inset_0_0_0_1px_var(--gold)]" : "border-line-dark text-paper"}`}>{f.label}</button>
-          ))}
-        </div>
-        <button onClick={onClose} aria-label="Sluiten" className="press -m-1 flex h-10 w-10 items-center justify-center text-paper"><X size={16} /></button>
+      {/* Kop, pasvorm en maten elk op een eigen rij: past ook in een halve kaart op een telefoon van 320px. */}
+      <div className="-mt-1 mb-1 flex items-center justify-between">
+        <p className="caption text-paper">Kies je maat</p>
+        <button onClick={onClose} aria-label="Sluiten" className="press -mr-2 flex h-10 w-10 items-center justify-center text-paper"><X size={16} /></button>
+      </div>
+      <div role="group" aria-label="Pasvorm" className="mb-1 grid grid-cols-2 gap-1">
+        {FITS.map((f) => (
+          <button key={f.id} type="button" aria-pressed={fit === f.id} onClick={() => setFit(f.id)}
+            className={`press tag min-h-10 border px-1 !tracking-[0.06em] ${fit === f.id ? "border-gold text-gold shadow-[inset_0_0_0_1px_var(--gold)]" : "border-line-dark text-paper"}`}>{f.label}</button>
+        ))}
       </div>
       <div className="grid grid-cols-4 gap-1">
         {SIZES.map((s) => (
@@ -57,25 +59,25 @@ export function ProductCard({ product, feature = false }: { product: Product; fe
   const href = `/product/${product.slug}`;
   const pct = discountPct(product);
   const thobe = isThobe(product);
-  // De grote kaart op de homepage staat onder de hero met dezelfde staande foto: daar eerst het detail, bij hover het geheel.
-  const [base, swap] = feature ? [product.images.lifestyle, product.images.primary] : [product.images.primary, product.images.lifestyle];
+  // Elke kaart toont eerst de hele thobe (zo zie je wat je koopt); de sfeerfoto komt bij hover met een muis.
+  const [base, swap] = [product.images.primary, product.images.lifestyle];
 
   return (
     <article className="group flex h-full flex-col">
-      <div className={`relative overflow-hidden bg-studio ${feature ? "aspect-[4/5] lg:aspect-auto lg:min-h-[32rem] lg:flex-1" : "aspect-[3/4]"}`}>
+      <div className={`relative overflow-hidden bg-studio ${feature ? "aspect-[3/4] lg:aspect-auto lg:min-h-[32rem] lg:flex-1" : "aspect-[3/4]"}`}>
         {/* Hover: alleen een rustige crossfade naar de sfeerfoto, en alleen met een muis. */}
-        <Link href={href} className="absolute inset-0 block" aria-label={product.name} tabIndex={-1}>
-          <Image src={base} alt={product.name} fill sizes={feature ? "(min-width:1024px) 50vw, 100vw" : "(min-width:1024px) 25vw, 50vw"} placeholder="blur" blurDataURL={BLUR}
+        <Link href={href} className={`absolute inset-0 block ${product.soldOut ? "opacity-55" : ""}`} aria-label={product.name} tabIndex={-1}>
+          <Image src={base} alt={product.name} fill sizes={feature ? "(min-width:1024px) 50vw, 50vw" : "(min-width:1024px) 25vw, 50vw"} placeholder="blur" blurDataURL={BLUR}
             className={`${thobe ? "object-cover" : "object-contain p-[12%]"} mix-blend-multiply transition-opacity duration-[400ms] ease-[ease] ${hoverImg ? "group-hover:opacity-0" : ""}`} />
           {hoverImg && (
-            <Image src={swap} alt="" fill sizes={feature ? "(min-width:1024px) 50vw, 100vw" : "(min-width:1024px) 25vw, 50vw"}
+            <Image src={swap} alt="" fill sizes={feature ? "(min-width:1024px) 50vw, 50vw" : "(min-width:1024px) 25vw, 50vw"}
               className="object-cover opacity-0 mix-blend-multiply transition-opacity duration-[400ms] ease-[ease] group-hover:opacity-100" />
           )}
         </Link>
 
         <div className="pointer-events-none absolute bottom-3 left-3 flex flex-col items-start gap-1.5">
           {pct > 0 && <span className={BADGE}>-{pct}%</span>}
-          {product.soldOut && <span className={BADGE}>Binnenkort terug</span>}
+          {product.soldOut && <span className={BADGE}>Uitverkocht</span>}
         </div>
 
         <button onClick={() => toggleWish(product.slug)} aria-pressed={wished} aria-label={wished ? "Verwijder uit verlanglijst" : "Zet op verlanglijst"}
@@ -94,9 +96,9 @@ export function ProductCard({ product, feature = false }: { product: Product; fe
         <AnimatePresence>{picking && <SizePicker product={product} onClose={() => setPicking(false)} />}</AnimatePresence>
       </div>
 
-      <div className={`flex flex-col bg-paper px-4 pb-5 pt-5 sm:px-5 ${feature ? "" : "flex-1"}`}>
+      <div className={`flex flex-col bg-paper px-4 pb-5 pt-5 sm:px-5 ${feature ? "flex-1 lg:flex-none" : "flex-1"}`}>
         <div className="flex flex-col gap-1 min-[480px]:flex-row min-[480px]:items-baseline min-[480px]:justify-between min-[480px]:gap-3">
-          <h3 className={`display ${feature ? "text-[clamp(2rem,3.4vw,3rem)]" : "text-2xl sm:text-[1.75rem]"}`}>
+          <h3 className={`display ${feature ? "text-2xl sm:text-[1.75rem] lg:text-[clamp(2rem,3.4vw,3rem)]" : "text-2xl sm:text-[1.75rem]"}`}>
             <Link href={href} className="underline-offset-4 hover:underline">{thobe ? <><span className="sr-only">Thobe </span>{product.name}</> : product.name}</Link>
           </h3>
           <Price price={product.price} compareAt={product.compareAt} className="num text-lg font-semibold" />
@@ -108,6 +110,8 @@ export function ProductCard({ product, feature = false }: { product: Product; fe
                 <span aria-hidden className="h-3 w-3 border border-line-strong" style={{ background: product.colors[0].hex }} /> {product.colors[0].name}
               </p>
             )}
+            {/* Op touch is de bestelknop niet altijd zichtbaar: de status staat daarom ook bij de tekst. */}
+            <p className={`mt-1.5 text-sm font-medium ${product.soldOut ? "text-muted" : "text-gold-ink"}`}>{product.soldOut ? "Uitverkocht" : "Op voorraad"}</p>
           </>
         ) : (
           <p className="mt-auto pt-3 text-sm text-gold-ink">Gratis bij elke thobe</p>

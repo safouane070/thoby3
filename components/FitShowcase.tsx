@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import home from "@/content/home.json";
 import { FITS, HAS_MEASUREMENTS, SIZES, sizeCode, type Fit } from "@/lib/products";
@@ -41,12 +42,14 @@ function FitColumn({ fit, size, align }: { fit: Fit; size: string; align: "left"
 // De maatkaart als één werkblad: kies je maat, en slank en breed staan naast elkaar op hetzelfde raster,
 // even lang en zichtbaar verschillend in de breedte. De volledige tabel staat eronder, uitklapbaar.
 export function FitShowcase() {
-  // Jouw maat uit de winkel (gedeeld met de balk en de productpagina); zonder keuze tonen we M, zonder die op te slaan.
-  const { pref, setPref } = useStore();
-  const size = pref.size ?? "M";
-  const fit: Fit = pref.fit ?? "slim";
-  const setSize = (sz: string) => setPref({ size: sz });
-  const setFit = (f: Fit) => setPref({ fit: f });
+  // Begint bij jouw bewaarde maat, maar rondkijken slaat niets op: anders stond een vergeleken maat ongemerkt
+  // voorgeselecteerd op de productpagina. De "Shop"-knop neemt de keuze mee in de URL.
+  const { pref } = useStore();
+  const [local, setLocal] = useState<{ size?: string; fit?: Fit }>({});
+  const size = local.size ?? pref.size ?? "M";
+  const fit: Fit = local.fit ?? pref.fit ?? "slim";
+  const setSize = (sz: string) => setLocal((x) => ({ ...x, size: sz }));
+  const setFit = (f: Fit) => setLocal((x) => ({ ...x, fit: f }));
   const s = SIZES.find((x) => x.label === size) ?? SIZES[0];
 
   return (
@@ -64,7 +67,7 @@ export function FitShowcase() {
                 <button key={x.label} type="button" aria-pressed={size === x.label} aria-label={`Maat ${x.label}, ${x.bodyHeight}`} onClick={() => setSize(x.label)}
                   className={`${CHOICE} ${choiceState(size === x.label)}`}>
                   <span className="display text-2xl">{x.label}</span>
-                  <span className={`num text-xs ${size === x.label ? "text-paper/70" : "text-muted"}`}>{x.bodyHeight.replace(" m", "")}</span>
+                  <span className={`num text-xs ${size === x.label ? "text-paper/70" : "text-muted"}`}>{x.bodyHeight.replace(" cm", "")}</span>
                 </button>
               ))}
             </div>
@@ -109,7 +112,10 @@ export function FitShowcase() {
                       return (
                         <tr key={f} onClick={() => { setSize(x.label); setFit(f); }}
                           className={`cursor-pointer border-b transition-colors duration-200 ${on ? "bg-ink text-paper" : "[@media(hover:hover)]:hover:bg-paper"} ${f === "broad" ? "border-line-strong" : "border-line"}`}>
-                          <th scope="row" className={`py-2.5 pl-2 pr-3 font-bold ${on ? "text-gold" : ""}`}>{sizeCode(x.label, f)}</th>
+                          <th scope="row" className={`py-1 pl-0 pr-3 font-bold ${on ? "text-gold" : ""}`}>
+                            {/* De rij is klikbaar met de muis; de knop maakt dezelfde keuze bereikbaar met toetsenbord en schermlezer. */}
+                            <button type="button" aria-pressed={on} onClick={(e) => { e.stopPropagation(); setSize(x.label); setFit(f); }} className="min-h-10 px-2 text-left font-bold">{sizeCode(x.label, f)}</button>
+                          </th>
                           <td className="py-2.5 pr-3">{x.chest[f]}</td><td className="py-2.5 pr-3">{x.shoulders[f]}</td>
                           <td className="py-2.5 pr-3">{x.sleeve[f]}</td><td className="py-2.5 pr-2">{x.length}</td>
                         </tr>
