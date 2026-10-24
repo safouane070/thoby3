@@ -19,6 +19,8 @@ function SizePicker({ product, onClose }: { product: Product; onClose: () => voi
   const { add, pref } = useStore();
   // Begint op jouw bewaarde pasvorm; jouw maat staat gemarkeerd.
   const [fit, setFit] = useState<Fit>(pref.fit ?? "slim");
+  // Net als op de telefoon: eerst kiezen, dan bevestigen. Jouw bewaarde maat staat al klaar.
+  const [size, setSize] = useState(pref.size ?? "");
   return (
     // Groeit uit de knop onderin (origin onder), met de volledige transform-string zodat hij op de compositor draait.
     <m.div
@@ -40,13 +42,17 @@ function SizePicker({ product, onClose }: { product: Product; onClose: () => voi
       </div>
       <div className="grid grid-cols-4 gap-1">
         {SIZES.map((s) => (
-          <button key={s.label} title={s.bodyHeight} aria-label={`Maat ${sizeCode(s.label, fit)}, ${s.bodyHeight}, in winkelwagen`}
-            onClick={() => { add({ slug: product.slug, size: s.label, fit }); onClose(); }}
-            className={`press min-h-11 rounded-xl border text-sm font-medium hover:border-ink ${pref.size === s.label ? "border-ink" : "border-line-strong"}`}>
+          <button key={s.label} title={s.bodyHeight} aria-label={`Maat ${sizeCode(s.label, fit)}, ${s.bodyHeight}`} aria-pressed={size === s.label}
+            onClick={() => setSize(s.label)}
+            className="press min-h-11 rounded-xl border border-line-strong text-sm font-medium hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper">
             {s.label}
           </button>
         ))}
       </div>
+      <button type="button" disabled={!size} onClick={() => { add({ slug: product.slug, size, fit }); onClose(); }}
+        className="press btn-primary tag mt-1.5 min-h-11 w-full !text-[0.8125rem] disabled:cursor-not-allowed disabled:opacity-50">
+        {size ? `In winkelwagen · ${sizeCode(size, fit)}` : "Kies je maat"}
+      </button>
     </m.div>
   );
 }

@@ -57,22 +57,31 @@ function Field({ id, label, className = "", ...input }: { id: string; label: str
 
 // Nederland: postcode + huisnummer vult straat en plaats in via PDOK (gratis adresdienst van de overheid).
 // Lukt dat niet, dan typ je ze zelf; wat je zelf typt overschrijven we niet.
-async function fillAddress(form: HTMLFormElement | null) {
+type Lookup = "" | "busy" | "miss";
+let latestLookup = "";
+async function fillAddress(form: HTMLFormElement | null, report: (s: Lookup) => void) {
   const el = (n: string) => form?.elements.namedItem(n) as HTMLInputElement | null;
   const street = el("streetAndNumber"), city = el("city");
   const pc = el("postalCode")?.value.replace(/\s/g, "").toUpperCase() ?? "";
   const nr = el("houseNumber")?.value.trim() ?? "";
   const num = nr.match(/^\d+/)?.[0];
-  if (!street || !city || !/^\d{4}[A-Z]{2}$/.test(pc) || !num) return;
+  // Typt iemand snel door, dan telt alleen het antwoord op de laatste combinatie.
+  const key = latestLookup = `${pc} ${nr}`;
+  if (!street || !city || !/^\d{4}[A-Z]{2}$/.test(pc) || !num) return report("");
+  report("busy");
   try {
     const q = new URLSearchParams({ q: `postcode:${pc} and huisnummer:${num}`, fq: "type:adres", rows: "1", fl: "straatnaam,woonplaatsnaam" });
     const res = await fetch(`https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?${q}`);
     const doc: { straatnaam?: string; woonplaatsnaam?: string } | undefined = (await res.json())?.response?.docs?.[0];
-    if (!doc?.straatnaam) return;
+    if (key !== latestLookup) return;
+    if (!doc?.straatnaam) return report("miss");
     for (const [input, value] of [[street, `${doc.straatnaam} ${nr}`], [city, doc.woonplaatsnaam ?? ""]] as const) {
       if (value && (!input.value || input.dataset.auto)) { input.value = value; input.dataset.auto = "1"; }
     }
-  } catch {}
+    report("");
+  } catch {
+    if (key === latestLookup) report("miss");
+  }
 }
 const manual = (e: React.FormEvent<HTMLInputElement>) => { delete e.currentTarget.dataset.auto; };
 
@@ -109,6 +118,7 @@ function CardFields({ mollie }: { mollie: MollieJs }) {
 export function Checkout() {
   const { lines, ready, setDrawerOpen } = useStore();
   const [country, setCountry] = useState("NL");
+  const [lookup, setLookup] = useState<Lookup>("");
   const [methods, setMethods] = useState<Method[] | null>(null);
   const [methodsError, setMethodsError] = useState("");
   const [method, setMethod] = useState("");
@@ -213,8 +223,11 @@ export function Checkout() {
             {/* In Nederland eerst postcode en huisnummer: dan vullen straat en plaats zichzelf. */}
             {country === "NL" ? (
               <>
-                <Field key="postalCode" id="postalCode" label="Postcode" required autoComplete="postal-code" autoCapitalize="characters" placeholder="1234 AB" onChange={(e) => fillAddress(e.currentTarget.form)} />
-                <Field key="houseNumber" id="houseNumber" label="Huisnummer" required inputMode="text" placeholder="12" onChange={(e) => fillAddress(e.currentTarget.form)} />
+                <Field key="postalCode" id="postalCode" label="Postcode" required autoComplete="postal-code" autoCapitalize="characters" placeholder="1234 AB" onChange={(e) => fillAddress(e.currentTarget.form, setLookup)} />
+                <Field key="houseNumber" id="houseNumber" label="Huisnummer" required inputMode="text" placeholder="12" onChange={(e) => fillAddress(e.currentTarget.form, setLookup)} />
+                <p key="lookup" aria-live="polite" className="col-span-2 -mt-2 text-xs text-taupe empty:hidden">
+                  {lookup === "busy" ? "Adres zoeken…" : lookup === "miss" ? "Adres niet gevonden. Vul straat en plaats zelf in." : ""}
+                </p>
                 <Field key="streetAndNumber" id="streetAndNumber" label="Straat en huisnummer" required autoComplete="street-address" className="col-span-2" onInput={manual} />
               </>
             ) : (

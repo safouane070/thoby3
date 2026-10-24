@@ -13,7 +13,7 @@ const columns = [faq.items.slice(0, half), faq.items.slice(half)];
 // Kop en WhatsApp op één regel, de vragen over de volle breedte in twee kolommen: geen zijbalk met een inleiding.
 export function Faq() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="mx-auto max-w-[1440px] px-5 py-12 lg:px-10 lg:py-28">
+    <section id="faq" aria-labelledby="faq-title" className="group/faq mx-auto max-w-[1440px] px-5 py-12 lg:px-10 lg:py-28">
       <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
         <h2 id="faq-title" className="display text-[clamp(2.25rem,4.4vw,3.75rem)]"><SplitTitle first={faq.title} second={faq.titleSecond} /></h2>
         <a href={whatsapp("Hoi THOBY3, ik heb een vraag.")} target="_blank" rel="noopener noreferrer"
@@ -24,7 +24,7 @@ export function Faq() {
 
       <Accordion.Root type="single" collapsible className="mt-8 grid gap-x-16 lg:mt-14 lg:grid-cols-2">
         {columns.map((items, c) => (
-          <div key={c} className={`border-t border-line ${c ? "max-lg:border-t-0" : ""}`}>
+          <div key={c} className={`border-t border-line ${c ? "max-lg:hidden max-lg:border-t-0 group-has-[#faq-more:checked]/faq:block" : ""}`}>
             {items.map((item, i) => (
               <Accordion.Item key={item.q} value={`q${c * half + i}`} className="group border-b border-line">
                 <Accordion.Header>
@@ -43,6 +43,11 @@ export function Faq() {
           </div>
         ))}
       </Accordion.Root>
+      {/* Telefoon: eerst de vier vragen die het vaakst over de koop gaan; de rest op verzoek (geen JS nodig). */}
+      <input type="checkbox" id="faq-more" className="peer sr-only lg:hidden" />
+      <label htmlFor="faq-more" className="press btn-ghost tag mt-6 inline-flex min-h-12 cursor-pointer items-center gap-2 px-6 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-ink peer-checked:hidden lg:hidden">
+        <Plus size={14} aria-hidden /> Meer vragen ({columns[1].length})
+      </label>
     </section>
   );
 }
