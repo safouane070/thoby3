@@ -11,7 +11,15 @@ const month = (d: string) => new Intl.DateTimeFormat("nl-NL", { month: "long", y
 export function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
     <span className="inline-flex gap-0.5" role="img" aria-label={`${rating} van de 5 sterren`}>
-      {[1, 2, 3, 4, 5].map((i) => <Star key={i} size={size} aria-hidden className={i <= Math.round(rating) ? "fill-ink text-ink" : "text-line-strong"} />)}
+      {/* Gedeeltelijk gevuld: 4,6 toont 4,6 sterren, geen afgeronde 5 naast het cijfer. */}
+      {[1, 2, 3, 4, 5].map((i) => (
+        <span key={i} className="relative inline-flex">
+          <Star size={size} aria-hidden className="text-line-strong" />
+          <span className="absolute inset-0 overflow-hidden" style={{ width: `${Math.min(Math.max(rating - i + 1, 0), 1) * 100}%` }}>
+            <Star size={size} aria-hidden className="fill-ink text-ink" />
+          </span>
+        </span>
+      ))}
     </span>
   );
 }

@@ -43,7 +43,7 @@ export function FabricStory() {
           <div className="sticky top-24 hidden h-[calc(100svh-8rem)] self-start max-h-[44rem] overflow-hidden rounded-2xl bg-board-raised lg:block">
             <div className="absolute inset-0">{steps.map((s, i) => (
               <Image key={s.image} src={s.image} alt={i === active ? s.alt : ""} fill sizes="45vw"
-                className={`object-cover transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${i === active ? "scale-100 opacity-100 blur-0" : "scale-[1.04] opacity-0 blur-[4px]"}`} />
+                className={`object-cover transition-[opacity,transform,filter] duration-[450ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${i === active ? "scale-100 opacity-100 blur-0" : "scale-[1.04] opacity-0 blur-[4px]"}`} />
             ))}</div>
             <p className="num absolute bottom-5 left-5 rounded-full bg-board/70 px-3.5 py-1.5 text-sm text-paper backdrop-blur-md" aria-hidden>
               {pad(active + 1)} <span className="text-muted-dark">/ {pad(steps.length)}</span>
@@ -54,12 +54,13 @@ export function FabricStory() {
           <ol aria-label="Eigenschappen van de stof" className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:block lg:overflow-visible lg:px-0 lg:pb-0">
             {steps.map((s, i) => (
               <li key={s.label} ref={(el) => { items.current[i] = el; }} data-i={i}
-                className={`w-[80%] max-w-[22rem] shrink-0 snap-start scroll-ml-5 transition-opacity duration-500 lg:flex lg:w-auto lg:max-w-none lg:min-h-[70svh] lg:flex-col lg:justify-center ${i === active ? "lg:opacity-100" : "lg:opacity-30"}`}>
+                className="w-[80%] max-w-[22rem] shrink-0 snap-start scroll-ml-5 lg:flex lg:w-auto lg:max-w-none lg:min-h-[70svh] lg:flex-col lg:justify-center">
                 <div className="relative mb-5 aspect-[4/5] overflow-hidden rounded-2xl lg:hidden">
                   <Image src={s.image} alt={s.alt} fill sizes="80vw" className="object-cover" />
                 </div>
-                <h3 className="display text-2xl lg:text-[clamp(1.75rem,3vw,2.75rem)]">{s.label}</h3>
-                <p className="mt-3 max-w-[38ch] leading-relaxed text-muted-dark lg:mt-4 lg:text-lg">{s.text}</p>
+                {/* Niet-actief dimt met kleur in plaats van opacity: rustiger, maar nog steeds AA-leesbaar (#7a7a7a ≈ 4,6:1 op board). */}
+                <h3 className={`display text-2xl transition-colors duration-300 lg:text-[clamp(1.75rem,3vw,2.75rem)] ${i === active ? "" : "lg:text-muted-dark"}`}>{s.label}</h3>
+                <p className={`mt-3 max-w-[38ch] leading-relaxed text-muted-dark transition-colors duration-300 lg:mt-4 lg:text-lg ${i === active ? "" : "lg:text-[#7a7a7a]"}`}>{s.text}</p>
               </li>
             ))}
           </ol>

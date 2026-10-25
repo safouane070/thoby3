@@ -46,13 +46,13 @@ export function SizeAdvisor({ onPick, pickLabel, shopHref, fit, tone = "light", 
   return (
     <div className={`sheet-enter ${className}`}>
       <label htmlFor={id} className="caption block">Twijfel je? Vul je lengte in</label>
-      <p className={`mt-1 text-sm ${muted}`}>In centimeters. Dan kiezen wij je maat.</p>
+      <p className={`mt-1 text-sm ${muted}`}>In centimeters, bijvoorbeeld 178. Dan kiezen wij je maat.</p>
 
       <div className="mt-4 flex flex-wrap items-end gap-x-10 gap-y-5">
         <div className={`flex items-baseline gap-2 border-b-2 pb-1 transition-colors duration-200 ${dark ? "border-paper/30 focus-within:border-paper" : "border-line-strong focus-within:border-ink"}`}>
-          <input id={id} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={value} placeholder="178" autoComplete="off"
+          <input id={id} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={value} autoComplete="off"
             onChange={(e) => setValue(e.target.value.replace(/\D/g, ""))}
-            className={`field-input num w-[3ch] bg-transparent text-5xl font-semibold leading-none tracking-tight ${dark ? "placeholder:text-paper/55" : "placeholder:text-[#767676]"}`} />
+            className="field-input num w-[3ch] bg-transparent text-5xl font-semibold leading-none tracking-tight" />
           <span className={`caption ${muted}`}>cm</span>
         </div>
 

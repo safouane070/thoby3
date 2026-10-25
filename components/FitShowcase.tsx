@@ -24,12 +24,13 @@ function FitColumn({ fit, size, align }: { fit: Fit; size: string; align: "left"
     <div className={`flex flex-col ${align === "right" ? "lg:items-end lg:text-right" : ""}`}>
       <p className="display text-[clamp(1.75rem,3vw,2.5rem)]">{sizeCode(s.label, fit)} <span className="text-muted">{f.label}</span></p>
       <p className="mt-2 hidden max-w-[30ch] text-sm leading-relaxed text-muted sm:block">{f.note}</p>
+      {/* Drie kolommen pas vanaf xl: daaronder is de kolom naast de tekening te smal en loopt "Schouders" in "Mouw". */}
       {HAS_MEASUREMENTS && (
-        <dl className="mt-5 w-full max-w-[18rem] border-y border-line-strong text-left sm:grid sm:grid-cols-3">
+        <dl className="mt-5 w-full max-w-[18rem] border-y border-line-strong text-left xl:grid xl:grid-cols-3">
           {rows.map(([k, v]) => (
-            <div key={k} className="flex items-baseline justify-between border-line py-2 [&:not(:first-child)]:border-t sm:block sm:py-3 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-t-0 sm:[&:not(:first-child)]:pl-3">
+            <div key={k} className="flex items-baseline justify-between border-line py-2 [&:not(:first-child)]:border-t xl:block xl:py-3 xl:[&:not(:first-child)]:border-l xl:[&:not(:first-child)]:border-t-0 xl:[&:not(:first-child)]:pl-3">
               <dt className="text-sm text-muted">{k}</dt>
-              <dd className={`num text-xl font-medium sm:text-2xl `}>{v}<span className="ml-0.5 text-sm font-normal text-muted">cm</span></dd>
+              <dd className="num text-xl font-medium xl:text-2xl">{v}<span className="ml-0.5 text-sm font-normal text-muted">cm</span></dd>
             </div>
           ))}
         </dl>
@@ -77,14 +78,17 @@ export function FitShowcase() {
         </div>
 
         {/* Het werkblad: tekening in het midden, de maten van elke pasvorm aan zijn eigen kant. */}
-        <div className="mt-10 grid items-start gap-8 rounded-[1.75rem] bg-studio p-5 sm:p-8 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)_minmax(0,1fr)] lg:gap-6 lg:p-12">
-          <div className="relative lg:order-2">
-            <p className="caption text-center text-muted" aria-live="polite"><span className="num">{s.length} cm</span> · zelfde lengte</p>
-            <ThobePair slim={shapeOf(s, "slim")} broad={shapeOf(s, "broad")} className="mx-auto mt-2 block w-full max-w-[44rem]" />
-          </div>
+        {/* Zonder maten in het CMS geen tekening op schaal (die zou op 0 cm instorten): dan alleen de twee pasvormen. */}
+        <div className={`mt-10 grid items-start gap-8 rounded-[1.75rem] bg-studio p-5 sm:p-8 lg:mt-14 lg:gap-6 lg:p-12 ${HAS_MEASUREMENTS ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)_minmax(0,1fr)]" : "lg:grid-cols-2"}`}>
+          {HAS_MEASUREMENTS && (
+            <div className="relative lg:order-2">
+              <p className="caption text-center text-muted" aria-live="polite"><span className="num">{s.length} cm</span> · zelfde lengte</p>
+              <ThobePair slim={shapeOf(s, "slim")} broad={shapeOf(s, "broad")} className="mx-auto mt-2 block w-full max-w-[44rem]" />
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-6 lg:contents">
-            <div className="lg:order-1 lg:pt-16"><FitColumn fit="slim" size={size} align="right" /></div>
-            <div className="lg:order-3 lg:pt-16"><FitColumn fit="broad" size={size} align="left" /></div>
+            <div className={`lg:order-1 ${HAS_MEASUREMENTS ? "lg:pt-16" : ""}`}><FitColumn fit="slim" size={size} align={HAS_MEASUREMENTS ? "right" : "left"} /></div>
+            <div className={`lg:order-3 ${HAS_MEASUREMENTS ? "lg:pt-16" : ""}`}><FitColumn fit="broad" size={size} align="left" /></div>
           </div>
         </div>
 

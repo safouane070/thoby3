@@ -2,45 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { Gift, Lock, Minus, Plus, ShoppingBag, Trash2, Truck, X } from "lucide-react";
 import { Drawer } from "vaul";
-import { FITS, REWARD_FROM, getProduct, sizeCode } from "@/lib/products";
+import { FITS, getProduct, sizeCode } from "@/lib/products";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { PAYMENT_METHODS, PaymentMark } from "./Brand";
 import { MAX_QTY, useStore } from "./StoreProvider";
 
 const GIFTS = [getProduct("musk")!, getProduct("siwak")!];
 const TAP = { type: "spring", stiffness: 500, damping: 30 } as const;
-const BURST = Array.from({ length: 10 }, (_, i) => (i / 10) * Math.PI * 2);
-
-// Voortgang naar gratis verzending (€50). Het rondje krijgt bij het halen eenmalig een ring en een korte burst.
-function Reward({ progress, unlocked, burst, children }: { progress: number; unlocked: boolean; burst: number; children: ReactNode }) {
-  return (
-    <div>
-      <p className="text-[0.8125rem]" aria-live="polite">{children}</p>
-      <div className="mt-3 flex items-center gap-3">
-        <div className="h-1 flex-1 overflow-hidden rounded-full bg-black/[0.08]" role="progressbar" aria-label="Voortgang naar gratis verzending in de EU" aria-valuenow={Math.round(progress * 100)} aria-valuemin={0} aria-valuemax={100}>
-          <m.div className="h-full origin-left rounded-full bg-ink" initial={false} animate={{ scaleX: progress }} transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }} />
-        </div>
-        <span className="relative">
-          <span key={burst} className={`flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-300 ${unlocked ? "border-ink bg-ink text-paper" : "border-line-strong text-taupe"} ${burst ? "ring-once" : ""}`}>
-            <Truck size={16} aria-hidden />
-          </span>
-          {burst > 0 && (
-            <span key={`b${burst}`} aria-hidden className="pointer-events-none absolute inset-0">
-              {BURST.map((a, i) => (
-                <m.span key={i} className="absolute left-1/2 top-1/2 -ml-[2px] -mt-[2px] h-1 w-1 rounded-full bg-ink"
-                  initial={{ x: 0, y: 0, opacity: 1 }} animate={{ x: Math.cos(a) * 30, y: Math.sin(a) * 30, opacity: 0 }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }} />
-              ))}
-            </span>
-          )}
-        </span>
-      </div>
-    </div>
-  );
-}
 
 function Qty({ qty, name, onChange }: { qty: number; name: string; onChange: (n: number) => void }) {
   return (
@@ -61,18 +32,6 @@ export function CartDrawer() {
   // Mobiel: bottom sheet die je omlaag wegveegt; vanaf tablet: zijlade rechts.
   const desktop = useMediaQuery("(min-width: 768px)");
 
-  // CartDrawer blijft altijd gemount, dus de overgang "nog niet -> ontgrendeld" wordt hier gezien (ook als add() de lade net opent).
-  // De burst start na de slide-in (350ms) zodat hij niet onder de animatie verdwijnt.
-  const was = useRef(freeShipping);
-  const [burst, setBurst] = useState(0);
-  useEffect(() => {
-    if (freeShipping && !was.current) {
-      const t = setTimeout(() => setBurst((n) => n + 1), 350);
-      was.current = true;
-      return () => clearTimeout(t);
-    }
-    was.current = freeShipping;
-  }, [freeShipping]);
 
   return (
     <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen} direction={desktop ? "right" : "bottom"}>
@@ -84,14 +43,17 @@ export function CartDrawer() {
             <Drawer.Title className="display text-xl">Winkelwagen <span className="text-sm font-normal text-taupe">({count})</span></Drawer.Title>
             <Drawer.Close aria-label="Sluit winkelwagen" className="press -mr-3 flex h-12 w-12 items-center justify-center md:-mr-2 md:h-10 md:w-10"><X size={20} /></Drawer.Close>
           </div>
-          <Drawer.Description className="sr-only">Je geselecteerde producten, cadeau en verzendvoortgang.</Drawer.Description>
+          <Drawer.Description className="sr-only">Je geselecteerde producten, cadeau en verzending.</Drawer.Description>
 
           <div className="mx-4 mt-1 rounded-2xl bg-studio px-5 py-4">
-            <Reward progress={Math.min(1, subtotal / REWARD_FROM)} unlocked={freeShipping} burst={burst}>
-              {freeShipping
-                ? <strong className="font-medium">Gratis verzending in Nederland en de EU</strong>
-                : <><strong className="block font-medium">Gratis verzending in Nederland</strong><span className="text-taupe">Naar de rest van de EU nog {money(remainingForShipping)} tot gratis verzending.</span></>}
-            </Reward>
+            {/* Geen voortgangsbalk: in Nederland (de meeste klanten) is verzending altijd gratis, een halfvolle balk zei het tegendeel. */}
+            <p className="flex items-start gap-2 text-[0.8125rem]" aria-live="polite">
+              <Truck size={15} className="mt-0.5 shrink-0" aria-hidden />
+              <span>
+                <strong className="block font-medium">{freeShipping ? "Gratis verzending in Nederland en de EU" : "Gratis verzending in Nederland"}</strong>
+                {!freeShipping && <span className="text-taupe">Naar de rest van de EU nog {money(remainingForShipping)} tot gratis verzending.</span>}
+              </span>
+            </p>
             <p className="mt-3 flex items-center gap-2 text-[0.8125rem]">
               <Gift size={15} className="shrink-0" aria-hidden />
               {giftUnlocked
@@ -140,9 +102,7 @@ export function CartDrawer() {
 
           {lines.length > 0 && (
             <div className="border-t border-line px-6 py-5">
-              <div className="flex items-baseline justify-between"><span className="text-sm text-taupe">Subtotaal incl. btw</span><span className="display text-2xl tabular-nums">{money(subtotal)}</span></div>
-              <p className="mt-1 text-xs text-taupe">{freeShipping ? "Gratis verzending" : "Gratis verzending in Nederland. Naar de rest van de EU berekend bij het afrekenen."}</p>
-              <Link href="/afrekenen" onClick={() => setDrawerOpen(false)} className="press btn-primary tag mt-4 flex min-h-14 w-full items-center justify-center py-4 !text-[0.9375rem]">Afrekenen</Link>
+              <div className="flex items-baseline justify-between"><span className="text-sm text-taupe">Subtotaal incl. btw</span><span className="display text-2xl tabular-nums">{money(subtotal)}</span></div>              <Link href="/afrekenen" onClick={() => setDrawerOpen(false)} className="press btn-primary tag mt-4 flex min-h-14 w-full items-center justify-center py-4 !text-[0.9375rem]">Afrekenen</Link>
               <div className="mt-4 flex flex-col items-center gap-2.5">
                 <p className="flex items-center gap-1.5 text-xs text-taupe-strong"><Lock size={12} aria-hidden /> Veilig betalen, SSL-versleuteld</p>
                 <ul className="flex flex-wrap justify-center gap-1.5 text-ink/70" aria-label="Betaalmethodes">

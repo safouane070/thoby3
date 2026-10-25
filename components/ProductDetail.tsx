@@ -152,16 +152,11 @@ export function ProductDetail({ product }: { product: Product }) {
   const fitLabel = FITS.find((f) => f.id === fit)!.label;
   const sizeInfo = SIZES.find((s) => s.label === size);
   const notify = whatsapp(`Hoi THOBY3, laat me weten wanneer de ${thobe ? "Thobe " : ""}${product.name} weer op voorraad is${size ? ` (maat ${size}, ${fitLabel.toLowerCase()})` : ""}.`);
-  const pickFromSticky = (s: string) => {
-    chooseSize(s);
-    setPicker(false);
-    add({ slug: product.slug, size: s, fit, giftBox });
-  };
   const total = product.price + (giftBox ? GIFT_BOX_PRICE : 0);
   const cta = "press btn-primary tag min-h-14 flex-1 py-4 !text-[0.9375rem] disabled:cursor-not-allowed disabled:opacity-50";
 
   return (
-    <div className="mx-auto max-w-[1440px] px-5 pb-32 pt-[6.5rem] sm:pt-32 lg:px-10 lg:pb-24 lg:pt-36">
+    <div className="mx-auto max-w-[1440px] px-5 pb-12 pt-[6.5rem] sm:pt-32 lg:px-10 lg:pb-24 lg:pt-36">
       {/* Op de telefoon geen kruimelpad: daar telt elke pixel tot de foto en de maat. */}
       <nav aria-label="Kruimelpad" className="mb-8 hidden items-center gap-2 text-sm text-muted sm:flex">
         <Link href="/" className="-m-4 inline-block p-4 hover:text-ink">Home</Link><ChevronRight size={12} aria-hidden />
@@ -228,7 +223,7 @@ export function ProductDetail({ product }: { product: Product }) {
                     ))}
                   </dl>
                 )}
-                <p className="mt-2 text-xs text-muted">{sizeInfo ? `${sizeCode(sizeInfo.label, fit)}, plat gemeten. ` : ""}Kort en vol postuur? Kies breed in de maat bij je lengte en laat hem zo nodig inkorten.</p>
+                <p className="mt-2 text-xs text-muted">{HAS_MEASUREMENTS && sizeInfo ? `${sizeCode(sizeInfo.label, fit)}, plat gemeten. ` : ""}Kort en vol postuur? Kies breed in de maat bij je lengte en laat hem zo nodig inkorten.</p>
                 {!product.soldOut && <SizeAdvisor onPick={chooseSize} fit={fit} pickLabel={(sz) => `Kies ${sizeCode(sz, fit)}`} collapsible className="mt-3" />}
               </div>
 
@@ -283,7 +278,7 @@ export function ProductDetail({ product }: { product: Product }) {
         </div>
       </div>
 
-      <div data-sticky-cta className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/90 p-3 backdrop-blur-xl pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden">
+      <div data-sticky-cta className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/90 px-5 py-3 backdrop-blur-xl pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden">
         {picker && (
           <div id="sticky-sizes" className="sheet-enter mb-3 space-y-3">
             <div className="flex items-center justify-between">
@@ -293,15 +288,16 @@ export function ProductDetail({ product }: { product: Product }) {
             <FitToggle value={fit} onChange={chooseFit} id="fit-sticky" />
             <div className="grid grid-cols-4 gap-2">
               {SIZES.map((s) => (
-                <button key={s.label} onClick={() => pickFromSticky(s.label)} className="press min-h-12 rounded-xl border border-line-strong py-2 hover:border-ink">
+                <button key={s.label} onClick={() => chooseSize(s.label)} aria-pressed={size === s.label}
+                  className="press min-h-12 rounded-xl border border-line-strong py-2 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper">
                   <span className="block font-semibold">{sizeCode(s.label, fit)}</span>
-                  <span className="num block text-xs text-muted">{s.bodyHeight.replace(" cm", "")}</span>
+                  <span className="num block text-xs opacity-70">{s.bodyHeight.replace(" cm", "")}</span>
                 </button>
               ))}
             </div>
           </div>
         )}
-        {thobe && size && !picker && !product.soldOut && (
+        {thobe && size && !product.soldOut && (
           <p className="mb-2 px-1 text-xs text-muted">Je bestelt: <span className="font-semibold text-ink">{sizeCode(size, fit)} · {fitLabel}</span>{giftBox ? " · in de geschenkdoos" : ""}</p>
         )}
         <div className="flex gap-2">
