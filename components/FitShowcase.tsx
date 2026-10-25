@@ -66,7 +66,8 @@ export function FitShowcase() {
             <legend className="caption mb-2 text-muted">Jouw maat, op lichaamslengte</legend>
             <div className="grid grid-cols-4 gap-1.5 lg:w-[28rem]">
               {SIZES.map((x) => (
-                <button key={x.label} type="button" aria-pressed={size === x.label} aria-label={`Maat ${x.label}, ${x.bodyHeight}`} onClick={() => setSize(x.label)}
+                // Geen aria-label: de zichtbare tekst ("S 160–170") is de naam, de legend zegt al dat het om lichaamslengte gaat.
+                <button key={x.label} type="button" aria-pressed={size === x.label} onClick={() => setSize(x.label)}
                   className={`${CHOICE} ${choiceState(size === x.label)}`}>
                   <span className="text-xl font-semibold">{x.label}</span>
                   <span className={`num text-xs ${size === x.label ? "text-paper/70" : "text-muted"}`}>{x.bodyHeight.replace(" cm", "")}</span>
