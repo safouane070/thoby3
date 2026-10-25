@@ -181,7 +181,9 @@ export function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    if (!pathname.startsWith("/afrekenen")) shopPath = window.location.pathname + window.location.search;
+    // Alleen een eigen pad: "//andere-site.nl" (bijv. via de 404-pagina) zou als protocol-relatieve link naar buiten gaan.
+    const here = window.location.pathname + window.location.search;
+    if (!pathname.startsWith("/afrekenen")) shopPath = /^\/(?![/\\])/.test(here) ? here : "/";
   }, [pathname]);
 
   // Menu sluit bij elke routewissel (ook via logo of winkelwagen): state bijstellen tijdens render, zonder effect.
