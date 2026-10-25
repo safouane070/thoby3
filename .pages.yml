@@ -134,15 +134,6 @@ content:
           - { name: imageHeldAlt, label: Beschrijving van die foto, type: string }
           - { name: button, label: Tekst knop, type: string }
           - { name: product, label: Knop gaat naar product (adres), type: string }
-      - name: promises
-        label: Beloftes (zwarte strook)
-        type: object
-        list: true
-        fields:
-          - { name: icon, label: Icoon, type: select, options: { values: [exchange, shield, whatsapp, truck] } }
-          - { name: title, label: Vetgedrukte tekst, type: string }
-          - { name: text, label: Tekst erachter, type: string }
-          - { name: whatsapp, label: Tekst is een WhatsApp-link, type: boolean }
       - name: fit
         label: Blok "De maatkaart"
         type: object

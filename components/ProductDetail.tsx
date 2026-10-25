@@ -223,7 +223,7 @@ export function ProductDetail({ product }: { product: Product }) {
                     ))}
                   </dl>
                 )}
-                <p className="mt-2 text-xs text-muted">{sizeInfo ? `${sizeCode(sizeInfo.label, fit)}, plat gemeten. ` : ""}Kort en vol postuur? Kies breed in de maat bij je lengte en laat hem zo nodig inkorten.</p>
+                <p className="mt-2 text-xs text-muted">{HAS_MEASUREMENTS && sizeInfo ? `${sizeCode(sizeInfo.label, fit)}, plat gemeten. ` : ""}Kort en vol postuur? Kies breed in de maat bij je lengte en laat hem zo nodig inkorten.</p>
                 {!product.soldOut && <SizeAdvisor onPick={chooseSize} fit={fit} pickLabel={(sz) => `Kies ${sizeCode(sz, fit)}`} collapsible className="mt-3" />}
               </div>
 

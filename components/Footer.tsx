@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { ArrowLeftRight, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Emblem, PAYMENT_METHODS, PaymentMark } from "./Brand";
 import { Newsletter } from "./Newsletter";
 import site from "@/content/site.json";
-import home from "@/content/home.json";
 import { isThobe, products } from "@/lib/products";
 
 const { contact } = site;
@@ -15,29 +13,14 @@ const companyLine = [company.kvk && `KvK ${company.kvk}`, company.btw && `Btw ${
 // 40px tapdoel op touch, 32px op desktop.
 const LINK = "inline-flex min-h-10 items-center transition-colors duration-200 hover:text-ink lg:min-h-8";
 const HEAD = "caption mb-1 text-ink";
-const PROMISE_ICONS = { truck: Truck, exchange: ArrowLeftRight, shield: ShieldCheck, whatsapp: MessageCircle };
 
 // Compact: wie hier komt zoekt een link of zekerheid, geen tweede hero. Op de telefoon ongeveer één scherm.
 export function Footer() {
   return (
     <footer id="contact" className="border-t border-line bg-sand">
       <div className="mx-auto max-w-[1440px] px-5 pb-8 pt-10 lg:px-10 lg:pb-10 lg:pt-14">
-        {/* De beloftes als één regel met icoon: kort te scannen, geen tegels. */}
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-3 border-b border-line pb-8 text-sm font-medium lg:grid-cols-4 lg:pb-10">
-          {home.promises.map((p) => {
-            const Icon = PROMISE_ICONS[p.icon as keyof typeof PROMISE_ICONS] ?? Truck;
-            const body = <><Icon size={18} aria-hidden className="shrink-0" /> {p.title}</>;
-            return (
-              <li key={p.title}>
-                {p.whatsapp
-                  ? <a href={`https://wa.me/${contact.whatsapp}`} target="_blank" rel="noopener noreferrer" className="flex min-h-10 items-center gap-2.5 underline decoration-line-strong underline-offset-4 hover:decoration-ink">{body}</a>
-                  : <span className="flex min-h-10 items-center gap-2.5" title={p.text}>{body}</span>}
-              </li>
-            );
-          })}
-        </ul>
-
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 pt-8 lg:grid-cols-[1.6fr_1fr_1fr] lg:gap-16 lg:pt-12 [&>*]:min-w-0">
+        {/* Geen beloftestrook: verzending en maatruil staan al in de aankondigingsbalk, WhatsApp bij Contact. */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-[1.6fr_1fr_1fr] lg:gap-16 [&>*]:min-w-0">
           <div className="col-span-2 lg:col-span-1">
             <Emblem className="h-10 w-auto text-ink" />
             {/* Zonder maildienst geen nieuwsbriefbelofte: dan gaat het blok gewoon over Instagram. */}
