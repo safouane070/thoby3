@@ -75,17 +75,43 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-8 flex flex-col gap-4 border-t border-line pt-6 lg:mt-12 lg:flex-row lg:items-center lg:justify-between">
-          <ul className="flex flex-wrap items-center gap-1.5 text-ink/70" aria-label="Betaalmethodes">
-            {PAYMENT_METHODS.map((m) => (
-              <li key={m.name} className="flex h-7 items-center rounded-md border border-line px-2 [&_svg]:max-h-3.5"><PaymentMark method={m} /></li>
-            ))}
-          </ul>
-          <div className="space-y-1 text-xs text-muted lg:text-right">
-            <p>© {new Date().getFullYear()} {company.name || "THOBY3"} · Uit Nederland</p>
-            {companyLine && <p>{companyLine}</p>}
-          </div>
-        </div>
+        <div className="mt-8 border-t border-line pt-6 lg:mt-12"><BottomRow /></div>
+      </div>
+    </footer>
+  );
+}
+
+function BottomRow() {
+  return (
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <ul className="flex flex-wrap items-center gap-1.5 text-ink/70" aria-label="Betaalmethodes">
+        {PAYMENT_METHODS.map((m) => (
+          <li key={m.name} className="flex h-7 items-center rounded-md border border-line px-2 [&_svg]:max-h-3.5"><PaymentMark method={m} /></li>
+        ))}
+      </ul>
+      <div className="space-y-1 text-xs text-muted lg:text-right">
+        <p>© {new Date().getFullYear()} {company.name || "THOBY3"} · Uit Nederland</p>
+        {companyLine && <p>{companyLine}</p>}
+      </div>
+    </div>
+  );
+}
+
+/** Afrekenen: alleen voorwaarden, betaalmethodes en bedrijfsgegevens. Geen links die je de flow uit trekken. */
+export function CheckoutFooter() {
+  return (
+    <footer className="border-t border-line bg-sand">
+      <div className="mx-auto max-w-[1440px] space-y-4 px-5 py-8 lg:px-10">
+        <ul className="flex flex-wrap gap-x-5 text-sm text-muted">
+          {site.legal.map((l) => (
+            <li key={l.url}>
+              {l.url.startsWith("/")
+                ? <Link href={l.url} className={LINK}>{l.label}</Link>
+                : <a href={l.url} target="_blank" rel="noopener noreferrer" className={LINK}>{l.label}</a>}
+            </li>
+          ))}
+        </ul>
+        <BottomRow />
       </div>
     </footer>
   );

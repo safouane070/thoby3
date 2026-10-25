@@ -236,7 +236,7 @@ svg.lucide {
 }
 .hero-word {
   display: inline-block;
-  animation: word-up 900ms var(--ease-out) both;
+  animation: word-up 700ms var(--ease-out) both;
 }
 /* Hero-foto opent vanuit een kleiner venster (clip-path, geen layout). */
 @keyframes open-frame {

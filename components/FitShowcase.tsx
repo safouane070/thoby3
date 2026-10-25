@@ -24,12 +24,13 @@ function FitColumn({ fit, size, align }: { fit: Fit; size: string; align: "left"
     <div className={`flex flex-col ${align === "right" ? "lg:items-end lg:text-right" : ""}`}>
       <p className="display text-[clamp(1.75rem,3vw,2.5rem)]">{sizeCode(s.label, fit)} <span className="text-muted">{f.label}</span></p>
       <p className="mt-2 hidden max-w-[30ch] text-sm leading-relaxed text-muted sm:block">{f.note}</p>
+      {/* Drie kolommen pas vanaf xl: daaronder is de kolom naast de tekening te smal en loopt "Schouders" in "Mouw". */}
       {HAS_MEASUREMENTS && (
-        <dl className="mt-5 w-full max-w-[18rem] border-y border-line-strong text-left sm:grid sm:grid-cols-3">
+        <dl className="mt-5 w-full max-w-[18rem] border-y border-line-strong text-left xl:grid xl:grid-cols-3">
           {rows.map(([k, v]) => (
-            <div key={k} className="flex items-baseline justify-between border-line py-2 [&:not(:first-child)]:border-t sm:block sm:py-3 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-t-0 sm:[&:not(:first-child)]:pl-3">
+            <div key={k} className="flex items-baseline justify-between border-line py-2 [&:not(:first-child)]:border-t xl:block xl:py-3 xl:[&:not(:first-child)]:border-l xl:[&:not(:first-child)]:border-t-0 xl:[&:not(:first-child)]:pl-3">
               <dt className="text-sm text-muted">{k}</dt>
-              <dd className={`num text-xl font-medium sm:text-2xl `}>{v}<span className="ml-0.5 text-sm font-normal text-muted">cm</span></dd>
+              <dd className="num text-xl font-medium xl:text-2xl">{v}<span className="ml-0.5 text-sm font-normal text-muted">cm</span></dd>
             </div>
           ))}
         </dl>

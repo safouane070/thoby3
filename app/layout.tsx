@@ -5,7 +5,8 @@ import { StoreProvider } from "@/components/StoreProvider";
 import { Motion } from "@/components/Motion";
 import { Header } from "@/components/Header";
 import { CartDrawerLazy } from "@/components/CartDrawerLazy";
-import { Footer } from "@/components/Footer";
+import { CheckoutFooter, Footer } from "@/components/Footer";
+import { FooterGate } from "@/components/FooterGate";
 import { SITE_LIVE, baseOpenGraph } from "@/lib/seo";
 import site from "@/content/site.json";
 
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Motion>
             <Header />
             <main id="inhoud" className="flex-1">{children}</main>
-            <Footer />
+            <FooterGate full={<Footer />} checkout={<CheckoutFooter />} />
             <CartDrawerLazy />
           </Motion>
         </StoreProvider>
