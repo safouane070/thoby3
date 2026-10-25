@@ -102,9 +102,7 @@ export function CartDrawer() {
 
           {lines.length > 0 && (
             <div className="border-t border-line px-6 py-5">
-              <div className="flex items-baseline justify-between"><span className="text-sm text-taupe">Subtotaal incl. btw</span><span className="display text-2xl tabular-nums">{money(subtotal)}</span></div>
-              <p className="mt-1 text-xs text-taupe">{freeShipping ? "Gratis verzending" : "Gratis verzending in Nederland. Naar de rest van de EU berekend bij het afrekenen."}</p>
-              <Link href="/afrekenen" onClick={() => setDrawerOpen(false)} className="press btn-primary tag mt-4 flex min-h-14 w-full items-center justify-center py-4 !text-[0.9375rem]">Afrekenen</Link>
+              <div className="flex items-baseline justify-between"><span className="text-sm text-taupe">Subtotaal incl. btw</span><span className="display text-2xl tabular-nums">{money(subtotal)}</span></div>              <Link href="/afrekenen" onClick={() => setDrawerOpen(false)} className="press btn-primary tag mt-4 flex min-h-14 w-full items-center justify-center py-4 !text-[0.9375rem]">Afrekenen</Link>
               <div className="mt-4 flex flex-col items-center gap-2.5">
                 <p className="flex items-center gap-1.5 text-xs text-taupe-strong"><Lock size={12} aria-hidden /> Veilig betalen, SSL-versleuteld</p>
                 <ul className="flex flex-wrap justify-center gap-1.5 text-ink/70" aria-label="Betaalmethodes">

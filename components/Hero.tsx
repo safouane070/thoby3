@@ -12,7 +12,8 @@ const content = home.hero;
 const reviews = home.reviews;
 const product = getProduct(content.featuredProduct) ?? products[0];
 // CSS-entree in plaats van Framer: speelt al vóór hydration, dus de kop (LCP) wacht niet op JavaScript.
-const rise = (i: number) => ({ animationDelay: `${300 + i * 80}ms` });
+// Kort gehouden: wie via Instagram binnenkomt, moet de knop binnen een halve seconde kunnen raken.
+const rise = (i: number) => ({ animationDelay: `${150 + i * 50}ms` });
 // Productfeiten, geen beloftes: die staan al in de aankondigingsbalk en de footer.
 const band = ["Satijnkatoen", "Slank en breed", "Zelfde lengte", "Acht maten", "In de geschenkdoos"];
 
