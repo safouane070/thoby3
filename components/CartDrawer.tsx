@@ -51,7 +51,7 @@ export function CartDrawer() {
               <Truck size={15} className="mt-0.5 shrink-0" aria-hidden />
               <span>
                 <strong className="block font-medium">{freeShipping ? "Gratis verzending in Nederland en de EU" : "Gratis verzending in Nederland"}</strong>
-                {!freeShipping && <span className="text-taupe">Naar de rest van de EU nog {money(remainingForShipping)} tot gratis verzending.</span>}
+                {!freeShipping && lines.length > 0 && <span className="text-taupe">Naar de rest van de EU nog {money(remainingForShipping)} tot gratis verzending.</span>}
               </span>
             </p>
             <p className="mt-3 flex items-center gap-2 text-[0.8125rem]">
@@ -71,11 +71,12 @@ export function CartDrawer() {
               </div>
             ) : (
               <ul className="divide-y divide-line">
-                <AnimatePresence initial={false} mode="popLayout">
+                {/* Zonder layout-engine: een verwijderde regel dooft kort uit, daarna sluit de lijst aan. */}
+                <AnimatePresence initial={false}>
                   {lines.map((l) => {
                     const p = getProduct(l.slug)!;
                     return (
-                      <m.li key={l.id} layout="position" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.12 } }} transition={{ duration: 0.2 }} className={`flex gap-4 py-5 ${l.id === lastAdded && drawerOpen ? "just-added" : ""}`}>
+                      <m.li key={l.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.12 } }} transition={{ duration: 0.2 }} className={`flex gap-4 py-5 ${l.id === lastAdded && drawerOpen ? "just-added" : ""}`}>
                         <div className="relative h-28 w-20 shrink-0 overflow-hidden rounded-xl bg-studio"><Image src={p.images.primary} alt="" fill sizes="80px" className="object-cover mix-blend-multiply" /></div>
                         <div className="flex flex-1 flex-col">
                           <div className="flex justify-between gap-3">
@@ -89,7 +90,7 @@ export function CartDrawer() {
                     );
                   })}
                   {giftUnlocked && GIFTS.map((g) => (
-                    <m.li key={g.slug} layout="position" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.12 } }} transition={{ duration: 0.2 }} className="flex items-center gap-4 py-4">
+                    <m.li key={g.slug} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.12 } }} transition={{ duration: 0.2 }} className="flex items-center gap-4 py-4">
                       <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-studio"><Image src={g.images.primary} alt="" fill sizes="56px" className="object-cover mix-blend-multiply" /></div>
                       <div className="flex-1"><p className="text-sm font-medium leading-tight">{g.name}{giftSets > 1 && <span className="num ml-1.5 text-sm text-taupe">× {giftSets}</span>}</p><p className="text-xs text-taupe">Cadeau bij je thobe</p></div>
                       <p className="text-xs font-medium">Gratis</p>

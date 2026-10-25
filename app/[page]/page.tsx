@@ -15,7 +15,10 @@ const find = (slug: string) => legal.find((p) => p.slug === slug);
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = find((await params).page);
   if (!p) return {};
-  return { title: p.title, alternates: { canonical: `/${p.slug}` }, openGraph: { ...baseOpenGraph, url: `/${p.slug}`, title: `${p.title} | THOBY3` } };
+  // Eigen beschrijving per pagina: de eerste alinea uit het CMS, zonder HTML, afgekapt op een woordgrens.
+  const text = (p.body.match(/<p>([\s\S]*?)<\/p>/)?.[1] ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  const description = text.length > 155 ? `${text.slice(0, 152).replace(/\s+\S*$/, "")}…` : text || undefined;
+  return { title: p.title, description, alternates: { canonical: `/${p.slug}` }, openGraph: { ...baseOpenGraph, url: `/${p.slug}`, title: `${p.title} | THOBY3`, description } };
 }
 
 export default async function LegalPage({ params }: Props) {

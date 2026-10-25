@@ -8,8 +8,8 @@
 /shop                            /#collectie               301
 /shop/                           /#collectie               301
 /product-category/*              /#collectie               301
-/about-us                        /#vakmanschap             301
-/about-us/                       /#vakmanschap             301
+/about-us                        /#stof                    301
+/about-us/                       /#stof                    301
 /contact                         /#contact                 301
 /contact/                        /#contact                 301
 /wishlist/                       /                         301

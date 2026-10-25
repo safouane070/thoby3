@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { ArrowLeft, Heart, Lock, Menu, ShoppingBag, X } from "lucide-react";
 import { AnnouncementBar } from "./AnnouncementBar";
@@ -35,7 +35,6 @@ const readScroll = () => {
 };
 
 const artikelen = (n: number) => `${n} ${n === 1 ? "artikel" : "artikelen"}`;
-const SPRING = { type: "spring", stiffness: 400, damping: 35 } as const;
 // 48px tapdoel op touch, 40px vanaf desktop.
 const ICON_BTN = "press relative flex h-12 w-12 items-center justify-center lg:h-10 lg:w-10";
 // Breedte nooit groter dan het scherm min de header-inspringing, zodat het paneel op 320px niet buiten beeld valt.
@@ -192,6 +191,22 @@ export function Header() {
   const onProduct = pathname.startsWith("/product/") && !!getProduct(pathname.split("/")[2] ?? "");
   const active = hover ?? (onProduct ? "collectie" : pathname === "/" ? spy : null);
 
+  // Eén pil die meeschuift naar het actieve item, in CSS (transform en breedte): zo hoeft de zware layout-engine van
+  // Framer niet mee. Verschijnt op zijn plek en schuift alleen tussen items.
+  const pill = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = pill.current;
+    if (!el) return;
+    const target = active ? el.parentElement?.querySelector<HTMLElement>(`[data-nav="${active}"]`) : null;
+    if (!target) { el.style.opacity = "0"; return; }
+    const appearing = el.style.opacity !== "1";
+    if (appearing) el.style.transitionProperty = "opacity";
+    el.style.transform = `translateX(${target.offsetLeft}px)`;
+    el.style.width = `${target.offsetWidth}px`;
+    el.style.opacity = "1";
+    if (appearing) requestAnimationFrame(() => { el.style.transitionProperty = ""; });
+  }, [active]);
+
   // Afrekenen zonder afleiding: geen aankondiging of menu. Wel terug naar de winkelwagen, om maat of aantal te wijzigen.
   if (pathname.replace(/\/$/, "") === "/afrekenen") return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-paper">
@@ -219,14 +234,14 @@ export function Header() {
             </Link>
 
             <nav className="absolute left-1/2 hidden -translate-x-1/2 lg:block" aria-label="Hoofdmenu" onMouseLeave={() => setHover(null)}>
+              <span ref={pill} aria-hidden style={{ opacity: 0 }}
+                className="absolute inset-y-0 left-0 rounded-full bg-studio transition-[transform,width,opacity] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]" />
               <ul className="flex items-center">
                 {nav.map((n) => (
                   <li key={n.id}>
-                    <Link href={n.href} onMouseEnter={() => setHover(n.id)} onFocus={() => setHover(n.id)} onBlur={() => setHover(null)}
+                    <Link href={n.href} data-nav={n.id} onMouseEnter={() => setHover(n.id)} onFocus={() => setHover(n.id)} onBlur={() => setHover(null)}
                       aria-current={active === n.id && !hover ? "location" : undefined}
                       className={`tag relative block whitespace-nowrap px-3.5 py-2 transition-colors duration-200 ${active === n.id ? "text-ink" : "text-muted hover:text-ink"}`}>
-                      {/* Eén pil die meeschuift naar het actieve item, in plaats van vlakken die aan en uit springen. */}
-                      {active === n.id && <m.span layoutId="activeNavPill" className="absolute inset-0 rounded-full bg-studio" transition={SPRING} />}
                       <span className="relative">{n.label}</span>
                     </Link>
                   </li>
