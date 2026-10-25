@@ -7,7 +7,6 @@ import { Accordion } from "radix-ui";
 import home from "@/content/home.json";
 import { FITS, HAS_MEASUREMENTS, SIZES, sizeCode, type Fit } from "@/lib/products";
 import { Reveal, SplitTitle } from "./Reveal";
-import { SizeAdvisor } from "./SizeAdvisor";
 import { ThobePair, shapeOf } from "./ThobeDiagram";
 import { useStore } from "./StoreProvider";
 
@@ -92,12 +91,11 @@ export function FitShowcase() {
           </div>
         </div>
 
-        <div className="mt-10 grid items-start gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-20">
-          <SizeAdvisor onPick={setSize} pickLabel={(sz) => `Toon maat ${sz}`} className="border-t border-line-strong pt-5" />
-          {HAS_MEASUREMENTS && (
+        {/* Geen lengte-advies hier: de maatknoppen hierboven tonen de lichaamslengte al. */}
+        {HAS_MEASUREMENTS && (
             // De volledige maattabel, ingeklapt: de maten van je gekozen maat staan hierboven al. Per maat een groep met de
             // lichaamslengte als kopregel; tik op een rij en de tekening springt naar die maat. Past op 320px zonder opzij schuiven.
-            <Accordion.Root type="single" collapsible className="border-t border-line-strong">
+            <Accordion.Root type="single" collapsible className="mt-10 border-t border-line-strong lg:mt-20 lg:max-w-[calc(50%-2.5rem)]">
               <Accordion.Item value="tabel" className="group">
                 <Accordion.Header>
                   <Accordion.Trigger className="flex min-h-14 w-full cursor-pointer items-center justify-between gap-6 py-4 text-left font-medium">
@@ -143,8 +141,7 @@ export function FitShowcase() {
                 </Accordion.Content>
               </Accordion.Item>
             </Accordion.Root>
-          )}
-        </div>
+        )}
       </div>
     </section>
   );
