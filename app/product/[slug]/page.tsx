@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ProductDetail } from "@/components/ProductDetail";
-import { getProduct, products } from "@/lib/products";
+import { getProduct, products, type Product } from "@/lib/products";
 import { SITE_URL, baseOpenGraph } from "@/lib/seo";
 import { average, reviewsFor } from "@/lib/reviews";
+import { COUNTRIES, shippingCents } from "@/lib/order";
 import { ProductCard } from "@/components/ProductCard";
 import { GiftStrip } from "@/components/GiftStrip";
 
@@ -11,16 +12,24 @@ import { GiftStrip } from "@/components/GiftStrip";
 export const dynamicParams = false;
 export const generateStaticParams = () => products.map((p) => ({ slug: p.slug }));
 
+// Zoektermen waarmee mensen kopen: "thobe" + "heren" + de stof in de titel, de maatkeuze en het cadeau in de beschrijving.
+const seoTitle = (p: Product) => (p.kind === "thobe" ? `Thobe ${p.name} voor heren, satijnkatoen` : p.name);
+const seoDescription = (p: Product) =>
+  p.kind === "thobe"
+    ? `${p.tagline} Slank of breed in S t/m XL, even lang. Gratis musk en siwak, gratis maatruil binnen 14 dagen.`
+    : p.description[0] ?? p.tagline;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const p = getProduct((await params).slug);
   if (!p) return {};
-  const title = p.kind === "thobe" ? `Thobe ${p.name}` : p.name;
+  const title = seoTitle(p);
+  const description = seoDescription(p);
   const url = `/product/${p.slug}`;
   return {
-    title, // via de template: "Thobe White Desert | THOBY3"
-    description: p.tagline,
+    title, // via de template: "Thobe White Desert voor heren, satijnkatoen | THOBY3"
+    description,
     alternates: { canonical: url },
-    openGraph: { ...baseOpenGraph, url, title: `${title} | THOBY3`, description: p.tagline, images: [{ url: p.images.primary, alt: title }] },
+    openGraph: { ...baseOpenGraph, url, title: `${title} | THOBY3`, description, images: [{ url: p.images.primary, alt: title }] },
   };
 }
 
@@ -35,7 +44,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.kind === "thobe" ? `Thobe ${product.name}` : product.name,
-    description: product.tagline,
+    description: [product.tagline, ...product.description].join(" "),
     image: product.gallery.map((src) => SITE_URL + src),
     url,
     sku: product.slug,
@@ -57,6 +66,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       priceCurrency: product.currency,
       itemCondition: "https://schema.org/NewCondition",
       availability: product.soldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      // Verzendkosten per land voor dit ene product, met dezelfde regel als het afrekenen (lib/order.ts).
+      shippingDetails: COUNTRIES.map((c) => {
+        const [min, max = min] = c.days.match(/\d+/g)!.map(Number);
+        return {
+          "@type": "OfferShippingDetails",
+          shippingRate: { "@type": "MonetaryAmount", value: (shippingCents(c.country, Math.round(product.price * 100))! / 100).toFixed(2), currency: "EUR" },
+          shippingDestination: { "@type": "DefinedRegion", addressCountry: c.country },
+          // Vóór 17:00 besteld (ma–za) gaat dezelfde dag weg: 0–1 dag verwerking, dan de looptijd uit het CMS.
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+            handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "DAY" },
+            transitTime: { "@type": "QuantitativeValue", minValue: min, maxValue: max, unitCode: "DAY" },
+          },
+        };
+      }),
       hasMerchantReturnPolicy: {
         "@type": "MerchantReturnPolicy",
         applicableCountry: "NL",

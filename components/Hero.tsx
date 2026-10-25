@@ -81,7 +81,7 @@ export function Hero() {
         <div className="relative mt-8 [grid-area:d] lg:mt-0">
           <figure className="open-frame relative aspect-[4/5] overflow-hidden bg-[#d3d7d7] lg:aspect-auto lg:h-[min(80svh,48rem)]">
             <Parallax distance={90} scale={1.1} className="absolute inset-0">
-              <Image src={content.image} alt={content.imageAlt} fill preload sizes="(min-width:1024px) 50vw, 100vw" className="object-cover object-top" />
+              <Image src={content.image} alt={content.imageAlt} fill fetchPriority="high" loading="eager" sizes="(min-width:1024px) 50vw, 100vw" className="object-cover object-top" />
             </Parallax>
             <figcaption style={rise(6)} className="rise absolute bottom-4 left-4 flex items-center gap-3 rounded-full bg-paper/85 py-2 pl-4 pr-2 text-sm shadow-[0_8px_24px_-12px_rgba(11,11,11,0.3)] backdrop-blur-md">
               <span><span className="font-semibold">{product.name}</span> <span className="text-muted">· {product.colors[0]?.name}</span></span>
