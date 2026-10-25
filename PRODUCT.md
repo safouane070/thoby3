@@ -28,7 +28,7 @@ Elke maat (S t/m XL) bestaat in twee pasvormen met dezelfde lengte: slank (-1) e
 
 - Producten: Thobe White Desert (gebroken wit), Thobe Caramel Sands (karamel, nu uitverkocht), Musk (Golden Aura, 5 ml), Siwak met houder.
 - Maten op lichaamslengte: S 1.60–1.70, M 1.70–1.78, L 1.78–1.87, XL 1.87–1.95 m.
-- Maattabel (cm, plat gemeten) van thoby3.com: S-1 56/41/58/137, S-2 60/44/58/137, M-1 60/44/60/142, M-2 64/47/60/142, L-1 64/47/61/147, L-2 68/50/61/147, XL-1 68/50/62/152, XL-2 72/53/62/152 (borst/schouders/mouw/lengte).
+- Kledingmaten in cm (borst/schouders/mouw/lengte) zijn nog niet bekend: thoby3.com noemt alleen lichaamslengtes. De velden in `content/shop.json` staan leeg tot de echte, gemeten maten via het CMS komen; leeg verbergt de cm-tabel en de tekening op schaal. Verzin geen maten.
 - Gratis maatruil binnen 14 dagen; gratis verzending in NL, naar de rest van de EU vanaf €50; vóór 17:00 besteld, dezelfde dag verzonden (ma–za).
 - Betalen: iDEAL, Visa, Mastercard, PayPal, Apple Pay.
 - Geen klantaccounts op deze voorkant.
@@ -43,7 +43,7 @@ Elke maat (S t/m XL) bestaat in twee pasvormen met dezelfde lengte: slank (-1) e
 ## Evidence on Hand
 
 - Studiofoto's van beide thobes (op model en details) in `public/img/`, en meer op thoby3.com: de doos open en dicht, de doos in het zand, het hangtag, de stofdrapering, de musk in een buidel, de siwak.
-- Echte maattabel (zie hierboven).
+- Maatindeling op lichaamslengte (zie hierboven); nog geen gemeten kledingmaten.
 - Geen klantreviews. Verzin geen reviews, klantaantallen, persvermeldingen of beoordelingen.
 - Het KvK-nummer, btw-id en adres zijn nog leeg in het CMS.
 

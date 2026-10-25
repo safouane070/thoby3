@@ -58,46 +58,46 @@
     {
       "label": "S",
       "bodyHeight": "1.60 – 1.70 m",
-      "length": "137",
-      "chestSlim": "56",
-      "chestBroad": "60",
-      "shouldersSlim": "41",
-      "shouldersBroad": "44",
-      "sleeveSlim": "58",
-      "sleeveBroad": "58"
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": "",
+      "shouldersSlim": "",
+      "shouldersBroad": "",
+      "sleeveSlim": "",
+      "sleeveBroad": ""
     },
     {
       "label": "M",
       "bodyHeight": "1.70 – 1.78 m",
-      "length": "142",
-      "chestSlim": "60",
-      "chestBroad": "64",
-      "shouldersSlim": "44",
-      "shouldersBroad": "47",
-      "sleeveSlim": "60",
-      "sleeveBroad": "60"
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": "",
+      "shouldersSlim": "",
+      "shouldersBroad": "",
+      "sleeveSlim": "",
+      "sleeveBroad": ""
     },
     {
       "label": "L",
       "bodyHeight": "1.78 – 1.87 m",
-      "length": "147",
-      "chestSlim": "64",
-      "chestBroad": "68",
-      "shouldersSlim": "47",
-      "shouldersBroad": "50",
-      "sleeveSlim": "61",
-      "sleeveBroad": "61"
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": "",
+      "shouldersSlim": "",
+      "shouldersBroad": "",
+      "sleeveSlim": "",
+      "sleeveBroad": ""
     },
     {
       "label": "XL",
       "bodyHeight": "1.87 – 1.95 m",
-      "length": "152",
-      "chestSlim": "68",
-      "chestBroad": "72",
-      "shouldersSlim": "50",
-      "shouldersBroad": "53",
-      "sleeveSlim": "62",
-      "sleeveBroad": "62"
+      "length": "",
+      "chestSlim": "",
+      "chestBroad": "",
+      "shouldersSlim": "",
+      "shouldersBroad": "",
+      "sleeveSlim": "",
+      "sleeveBroad": ""
     }
   ],
   "fits": [

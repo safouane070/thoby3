@@ -36,33 +36,10 @@
     "button": "Kies je thobe in de doos",
     "product": "white-desert"
   },
-  "promises": [
-    {
-      "icon": "truck",
-      "title": "Vandaag verstuurd",
-      "text": "Ma t/m za vóór 17:00 besteld, dezelfde dag onderweg."
-    },
-    {
-      "icon": "exchange",
-      "title": "Gratis maatruil",
-      "text": "Past hij niet? Binnen 14 dagen ruil je kosteloos."
-    },
-    {
-      "icon": "shield",
-      "title": "Veilig betalen",
-      "text": "iDEAL, creditcard, PayPal of Apple Pay."
-    },
-    {
-      "icon": "whatsapp",
-      "title": "Twijfel je over je maat?",
-      "text": "Stuur ons een WhatsApp.",
-      "whatsapp": true
-    }
-  ],
   "fit": {
     "title": "Maatkaart",
     "titleSecond": "",
-    "text": "Kies je maat. Slank (-1) en breed (-2) staan hieronder naast elkaar op schaal: even lang, alleen ruimer in borst en schouders.",
+    "text": "Kies je maat op je lichaamslengte. Slank (-1) en breed (-2) zijn even lang; breed is alleen ruimer in borst en schouders.",
     "note": "Kort en vol postuur? Kies breed in de maat die bij je lengte past. Te lang? Laat hem inkorten."
   },
   "fabric": {
@@ -126,7 +103,7 @@
       },
       {
         "q": "Slank of breed: wat is het verschil?",
-        "a": "Beide pasvormen hebben per maat dezelfde lengte. Slank is smaller om schouders en taille, voor een atletische of slanke bouw. Breed is ruimer om borst en buik (4 cm meer borstwijdte), voor een volle of brede bouw."
+        "a": "Beide pasvormen hebben per maat dezelfde lengte. Slank is smaller om schouders en taille, voor een atletische of slanke bouw. Breed is ruimer om borst en buik, voor een volle of brede bouw."
       },
       {
         "q": "Mijn maat past niet. Kan ik ruilen?",
