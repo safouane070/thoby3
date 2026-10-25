@@ -294,14 +294,16 @@ export function Checkout() {
 
       <aside className="order-first lg:order-none">
         <div className="rounded-2xl bg-studio p-5 lg:sticky lg:top-28 lg:p-7">
-          <div className="flex items-center justify-between gap-4">
+          {/* Op de telefoon is de hele balk het tikvlak, niet alleen "Toon": de klik van de knop (toetsenbord, schermlezer)
+              borrelt op naar deze rij. Een ::after over de rij werkt niet met touch. Op desktop staat het overzicht altijd open. */}
+          <div onClick={() => setSummary((v) => !v)} className="flex cursor-pointer items-center justify-between gap-4 lg:cursor-auto">
             <h2 className="display text-xl lg:text-2xl">Je bestelling</h2>
-            <button type="button" onClick={() => setSummary((v) => !v)} aria-expanded={summary} aria-controls="besteloverzicht"
+            <button type="button" aria-expanded={summary} aria-controls="besteloverzicht"
               className="press flex min-h-11 items-center gap-1.5 text-sm lg:hidden">
               {summary ? "Verberg" : "Toon"} {!("error" in order) && <span className="num font-semibold">{euro(order.total)}</span>}
               <ChevronDown size={16} aria-hidden className={`transition-transform duration-200 ${summary ? "rotate-180" : ""}`} />
             </button>
-            <button type="button" onClick={() => setDrawerOpen(true)} className="press hidden min-h-10 text-sm underline decoration-line-strong underline-offset-4 hover:decoration-ink lg:block">Wijzigen</button>
+            <button type="button" onClick={(e) => { e.stopPropagation(); setDrawerOpen(true); }} className="press hidden min-h-10 text-sm underline decoration-line-strong underline-offset-4 hover:decoration-ink lg:block">Wijzigen</button>
           </div>
           {!("error" in order) && (
             <div id="besteloverzicht" className={summary ? "" : "max-lg:hidden"}>

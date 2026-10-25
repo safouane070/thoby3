@@ -35,6 +35,9 @@ const readScroll = () => {
 };
 
 const artikelen = (n: number) => `${n} ${n === 1 ? "artikel" : "artikelen"}`;
+// Laatst bekeken winkelpagina (met maatkeuze in de query), voor "Verder winkelen" bij het afrekenen. In geheugen:
+// na een volledige herlaad (bijv. terug van Mollie) is dat de homepage.
+let shopPath = "/";
 // 48px tapdoel op touch, 40px vanaf desktop.
 const ICON_BTN = "press relative flex h-12 w-12 items-center justify-center lg:h-10 lg:w-10";
 // Breedte nooit groter dan het scherm min de header-inspringing, zodat het paneel op 320px niet buiten beeld valt.
@@ -177,6 +180,10 @@ export function Header() {
     return () => io.disconnect();
   }, [pathname]);
 
+  useEffect(() => {
+    if (!pathname.startsWith("/afrekenen")) shopPath = window.location.pathname + window.location.search;
+  }, [pathname]);
+
   // Menu sluit bij elke routewissel (ook via logo of winkelwagen): state bijstellen tijdens render, zonder effect.
   const [menuPath, setMenuPath] = useState(pathname);
   // Vanaf desktop bestaat het mobiele menu niet; anders bleef de scroll-lock hangen na het draaien of vergroten van het scherm.
@@ -207,16 +214,23 @@ export function Header() {
     if (appearing) requestAnimationFrame(() => { el.style.transitionProperty = ""; });
   }, [active]);
 
-  // Afrekenen zonder afleiding: geen aankondiging of menu. Wel terug naar de winkelwagen, om maat of aantal te wijzigen.
+  // Afrekenen zonder afleiding: geen aankondiging of menu. Links een echte terugknop (een pijl lees je als "terug"),
+  // rechts de winkelwagen om maat of aantal te wijzigen.
   if (pathname.replace(/\/$/, "") === "/afrekenen") return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-paper">
-      {/* Drie kolommen (1fr auto 1fr): het logo staat in het midden en kan nooit over de terugknop schuiven. */}
+      {/* Drie kolommen (1fr auto 1fr): het logo staat in het midden en kan nooit over de knoppen schuiven. */}
       <div className="mx-auto grid h-14 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-2 lg:px-7">
-        <button type="button" onClick={() => setDrawerOpen(true)} aria-label="Terug naar winkelwagen" className="press tag flex min-h-12 items-center gap-1.5 justify-self-start rounded-full px-3 hover:bg-studio">
-          <ArrowLeft size={16} aria-hidden /><span className="max-[400px]:hidden">Winkelwagen</span><ShoppingBag size={16} aria-hidden className="min-[401px]:hidden" />
-        </button>
+        <Link href={shopPath} className="press tag flex min-h-12 items-center gap-1.5 justify-self-start rounded-full px-3 hover:bg-studio">
+          <ArrowLeft size={16} aria-hidden /><span className="max-[400px]:sr-only">Verder winkelen</span>
+        </Link>
         <Link href="/" aria-label="THOBY3, naar de homepage" className="inline-flex h-12 items-center"><Logo className="h-[clamp(1rem,5vw,1.125rem)] text-ink" /></Link>
-        <p className="flex items-center gap-1.5 justify-self-end px-3 text-[0.8125rem] text-muted"><Lock size={14} aria-hidden /><span className="max-sm:sr-only">Veilig afrekenen</span></p>
+        <div className="flex items-center justify-self-end">
+          <p className="flex items-center gap-1.5 px-2 text-[0.8125rem] text-muted"><Lock size={14} aria-hidden /><span className="max-sm:sr-only">Veilig afrekenen</span></p>
+          <button type="button" className={`${ICON_BTN} rounded-full hover:bg-studio`} onClick={() => setDrawerOpen(true)} aria-label={`Winkelwagen aanpassen, ${artikelen(count)}`}>
+            <ShoppingBag size={18} />
+            {count > 0 && <span className="num absolute right-1.5 top-2 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-ink px-1 text-[0.6875rem] font-semibold leading-none text-paper ring-2 ring-paper lg:right-0.5 lg:top-0.5">{count}</span>}
+          </button>
+        </div>
       </div>
     </header>
   );
