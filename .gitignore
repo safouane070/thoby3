@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Cloudflare (wrangler pages dev)
 .wrangler/
+
+# Wordt automatisch aangemaakt door next dev
+AGENTS.md
