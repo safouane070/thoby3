@@ -66,7 +66,7 @@ export function adviseSize(height: number): { size?: string; note?: "shorten" | 
   if (height < first.min - 10) return { note: "contact" };
   if (height < first.min) return { size: first.label, note: "shorten" };
   if (height > last.max) return { note: "contact" };
-  return { size: [...SIZES].reverse().find((s) => height >= s.min)!.label };
+  return { size: SIZES.findLast((s) => height >= s.min)!.label };
 }
 export const FITS = shop.fits as { id: ThobeFit; label: string; note: string }[];
 /** Maatcode zoals op het nekmerk: -1 is slank, -2 is breed (M-1, M-2). */

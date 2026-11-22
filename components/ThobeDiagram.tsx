@@ -32,7 +32,7 @@ function geometry({ chest, shoulders, sleeve, length }: Shape) {
   const f = (n: number) => n.toFixed(2);
   // Rechterhelft met de klok mee, dan gespiegeld terug: elke maat heeft dezelfde puntenreeks, dus Framer morpht vloeiend.
   const right = [[COLLAR, 0], [sh, DROP], outer, inner, [ch, arm], [hem, length]];
-  const left = [...right].reverse().map(([x, y]) => [-x, y]);
+  const left = right.toReversed().map(([x, y]) => [-x, y]);
   const d = `M${right.map(([x, y]) => `${f(x)} ${f(y)}`).join(" L")} L${left.map(([x, y]) => `${f(x)} ${f(y)}`).join(" L")} Z`;
   return { d, ch, arm, hem, cuff };
 }
