@@ -16,7 +16,7 @@ export function FitToggle({ value, onChange, id, tone = "light", className = "" 
           className={`press tag min-h-11 rounded-full px-3 ${dark
             ? "text-paper/70 data-[state=on]:bg-paper data-[state=on]:text-ink"
             : "text-muted hover:text-ink data-[state=on]:bg-paper data-[state=on]:text-ink data-[state=on]:shadow-[0_1px_3px_rgba(11,11,11,0.12)]"}`}>
-          {f.label} <span className="ml-1 opacity-60">-{f.id === "slim" ? 1 : 2}</span>
+          {f.label} <span className="ml-1 font-normal">-{f.id === "slim" ? 1 : 2}</span>
         </ToggleGroup.Item>
       ))}
     </ToggleGroup.Root>

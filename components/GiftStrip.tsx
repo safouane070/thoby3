@@ -27,7 +27,7 @@ export function GiftStrip({ className = "" }: { className?: string }) {
               <Link href={`/product/${p.slug}`} className="block font-medium underline-offset-4 hover:underline">{p.name}</Link>
               <div className="mt-0.5"><Price price={p.price} compareAt={p.compareAt} className="num text-sm text-muted" /></div>
               {!p.soldOut && (
-                <button type="button" onClick={() => add({ slug: p.slug })} aria-label={`${p.name} los in winkelwagen`}
+                <button type="button" onClick={() => add({ slug: p.slug })} aria-label={`${p.name} los erbij`}
                   className="press btn-light tag mt-2 flex min-h-9 items-center gap-1.5 px-3.5 !text-[0.8125rem]">
                   <Plus size={14} aria-hidden /> Los erbij
                 </button>

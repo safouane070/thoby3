@@ -60,7 +60,7 @@ function Gallery({ product }: { product: Product }) {
         {product.gallery.length > 1 && (
           <div className="mt-3 flex justify-center lg:hidden" role="group" aria-label="Kies een foto">
             {product.gallery.map((src, i) => (
-              <button key={src} type="button" onClick={() => go(i)} aria-label={`Foto ${i + 1}`} aria-current={i === img || undefined} className="flex h-6 items-center px-1">
+              <button key={src} type="button" onClick={() => go(i)} aria-label={`Foto ${i + 1}`} aria-current={i === img || undefined} className="flex h-6 min-w-6 items-center justify-center">
                 <span className={`block h-1.5 rounded-full transition-[width,background-color] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${i === img ? "w-5 bg-ink" : "w-1.5 bg-line-strong"}`} />
               </button>
             ))}

@@ -51,7 +51,8 @@ export function FabricStory() {
           </div>
 
           {/* Telefoon: een swipe-rij (de volgende kaart steekt uit, zodat je ziet dat er meer is). Desktop: onder elkaar naast de vaste foto. */}
-          <ol aria-label="Eigenschappen van de stof" className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:block lg:overflow-visible lg:px-0 lg:pb-0">
+          {/* tabIndex: op de telefoon is dit een scrollrij, zonder focus kun je hem met het toetsenbord niet scrollen. */}
+          <ol aria-label="Eigenschappen van de stof" tabIndex={0} className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:block lg:overflow-visible lg:px-0 lg:pb-0">
             {steps.map((s, i) => (
               <li key={s.label} ref={(el) => { items.current[i] = el; }} data-i={i}
                 className="w-[80%] max-w-[22rem] shrink-0 snap-start scroll-ml-5 lg:flex lg:w-auto lg:max-w-none lg:min-h-[70svh] lg:flex-col lg:justify-center">

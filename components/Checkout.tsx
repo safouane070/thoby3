@@ -196,7 +196,7 @@ export function Checkout() {
     return (
       <div className="grid gap-10 lg:grid-cols-[7fr_5fr] lg:gap-20">
         <div>
-          <p className="display text-2xl">Je winkelwagen is leeg</p>
+          <h2 className="display text-2xl">Je winkelwagen is leeg</h2>
           <p className="mt-4 max-w-[46ch] leading-relaxed text-taupe">Kies eerst je thobe en je maat. Twijfel je over de maat? Op de maatkaart zie je slank en breed naast elkaar, in centimeters.</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/#collectie" className="press btn-primary tag flex min-h-12 items-center px-7">Naar de collectie</Link>
