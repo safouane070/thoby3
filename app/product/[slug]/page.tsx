@@ -103,13 +103,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <section aria-labelledby="meer-title" className="mx-auto max-w-[1440px] border-t border-line px-5 pb-24 pt-16 lg:px-10 lg:pb-28">
         <h2 id="meer-title" className="display text-[clamp(2rem,3.2vw,2.75rem)]">Meer van THOBY3</h2>
         {/* Andere thobes als kaart, musk en siwak in hun eigen strook: geen kleine voorwerpen in grote lege vlakken. */}
-        {others.length > 0 && (
-          // Kolommen naar het aantal: nooit een halve rij leeg (2 kaarten = 2 kolommen, 3 = 3, 4+ = 4).
-          <div className={`mt-8 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-5 lg:gap-x-6 ${["", "lg:max-w-xl", "", "lg:grid-cols-3"][others.length] ?? "lg:grid-cols-4"}`}>
-            {others.map((p) => <ProductCard key={p.slug} product={p} />)}
-          </div>
-        )}
-        {product.kind === "thobe" && <GiftStrip className="mt-6" />}
+        {/* Eén kaart: strook ernaast (zoals op de homepage), anders staat er één kaartje in een leeg vlak. */}
+        <div className={`mt-8 grid gap-6 ${others.length === 1 ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:items-start" : ""}`}>
+          {others.length > 0 && (
+            // Kolommen naar het aantal: nooit een halve rij leeg (2 kaarten = 2 kolommen, 3 = 3, 4+ = 4).
+            <div className={`grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-5 lg:gap-x-6 ${["", "lg:grid-cols-1", "", "lg:grid-cols-3"][others.length] ?? "lg:grid-cols-4"}`}>
+              {others.map((p) => <ProductCard key={p.slug} product={p} />)}
+            </div>
+          )}
+          {product.kind === "thobe" && <GiftStrip />}
+        </div>
       </section>
     </>
   );

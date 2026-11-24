@@ -47,8 +47,8 @@ export function Hero() {
     <section aria-labelledby="hero-title" className="bg-sand pt-[5.875rem]">
       {/* Telefoon: kop, knop, dan meteen de thobe (product in het eerste scherm), toelichting eronder.
           Desktop: tekst links verticaal gecentreerd, foto rechts. Eén DOM, de volgorde komt uit grid-areas. */}
-      <div className="mx-auto grid max-w-[1440px] px-5 pb-12 pt-6 [grid-template-areas:'a'_'b'_'d'_'c'] lg:grid-cols-2 lg:grid-rows-[1fr_auto_1fr] lg:gap-x-16 lg:px-10 lg:pb-20 lg:pt-10 lg:[grid-template-areas:'a_d'_'c_d'_'b_d']">
-        <div className="[grid-area:a] lg:self-end">
+      <div className="mx-auto grid max-w-[1440px] px-5 pb-12 pt-6 [grid-template-areas:'a'_'b'_'d'_'c'] md:grid-cols-2 md:grid-rows-[1fr_auto_1fr] md:gap-x-8 md:[grid-template-areas:'a_d'_'c_d'_'b_d'] lg:gap-x-16 lg:px-10 lg:pb-20 lg:pt-10">
+        <div className="[grid-area:a] md:self-end">
           {reviews.url && (
             <a href={reviews.url} target="_blank" rel="noopener noreferrer" style={rise(0)}
               className="rise press btn-ghost inline-flex min-h-9 items-center gap-2 px-3.5 text-[0.8125rem]">
@@ -64,12 +64,12 @@ export function Hero() {
           </h1>
         </div>
 
-        <div style={rise(4)} className="rise mt-6 flex gap-3 [grid-area:b] lg:mt-8 lg:self-start">
+        <div style={rise(4)} className="rise mt-6 flex flex-wrap gap-3 [grid-area:b] md:self-start lg:mt-8">
           <Link href={`/product/${product.slug}`} className="press btn-primary tag group inline-flex min-h-12 flex-1 items-center justify-center gap-2.5 px-6 !text-[0.9375rem] sm:flex-none">
             {content.buttonPrimary} <span className="num text-paper/60">{eur(product.price)}</span>
             <ArrowRight size={16} aria-hidden className="transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
           </Link>
-          <Link href="/#pasvorm" className="press btn-ghost tag hidden min-h-12 items-center px-6 !text-[0.9375rem] sm:inline-flex">{content.buttonSecondary}</Link>
+          <Link href="/#pasvorm" className="press btn-ghost tag hidden min-h-12 items-center whitespace-nowrap px-6 !text-[0.9375rem] sm:inline-flex">{content.buttonSecondary}</Link>
         </div>
 
         <div style={rise(3)} className="rise mt-8 [grid-area:c] lg:mt-8">
@@ -78,10 +78,10 @@ export function Hero() {
         </div>
 
         {/* De paneelkleur is het grijs van de foto zelf, zodat foto en vlak naadloos in elkaar lopen. */}
-        <div className="relative mt-8 [grid-area:d] lg:mt-0">
-          <figure className="open-frame relative aspect-[4/5] overflow-hidden bg-[#d3d7d7] lg:aspect-auto lg:h-[min(80svh,48rem)]">
+        <div className="relative mt-8 [grid-area:d] md:mt-0">
+          <figure className="open-frame relative aspect-[4/5] overflow-hidden bg-[#d3d7d7] md:aspect-auto md:h-[min(70svh,40rem)] lg:h-[min(80svh,48rem)]">
             <Parallax distance={90} scale={1.1} className="absolute inset-0">
-              <Image src={content.image} alt={content.imageAlt} fill fetchPriority="high" loading="eager" sizes="(min-width:1024px) 50vw, 100vw" className="object-cover object-top" />
+              <Image src={content.image} alt={content.imageAlt} fill fetchPriority="high" loading="eager" sizes="(min-width:768px) 50vw, 100vw" className="object-cover object-top" />
             </Parallax>
             <figcaption style={rise(6)} className="rise absolute bottom-4 left-4 flex items-center gap-3 rounded-full bg-paper/85 py-2 pl-4 pr-2 text-sm shadow-[0_8px_24px_-12px_rgba(11,11,11,0.3)] backdrop-blur-md">
               <span><span className="font-semibold">{product.name}</span> <span className="text-muted">· {product.colors[0]?.name}</span></span>

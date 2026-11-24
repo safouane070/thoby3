@@ -14,7 +14,7 @@ const box = home.box;
 export function BoxSection() {
   return (
     <section id="doos" aria-labelledby="doos-title" className="mx-auto max-w-[1440px] px-5 py-14 lg:px-10 lg:py-32">
-      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-20">
+      <div className="grid items-center gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-20">
         <div>
           <h2 id="doos-title" className="display text-[clamp(2.25rem,4.4vw,3.75rem)]"><SplitTitle first={box.title} second={box.titleSecond} /></h2>
           <Reveal delay={0.1}><p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-muted">{box.text}</p></Reveal>

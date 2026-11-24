@@ -228,12 +228,12 @@ export function ProductDetail({ product }: { product: Product }) {
               </div>
 
               {/* De geschenkdoos als keuze met foto. Staat in de URL (?box=1), zodat de link vanaf de homepage hem aanzet. */}
-              <label className={`press flex cursor-pointer items-center gap-4 rounded-2xl border p-3 pr-4 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink ${giftBox ? "border-ink shadow-[inset_0_0_0_1px_var(--ink)]" : "border-line-strong hover:border-ink"}`}>
+              {!product.soldOut && <label className={`press flex cursor-pointer items-center gap-4 rounded-2xl border p-3 pr-4 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink ${giftBox ? "border-ink shadow-[inset_0_0_0_1px_var(--ink)]" : "border-line-strong hover:border-ink"}`}>
                 <input type="checkbox" checked={giftBox} onChange={(e) => setGiftBox(e.target.checked)} className="peer sr-only" />
                 <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl"><Image src="/img/box-sand.jpg" alt="" fill sizes="64px" className="object-cover" /></span>
                 <span className="min-w-0 flex-1 text-sm leading-snug"><span className="block font-medium">In de geschenkdoos <span className="num font-normal text-muted">+ {money(GIFT_BOX_PRICE)}</span></span><span className="text-muted">Matzwart, goudfolie, banderol</span></span>
                 <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-line-strong text-paper peer-checked:border-ink peer-checked:bg-ink">{giftBox && <Check size={13} strokeWidth={2.5} />}</span>
-              </label>
+              </label>}
 
               <div className="flex flex-col gap-3 text-[0.8125rem] sm:flex-row sm:items-center sm:justify-between">
                 <p className="flex items-center gap-2"><Gift size={16} className="shrink-0" aria-hidden /> {GIFT_TEXT}</p>

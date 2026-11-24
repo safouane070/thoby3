@@ -28,7 +28,7 @@ function Qty({ qty, name, onChange }: { qty: number; name: string; onChange: (n:
 }
 
 export function CartDrawer() {
-  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, giftSets, freeShipping, remainingForShipping, money, count, lastAdded } = useStore();
+  const { drawerOpen, setDrawerOpen, lines, setQty, lineUnit, subtotal, giftUnlocked, giftSets, freeShipping, money, count, lastAdded } = useStore();
   // Mobiel: bottom sheet die je omlaag wegveegt; vanaf tablet: zijlade rechts.
   const desktop = useMediaQuery("(min-width: 768px)");
 
@@ -50,9 +50,7 @@ export function CartDrawer() {
             <p className="flex items-start gap-2 text-[0.8125rem]" aria-live="polite">
               <Truck size={15} className="mt-0.5 shrink-0" aria-hidden />
               <span>
-                <strong className="block font-medium">{freeShipping ? "Gratis verzending in Nederland en de EU" : "Gratis verzending in Nederland"}</strong>
-                {!freeShipping && lines.length > 0 && <span className="text-taupe">Naar de rest van de EU nog {money(remainingForShipping)} tot gratis verzending.</span>}
-              </span>
+                <strong className="block font-medium">{freeShipping ? "Gratis verzending in Nederland en de EU" : "Gratis verzending in Nederland"}</strong>              </span>
             </p>
             <p className="mt-3 flex items-center gap-2 text-[0.8125rem]">
               <Gift size={15} className="shrink-0" aria-hidden />

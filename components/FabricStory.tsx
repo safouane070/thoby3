@@ -55,7 +55,7 @@ export function FabricStory() {
           <ol aria-label="Eigenschappen van de stof" tabIndex={0} className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:block lg:overflow-visible lg:px-0 lg:pb-0">
             {steps.map((s, i) => (
               <li key={s.label} ref={(el) => { items.current[i] = el; }} data-i={i}
-                className="w-[80%] max-w-[22rem] shrink-0 snap-start scroll-ml-5 lg:flex lg:w-auto lg:max-w-none lg:min-h-[70svh] lg:flex-col lg:justify-center">
+                className="w-[80%] max-w-[22rem] shrink-0 snap-start scroll-ml-5 lg:flex lg:w-auto lg:max-w-none lg:min-h-[45svh] lg:flex-col lg:justify-center">
                 <div className="relative mb-5 aspect-[4/5] overflow-hidden rounded-2xl lg:hidden">
                   <Image src={s.image} alt={s.alt} fill sizes="80vw" className="object-cover" />
                 </div>

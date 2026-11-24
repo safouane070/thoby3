@@ -131,13 +131,14 @@ function Wishlist({ onOpen }: { onOpen: () => void }) {
 
 export function Header() {
   const pathname = usePathname();
-  const { count, setDrawerOpen } = useStore();
+  const { count, setDrawerOpen, ready } = useStore();
   const scroll = useSyncExternalStore(subscribeScroll, readScroll, () => "top" as const);
   const [spy, setSpy] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
   const [menu, setMenu] = useState(false);
   const menuBtn = useRef<HTMLButtonElement>(null);
   const prev = useRef(count);
+  const wasReady = useRef(ready);
 
   // Open menu: Esc sluit (focus terug op de knop) en de pagina eronder scrolt niet mee.
   useEffect(() => {
@@ -159,9 +160,11 @@ export function Header() {
   const [bumped, setBumped] = useState(0);
 
   useEffect(() => {
-    if (count > prev.current) setBumped((n) => n + 1);
+    // Het inlezen uit de opslag bij het laden is geen toevoeging: alleen bumpen als de wagen al ingelezen was.
+    if (wasReady.current && count > prev.current) setBumped((n) => n + 1);
     prev.current = count;
-  }, [count]);
+    wasReady.current = ready;
+  }, [count, ready]);
 
   useEffect(() => {
     if (pathname !== "/") return;
@@ -241,7 +244,7 @@ export function Header() {
     <header className={`fixed inset-x-0 top-0 z-40 transition-transform duration-[250ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${scroll === "top" ? "" : scroll === "down" && !menu ? "-translate-y-full" : "-translate-y-9"}`}>
       <AnnouncementBar />
       {/* Witte balk, licht doorschijnend: de pagina schuift er zacht onderdoor. */}
-      <div className="border-b border-line bg-paper/85 text-ink backdrop-blur-xl backdrop-saturate-150">
+      <div className={`border-b border-line text-ink backdrop-blur-xl backdrop-saturate-150 ${menu ? "bg-paper" : "bg-paper/85"}`}>
         <div className="mx-auto max-w-[1440px]">
           <div className="relative flex h-14 items-center justify-between pl-5 pr-2 lg:pl-10 lg:pr-7">
             <Link href="/" aria-label="THOBY3, naar de homepage" className="inline-flex h-12 items-center">
