@@ -21,7 +21,7 @@ function FitColumn({ fit, size, align }: { fit: Fit; size: string; align: "left"
   const rows = [["Borst", s.chest[fit]], ["Schouders", s.shoulders[fit]], ["Mouw", s.sleeve[fit]]] as const;
   return (
     <div className={`flex flex-col ${align === "right" ? "lg:items-end lg:text-right" : ""}`}>
-      <p className="display text-[clamp(1.75rem,3vw,2.5rem)]">{sizeCode(s.label, fit)} <span className="text-muted">{f.label}</span></p>
+      <p className="display text-[clamp(1.75rem,3vw,2.5rem)]">{sizeCode(s.label, fit)} <span className="block text-muted sm:inline">{f.label}</span></p>
       <p className="mt-2 hidden max-w-[30ch] text-sm leading-relaxed text-muted sm:block">{f.note}</p>
       {/* Drie kolommen pas vanaf xl: daaronder is de kolom naast de tekening te smal en loopt "Schouders" in "Mouw". */}
       {HAS_MEASUREMENTS && (
@@ -34,9 +34,13 @@ function FitColumn({ fit, size, align }: { fit: Fit; size: string; align: "left"
           ))}
         </dl>
       )}
-      <Link href={href} className="press btn-primary tag group mt-5 flex min-h-12 w-full max-w-[18rem] items-center justify-center gap-2 whitespace-nowrap px-5">
-        Shop {sizeCode(s.label, fit)} <ArrowRight size={15} aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5" />
-      </Link>
+      {/* mt-auto: de knoppen van slank en breed staan altijd op dezelfde hoogte, ook als een kop langer is. */}
+      <div className="mt-auto w-full max-w-[18rem] pt-5">
+        <Link href={href} className="press btn-primary tag group flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap px-3 sm:px-5">
+          {/* Op smalle telefoons past "Shop XL-1" plus pijl niet in een halve kolom: dan zonder pijl. */}
+          Shop {sizeCode(s.label, fit)} <ArrowRight size={15} aria-hidden className="hidden transition-transform duration-200 group-hover:translate-x-0.5 min-[380px]:block" />
+        </Link>
+      </div>
     </div>
   );
 }
