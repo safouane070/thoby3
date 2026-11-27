@@ -15,7 +15,8 @@ export async function onRequestGet({ request, env }: Ctx) {
     return json({
       methods: res._embedded.methods.map((m) => ({ id: m.id, description: m.description, image: m.image.svg })),
       // Nodig voor de kaartvelden (Mollie Components); het profiel-ID is niet geheim.
-      profileId: env.MOLLIE_PROFILE_ID,
+      // Zonder MOLLIE_PROFILE_ID vragen we het profiel van de API-sleutel op (één call extra per keer).
+      profileId: env.MOLLIE_PROFILE_ID || (await mollie<{ id: string }>(env, "profiles/me")).id,
       testmode: env.MOLLIE_API_KEY.startsWith("test_"),
     });
   } catch (e) {
